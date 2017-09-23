@@ -7,12 +7,17 @@
  * 
  * @year 2017
  */
-package com.snapgames.gdj.gdj105.core;
+package com.snapgames.gdj.core.gfx;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.snapgames.gdj.core.entity.AbstractGameObject;
+import com.snapgames.gdj.core.entity.GameObject;
 
 /**
  * This class is a Render helper class to draw some shiny things.
@@ -51,7 +56,8 @@ public class RenderHelper {
 		int i = 0;
 		for (Object o : objects) {
 			helps[i] = o.toString();
-			drawShadowString(g, helps[i], x + 5, y + i * fm.getHeight(), Color.WHITE, Color.BLACK,TextPosition.LEFT,2);
+			drawShadowString(g, helps[i], x + 5, y + i * fm.getHeight(), Color.WHITE, Color.BLACK, TextPosition.LEFT,
+					2);
 			i++;
 		}
 
@@ -144,28 +150,32 @@ public class RenderHelper {
 	 */
 	public static void drawDebug(Graphics2D g, GameObject o, Font f) {
 
+		AbstractGameObject ago = (AbstractGameObject) o;
 		g.setFont(f);
 		int pane_padding = 4;
-		int pane_x = (int) o.x + (int) o.width + pane_padding;
-		int pane_y = (int) o.y + (int) o.height + pane_padding;
+		int pane_x = (int) ago.x + (int) ago.width + pane_padding;
+		int pane_y = (int) ago.y + (int) ago.height + pane_padding;
 		int link = 2;
 		int fontHeight = g.getFontMetrics().getHeight();
 		int pane_width = 100;
-
+		List<String> lines = new ArrayList<>();
+		o.addDebugInfo();
+		lines.addAll(o.getDebugInfo());
+		for (int i = 0; i < lines.size(); i++) {
+			pane_width = (g.getFontMetrics().stringWidth(lines.get(i) + pane_padding) > pane_width
+					? g.getFontMetrics().stringWidth(lines.get(i)) + (pane_padding * 2)
+					: pane_width);
+		}
 		g.setColor(new Color(0.5f, .5f, .5f, .6f));
-		g.fillRect(pane_x + link, pane_y + link, pane_width, 4 * fontHeight + fontHeight / 2);
+		g.fillRect(pane_x + link, pane_y + link, pane_width, lines.size() * fontHeight + fontHeight / 2);
 
 		g.setColor(Color.YELLOW);
-		g.drawRect((int) o.x, (int) o.y, o.width, o.height);
-		g.drawRect(pane_x + link, pane_y + link, pane_width, 4 * fontHeight + fontHeight / 2);
-		g.drawLine((int) o.x + o.width, (int) o.y + o.height, (int) pane_x + link, pane_y + link);
+		g.drawRect((int) ago.x, (int) ago.y, ago.width, ago.height);
+		g.drawRect(pane_x + link, pane_y + link, pane_width, lines.size() * fontHeight + fontHeight / 2);
+		g.drawLine((int) ago.x + ago.width, (int) ago.y + ago.height, (int) pane_x + link, pane_y + link);
 
-		g.drawString(o.name, pane_x + link + pane_padding, pane_y + link + fontHeight);
-		g.drawString(String.format("pos:(%4.2f,%4.2f)", o.x, o.y), pane_x + link + pane_padding,
-				pane_y + link + 2 * fontHeight);
-		g.drawString(String.format("spd:(%4.2f,%4.2f)", o.dx, o.dy), pane_x + link + pane_padding,
-				pane_y + link + 3 * fontHeight);
-		g.drawString(String.format("lyr,prio(:(%d,%d)", o.layer, o.priority), pane_x + link + pane_padding,
-				pane_y + link + 4 * fontHeight);
+		for (int i = 0; i < lines.size(); i++) {
+			g.drawString(lines.get(i), pane_x + link + pane_padding, pane_y + link + (i + 1) * fontHeight);
+		}
 	}
 }

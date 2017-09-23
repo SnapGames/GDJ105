@@ -3,11 +3,11 @@
  * 
  * Game Development Java
  * 
- * gdj104
+ * gdj105
  * 
  * @year 2017
  */
-package com.snapgames.gdj.gdj105.core;
+package com.snapgames.gdj.core.gfx;
 
 import java.awt.image.BufferedImage;
 import java.io.File;

@@ -3,17 +3,17 @@
  * 
  * Game Development Java
  * 
- * gdj104
+ * gdj105
  * 
  * @year 2017
  */
-package com.snapgames.gdj.gdj105.core;
+package com.snapgames.gdj.core.io;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.util.Stack;
 
-import com.snapgames.gdj.gdj105.core.state.GameStateManager;
+import com.snapgames.gdj.core.state.GameStateManager;
 
 /**
  * InputHandler

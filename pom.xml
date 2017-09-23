@@ -9,6 +9,7 @@
 	<url>https://github.com/SnapGames/GDJ105</url>
 	<inceptionYear>2017</inceptionYear>
 
+	<!-- Authors and Designers -->
 	<contributors>
 		<contributor>
 			<name>Frédéric Delorme</name>
@@ -22,6 +23,7 @@
 		</contributor>
 	</contributors>
 
+	<!-- Project eco-system definition -->
 	<organization>
 		<url>http://snapgames.github.io</url>
 		<name>SnapGames</name>
@@ -42,8 +44,17 @@
 	</ciManagement>
 
 	<properties>
-		<mainClass>com.snapgames.gdj.gdj105.core.Game</mainClass>
+		<mainClass>com.snapgames.gdj.core.Game</mainClass>
 	</properties>
+
+	<!-- Project Dependencies -->
+	<dependencies>
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			<version>2.4.0</version>
+		</dependency>
+	</dependencies>
 
 	<build>
 		<plugins>

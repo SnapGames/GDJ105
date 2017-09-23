@@ -1,7 +1,13 @@
 /**
+ * SnapGames
  * 
+ * Game Development Java
+ * 
+ * GDJ105
+ * 
+ * @year 2017
  */
-package com.snapgames.gdj.gdj105.core.state;
+package com.snapgames.gdj.core.state;
 
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -9,8 +15,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import com.snapgames.gdj.gdj105.core.Game;
-import com.snapgames.gdj.gdj105.core.InputHandler;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import com.snapgames.gdj.core.Game;
+import com.snapgames.gdj.core.io.InputHandler;
+import com.snapgames.gdj.core.state.factory.GameStateFactory;
+import com.snapgames.gdj.core.state.factory.NoDefaultStateException;
+import com.snapgames.gdj.core.state.factory.GameStateFactory.StateDefinition;
 
 /**
  * The Game State Manager is the state machine to manage all the states of the
@@ -21,10 +33,19 @@ import com.snapgames.gdj.gdj105.core.InputHandler;
  */
 public class GameStateManager {
 
+	private static final Logger logger = LoggerFactory.getLogger(GameStateManager.class);
+
+	private GameStateFactory gsf = GameStateFactory.getInstance();
+
 	/**
-	 * internal reference to parent game.
+	 * Internal reference to parent game.
 	 */
 	private Game game;
+
+	/**
+	 * List of GameState class to be instantiated on-demand.
+	 */
+	private Map<String, Class<? extends AbstractGameState>> statesClass = new HashMap<>();
 
 	/**
 	 * The internal buffer to store instances of the available states.
@@ -32,7 +53,7 @@ public class GameStateManager {
 	private Map<String, GameState> states = new HashMap<>();
 
 	/**
-	 * the current active state.
+	 * The current active state.
 	 */
 	private GameState currentState = null;
 
@@ -52,6 +73,25 @@ public class GameStateManager {
 	 */
 	public void initialize() {
 		states = new HashMap<>();
+		gsf.load();
+
+	}
+
+	public AbstractGameState loadState(String name) {
+		AbstractGameState state = null;
+		try {
+			StateDefinition stateDef = gsf.getStateDefintion(name);
+			state = stateDef.classState.newInstance();
+			logger.info("State named {0} with class {1} has been instantiated with success", stateDef.name,
+					stateDef.className);
+		} catch (InstantiationException | IllegalAccessException | NoDefaultStateException e) {
+			logger.error("Unable to instatiate the class for state {0}",name);
+		}
+		if (null != state) {
+			states.put(name, state);
+		}
+
+		return state;
 	}
 
 	/**
@@ -65,6 +105,7 @@ public class GameStateManager {
 		assert (state != null);
 		assert (states != null);
 		states.put(name, state);
+		logger.info("add the state {0} to the cache.", name);
 	}
 
 	/**
@@ -74,10 +115,15 @@ public class GameStateManager {
 	 *            the name of the state to activate.
 	 */
 	public void activate(String name) {
-		assert (states != null && !states.isEmpty());
-		if (states.containsKey(name)) {
-			currentState = states.get(name);
-			currentState.initialize(game);
+		if (!states.containsKey(name)) {
+			loadState(name);
+			if (states.containsKey(name)) {
+				currentState = states.get(name);
+				currentState.initialize(game);
+				logger.info("State {0} actiavted with success", name);
+			} else {
+				logger.error("Unable to load state {0}", name);
+			}
 		}
 	}
 
@@ -117,23 +163,59 @@ public class GameStateManager {
 		for (Entry<String, GameState> gs : states.entrySet()) {
 			gs.getValue().dispose(game);
 			states.remove(gs.getKey());
+			logger.info("Remove all states from cache.");
 		}
 	}
 
+	/**
+	 * return the parent Game
+	 * 
+	 * @return
+	 */
 	public Game getGame() {
 		return game;
 	}
 
+	/**
+	 * Key typed event intercepter
+	 * 
+	 * @param e
+	 */
 	public void keyTyped(KeyEvent e) {
 		currentState.keyTyped(this.getGame(), e);
 	}
 
+	/**
+	 * key pressed event intercepter
+	 * 
+	 * @param e
+	 */
 	public void keyPressed(KeyEvent e) {
 		currentState.keyPressed(this.getGame(), e);
 	}
 
+	/**
+	 * key released event intercepter
+	 * 
+	 * @param e
+	 */
 	public void keyReleased(KeyEvent e) {
 		currentState.keyReleased(this.getGame(), e);
 	}
 
+	public void activateDefaultState() {
+		try {
+			this.activate(gsf.getDefault().name);
+		} catch (NoDefaultStateException e) {
+			logger.error("Unable to get the default state", e);
+		}
+
+	}
+
+	/**
+	 * @return the currentState
+	 */
+	public GameState getCurrentState() {
+		return currentState;
+	}
 }
