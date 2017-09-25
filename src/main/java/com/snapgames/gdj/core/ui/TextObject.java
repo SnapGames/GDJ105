@@ -3,19 +3,21 @@
  * 
  * Game Development Java
  * 
- * gdj104
+ * gdj105
  * 
  * @year 2017
  */
-package com.snapgames.gdj.gdj105.core.ui;
+package com.snapgames.gdj.core.ui;
 
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 
-import com.snapgames.gdj.gdj105.core.Game;
-import com.snapgames.gdj.gdj105.core.GameObject;
+import com.snapgames.gdj.core.Game;
+import com.snapgames.gdj.core.entity.AbstractGameObject;
+import com.snapgames.gdj.core.gfx.RenderHelper;
+import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
 
 /**
  * A textObject is a UI element to display Text.
@@ -23,19 +25,21 @@ import com.snapgames.gdj.gdj105.core.GameObject;
  * @author Frédéric Delorme
  *
  */
-public class TextObject extends GameObject {
+public class TextObject extends AbstractGameObject {
 
 	private String text;
 	private Font font;
 	private Color frontColor;
 	private Color shadowColor;
+	private int shadowBold;
 	private Color backgroundColor;
+	private TextPosition txtPos;
 
 	public TextObject() {
 		super();
 		text = "notext";
 		frontColor = Color.WHITE;
-		backgroundColor = new Color(0.5f, 0.5f, 0.5f, 0.8f);
+		backgroundColor = Color.BLUE;// new Color(0.5f, 0.5f, 0.5f, 0.2f);
 		shadowColor = Color.BLACK;
 	}
 
@@ -61,17 +65,24 @@ public class TextObject extends GameObject {
 	 * @param color
 	 *            the color to be used if not default foreground Color.
 	 */
-	public TextObject(String name, int x, int y, String text, Font font, int layer, int priority, Color color) {
+	public TextObject(String name, int x, int y, String text, Font font, int layer, int priority, Color color,
+			TextPosition pos) {
 		super(name, x, y, 1, 1, layer, priority, color);
 		this.text = text;
+		this.shadowBold = 1;
+		this.font = font;
+		this.txtPos = pos;
+		this.shadowColor = Color.BLACK;
+		this.frontColor = color;
+		this.shadowBold = 2;
+
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.snapgames.gdj.gdj105.core.GameObject#draw(com.snapgames.gdj.gdj105.core.
-	 * Game, java.awt.Graphics2D)
+	 * @see com.snapgames.gdj.core.AbstractGameObject#draw(com.snapgames.gdj.
+	 * gdj105.core. Game, java.awt.Graphics2D)
 	 */
 	@Override
 	public void draw(Game game, Graphics2D g) {
@@ -81,16 +92,18 @@ public class TextObject extends GameObject {
 		FontMetrics fm = g.getFontMetrics();
 		this.width = fm.stringWidth(this.text);
 		this.height = fm.getHeight();
+
 		if (backgroundColor != null) {
 			g.setColor(backgroundColor);
-			g.fillRect((int) x - 2, (int) y - 2, width + 4, height + 4);
+			g.fillRect((int) x - 2, (int) y + 2 + height, width + 4, height + 4);
 		}
-		if (shadowColor != null) {
-			g.setColor(shadowColor);
-			g.drawString(text, x + 1, y + 1);
-		}
-		g.setColor((color != null ? color : frontColor));
-		g.drawString(text, x, y);
+
+		RenderHelper.drawShadowString(g, text, (int) x, (int) y, frontColor, shadowColor, txtPos, shadowBold);
+	}
+
+	public void addDebugInfo() {
+		super.addDebugInfo();
+		debugInfo.add(String.format("text:(%s)", text));
 	}
 
 }

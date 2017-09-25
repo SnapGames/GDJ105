@@ -7,11 +7,13 @@
  * 
  * @year 2017
  */
-package com.snapgames.gdj.gdj105.core;
+package com.snapgames.gdj.core.ui;
 
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
+
+import com.snapgames.gdj.core.Game;
 
 /**
  * the {@link Window} class to contains and display all the game.
