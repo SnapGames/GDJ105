@@ -7,13 +7,14 @@
  * 
  * @year 2017
  */
-package com.snapgames.gdj.gdj105.core.state;
+package com.snapgames.gdj.core.state;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
-import com.snapgames.gdj.gdj105.core.Game;
-import com.snapgames.gdj.gdj105.core.InputHandler;
+import com.snapgames.gdj.core.Game;
+import com.snapgames.gdj.core.io.InputHandler;
 
 /**
  * An interface to design all states

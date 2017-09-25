@@ -3,22 +3,26 @@
  * 
  * Game Development Java
  * 
- * gdj104
+ * gdj105
  * 
  * @year 2017
  */
-package com.snapgames.gdj.gdj105.core;
+package com.snapgames.gdj.core.entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.snapgames.gdj.core.Game;
 
 /**
- * GameObject
+ * AbstractGameObject
  * 
  * @author Frédéric Delorme
  *
  */
-public class GameObject {
+public class AbstractGameObject implements GameObject {
 	/**
 	 * internal index to generate the default object name.
 	 */
@@ -73,15 +77,20 @@ public class GameObject {
 	public Color color = Color.GREEN;
 
 	/**
-	 * Default constructor for this GameObject.
+	 * Debug info if needed.
 	 */
-	public GameObject() {
+	protected List<String> debugInfo = new ArrayList();
+
+	/**
+	 * Default constructor for this AbstractGameObject.
+	 */
+	public AbstractGameObject() {
 		super();
 		index++;
 	}
 
 	/**
-	 * Create a GameObject with <code>name</code>, position
+	 * Create a AbstractGameObject with <code>name</code>, position
 	 * (<code>x</code>,<code>y</code>) size (<code>width</code>,<code>height</code>)
 	 * on a <code>layer</code> width a rendering <code>priority</code> and a
 	 * <code>color</code>.
@@ -102,7 +111,7 @@ public class GameObject {
 	 * @param priority
 	 *            priority to sort the rendering position of this object.
 	 */
-	public GameObject(String name, int x, int y, int width, int height, int layer, int priority, Color color) {
+	public AbstractGameObject(String name, int x, int y, int width, int height, int layer, int priority, Color color) {
 		this(name, x, y, 0, 0);
 		this.width = width;
 		this.height = height;
@@ -112,7 +121,7 @@ public class GameObject {
 	}
 
 	/**
-	 * Create a GameObject with <code>name</code>, position
+	 * Create a AbstractGameObject with <code>name</code>, position
 	 * (<code>x</code>,<code>y</code>) with a velocity of
 	 * (<code>dx</code>,<code>dy</code>).
 	 * 
@@ -127,7 +136,7 @@ public class GameObject {
 	 * @param dy
 	 *            velocity on y direction.
 	 */
-	public GameObject(String name, int x, int y, int dx, int dy) {
+	public AbstractGameObject(String name, int x, int y, int dx, int dy) {
 		super();
 		// if name is null, generate a default name.
 		this.name = (name == null || name.equals("") ? "noname_" + index : name);
@@ -142,12 +151,13 @@ public class GameObject {
 
 	}
 
-	/**
-	 * Update object position.
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param game
-	 * @param dt
+	 * @see com.snapgames.gdj.core.GameObject#update(com.snapgames.gdj.core .Game,
+	 * long)
 	 */
+	@Override
 	public void update(Game game, long dt) {
 		// compute basic physic mechanic
 		x += dx * dt;
@@ -163,14 +173,14 @@ public class GameObject {
 
 	}
 
-	/**
-	 * Draw object
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @param game
-	 * @param g
+	 * @see com.snapgames.gdj.core.GameObject#draw(com.snapgames.gdj.core. Game,
+	 * java.awt.Graphics2D)
 	 */
+	@Override
 	public void draw(Game game, Graphics2D g) {
-		
 		g.setColor(color);
 		g.fillRect((int) x, (int) y, width, height);
 		// Extended object will use their own draw process.
@@ -185,12 +195,66 @@ public class GameObject {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("GameObject [name=").append(name).append(", x=").append(x).append(", y=").append(y)
+		builder.append("AbstractGameObject [name=").append(name).append(", x=").append(x).append(", y=").append(y)
 				.append(", vSpeed=").append(vSpeed).append(", hSpeed=").append(hSpeed).append(", dx=").append(dx)
 				.append(", dy=").append(dy).append(", width=").append(width).append(", height=").append(height)
 				.append(", layer=").append(layer).append(", priority=").append(priority).append(", color=")
 				.append(color).append("]");
 		return builder.toString();
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.GameObject#getName()
+	 */
+	@Override
+	public String getName() {
+		return name;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.GameObject#getLayer()
+	 */
+	@Override
+	public int getLayer() {
+		return layer;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.GameObject#getPriority()
+	 */
+	@Override
+	public int getPriority() {
+		return priority;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.entity.GameObject#addDebugInfo()
+	 */
+	@Override
+	public void addDebugInfo() {
+		debugInfo.clear();
+		debugInfo.add(name);
+		debugInfo.add(String.format("pos:(%4.2f,%4.2f)", x, y));
+		debugInfo.add(String.format("spd:(%4.2f,%4.2f)", dx, dy));
+		debugInfo.add(String.format("lyr,prio(:(%d,%d)", layer, priority));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.entity.GameObject#getDebugInfo()
+	 */
+	@Override
+	public List<String> getDebugInfo() {
+		return debugInfo;
 	}
 
 }

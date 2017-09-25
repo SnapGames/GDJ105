@@ -10,13 +10,14 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.snapgames.gdj.gdj105.core.Game;
-import com.snapgames.gdj.gdj105.core.GameObject;
-import com.snapgames.gdj.gdj105.core.InputHandler;
-import com.snapgames.gdj.gdj105.core.RenderHelper;
-import com.snapgames.gdj.gdj105.core.state.AbstractGameState;
-import com.snapgames.gdj.gdj105.core.state.GameState;
-import com.snapgames.gdj.gdj105.core.state.GameStateManager;
+import com.snapgames.gdj.core.Game;
+import com.snapgames.gdj.core.entity.AbstractGameObject;
+import com.snapgames.gdj.core.entity.GameObject;
+import com.snapgames.gdj.core.gfx.RenderHelper;
+import com.snapgames.gdj.core.io.InputHandler;
+import com.snapgames.gdj.core.state.AbstractGameState;
+import com.snapgames.gdj.core.state.GameState;
+import com.snapgames.gdj.core.state.GameStateManager;
 
 /**
  * @author frederic
@@ -28,9 +29,9 @@ public class PlayState extends AbstractGameState implements GameState {
 	 * objects to be animated on the game display.
 	 */
 	// Object moved by player
-	private GameObject player = null;
-	// list of other entities to demonstrate GameObject usage.
-	private List<GameObject> entities = new ArrayList<>();
+	private AbstractGameObject player = null;
+	// list of other entities to demonstrate AbstractGameObject usage.
+	private List<AbstractGameObject> entities = new ArrayList<>();
 
 	/**
 	 * Flag to display Help.
@@ -56,7 +57,7 @@ public class PlayState extends AbstractGameState implements GameState {
 		super.initialize(game);
 
 		// prepare Game objects
-		player = new GameObject("player", game.getWidth() / (2 * game.getScale()),
+		player = new AbstractGameObject("player", game.getWidth() / (2 * game.getScale()),
 				game.getHeight() / (2 * game.getScale()), 16, 16, 1, 1, Color.BLUE);
 		player.hSpeed = 0.6f;
 		player.vSpeed = 0.3f;
@@ -70,7 +71,7 @@ public class PlayState extends AbstractGameState implements GameState {
 
 		for (int i = 0; i < 10; i++) {
 
-			GameObject entity = new GameObject("entity_" + i, game.getWidth() / (2 * game.getScale()),
+			AbstractGameObject entity = new AbstractGameObject("entity_" + i, game.getWidth() / (2 * game.getScale()),
 					game.getHeight() / (2 * game.getScale()), 16, 16, 1, 1, Color.RED);
 			entity.dx = ((float) Math.random() * 0.1f) - 0.05f;
 			entity.dy = ((float) Math.random() * 0.1f) - 0.05f;
@@ -157,7 +158,7 @@ public class PlayState extends AbstractGameState implements GameState {
 			player.dy *= 0.980f;
 		}
 
-		for (GameObject o : entities) {
+		for (AbstractGameObject o : entities) {
 			if (o.x <= wl || o.x >= wr) {
 				o.dx = -Math.signum(o.dx) * o.hSpeed;
 			}

@@ -3,11 +3,11 @@
  * 
  * Game Development Java
  * 
- * GDJ104
+ * GDJ105
  * 
  * @year 2017
  */
-package com.snapgames.gdj.gdj105.core;
+package com.snapgames.gdj.core;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -18,8 +18,11 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
-import com.snapgames.gdj.gdj105.PlayState;
-import com.snapgames.gdj.gdj105.core.state.GameStateManager;
+import com.snapgames.gdj.core.gfx.ImageUtils;
+import com.snapgames.gdj.core.gfx.RenderHelper;
+import com.snapgames.gdj.core.io.InputHandler;
+import com.snapgames.gdj.core.state.GameStateManager;
+import com.snapgames.gdj.core.ui.Window;
 
 /**
  * the basic Game container is a JPanel child.
@@ -113,16 +116,13 @@ public class Game extends JPanel {
 		g = image.createGraphics();
 
 		font = g.getFont();
-		gsm.addState("demo", new PlayState(gsm));
-
+		gsm.activateDefaultState();
 	}
 
 	/**
 	 * The main Loop !
 	 */
 	private void loop() {
-		gsm.activate("demo");
-
 		long currentTime = System.currentTimeMillis();
 		long lastTime = currentTime;
 		while (!exit) {
@@ -307,6 +307,7 @@ public class Game extends JPanel {
 	public Graphics2D getRender() {
 		return g;
 	}
+
 	public int getScale() {
 		return SCALE;
 	}
@@ -324,7 +325,6 @@ public class Game extends JPanel {
 		screenshot = true;
 
 	}
-
 
 	/**
 	 * The main entry point to start our GDJ104 game.

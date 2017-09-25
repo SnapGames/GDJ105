@@ -7,37 +7,59 @@
  * 
  * @year 2017
  */
-package com.snapgames.gdj.gdj105.core.state;
+package com.snapgames.gdj.core.state;
 
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
-import com.snapgames.gdj.gdj105.core.Game;
-import com.snapgames.gdj.gdj105.core.GameObject;
-import com.snapgames.gdj.gdj105.core.RenderHelper;
+import com.snapgames.gdj.core.Game;
+import com.snapgames.gdj.core.entity.AbstractGameObject;
+import com.snapgames.gdj.core.entity.GameObject;
+import com.snapgames.gdj.core.gfx.RenderHelper;
 
 /**
  * An Abstract Game State to manage all states of the Game !
  */
 public abstract class AbstractGameState implements GameState {
 
+	/**
+	 * Internal rendering layers. by default 3 layers are initialized.
+	 */
 	protected boolean[] layers = new boolean[3];
 
-	protected  Font debugFont;
+	/**
+	 * embedded debug font to draw on screen debug information.
+	 */
+	protected Font debugFont;
 
 	/**
-	 * List of managed objects.
+	 * Background color (for clear purpose).
 	 */
-	protected List<GameObject> objects = new ArrayList<>();
+	protected Color backgroundColor = Color.BLACK;
 
+	/**
+	 * List of managed objects. Use a list that can put up with concurrent access.
+	 */
+	protected List<GameObject> objects = new CopyOnWriteArrayList<>();
+
+	/**
+	 * Default constructor for the AbstractGameState
+	 */
 	public AbstractGameState() {
 		super();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.state.GameState#initialize(com.snapgames.gdj.
+	 * gdj105.core.Game)
+	 */
 	@Override
 	public void initialize(Game game) {
 		debugFont = game.getRender().getFont().deriveFont(9f);
@@ -49,11 +71,13 @@ public abstract class AbstractGameState implements GameState {
 	 * 
 	 * @param object
 	 */
-	protected void addObject(GameObject object) {
+	protected void addObject(AbstractGameObject object) {
 		objects.add(object);
 		objects.sort(new Comparator<GameObject>() {
 			public int compare(GameObject o1, GameObject o2) {
-				return (o1.layer > o2.layer ? -1 : (o1.priority > o2.priority ? -1 : 1));
+				AbstractGameObject ago1 = (AbstractGameObject) o1;
+				AbstractGameObject ago2 = (AbstractGameObject) o2;
+				return (ago1.layer > ago2.layer ? -1 : (ago1.priority > ago2.priority ? -1 : 1));
 			};
 		});
 	}
@@ -62,14 +86,32 @@ public abstract class AbstractGameState implements GameState {
 		objects.clear();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.state.GameState#keyTyped(com.snapgames.gdj.
+	 * gdj105.core.Game, java.awt.event.KeyEvent)
+	 */
 	@Override
 	public void keyTyped(Game game, KeyEvent e) {
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.state.GameState#keyPressed(com.snapgames.gdj.
+	 * gdj105.core.Game, java.awt.event.KeyEvent)
+	 */
 	@Override
 	public void keyPressed(Game game, KeyEvent e) {
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.state.GameState#keyReleased(com.snapgames.gdj.
+	 * gdj105.core.Game, java.awt.event.KeyEvent)
+	 */
 	@Override
 	public void keyReleased(Game game, KeyEvent e) {
 		switch (e.getKeyCode()) {
@@ -98,14 +140,13 @@ public abstract class AbstractGameState implements GameState {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * com.snapgames.gdj.gdj105.core.state.GameState#render(com.snapgames.gdj.gdj105
+	 * @see com.snapgames.gdj.core.state.GameState#render(com.snapgames.gdj.gdj105
 	 * .core.Game, java.awt.Graphics2D)
 	 */
 	public void render(Game game, Graphics2D g) {
 		if (!objects.isEmpty()) {
 			for (GameObject o : objects) {
-				if (layers[o.layer - 1]) {
+				if (layers[o.getLayer() - 1]) {
 					o.draw(game, g);
 					if (game.isDebug()) {
 						RenderHelper.drawDebug(g, o, debugFont);

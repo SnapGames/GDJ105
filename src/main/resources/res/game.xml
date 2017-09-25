@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE story SYSTEM "states.dtd">
+<game>
+	<default name="title" />
+	<states>
+		<state name="title" class="com.snapgames.gdj.gdj105.TitleState"  />
+	</states>
+</game>
