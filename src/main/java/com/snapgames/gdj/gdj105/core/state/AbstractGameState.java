@@ -9,6 +9,8 @@
  */
 package com.snapgames.gdj.gdj105.core.state;
 
+import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -16,6 +18,7 @@ import java.util.List;
 
 import com.snapgames.gdj.gdj105.core.Game;
 import com.snapgames.gdj.gdj105.core.GameObject;
+import com.snapgames.gdj.gdj105.core.RenderHelper;
 
 /**
  * An Abstract Game State to manage all states of the Game !
@@ -24,10 +27,21 @@ public abstract class AbstractGameState implements GameState {
 
 	protected boolean[] layers = new boolean[3];
 
+	protected  Font debugFont;
+
 	/**
 	 * List of managed objects.
 	 */
 	protected List<GameObject> objects = new ArrayList<>();
+
+	public AbstractGameState() {
+		super();
+	}
+
+	@Override
+	public void initialize(Game game) {
+		debugFont = game.getRender().getFont().deriveFont(9f);
+	}
 
 	/**
 	 * Add an object to the Object list and sort them according to their layer and
@@ -78,6 +92,26 @@ public abstract class AbstractGameState implements GameState {
 
 		default:
 			break;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.snapgames.gdj.gdj105.core.state.GameState#render(com.snapgames.gdj.gdj105
+	 * .core.Game, java.awt.Graphics2D)
+	 */
+	public void render(Game game, Graphics2D g) {
+		if (!objects.isEmpty()) {
+			for (GameObject o : objects) {
+				if (layers[o.layer - 1]) {
+					o.draw(game, g);
+					if (game.isDebug()) {
+						RenderHelper.drawDebug(g, o, debugFont);
+					}
+				}
+			}
 		}
 	}
 }

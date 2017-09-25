@@ -39,7 +39,6 @@ public class PlayState extends AbstractGameState implements GameState {
 
 	private GameStateManager gsm = null;
 
-	private Font debugFont;
 
 	public PlayState(GameStateManager gsm) {
 		this.gsm = gsm;
@@ -54,7 +53,7 @@ public class PlayState extends AbstractGameState implements GameState {
 	 */
 	@Override
 	public void initialize(Game game) {
-		debugFont = game.getRender().getFont().deriveFont(9f);
+		super.initialize(game);
 
 		// prepare Game objects
 		player = new GameObject("player", game.getWidth() / (2 * game.getScale()),
@@ -96,7 +95,7 @@ public class PlayState extends AbstractGameState implements GameState {
 	 */
 	@Override
 	public void input(Game game, InputHandler input) {
-		
+
 		// left / right
 		if (input.getKeyPressed(KeyEvent.VK_LEFT)) {
 			player.dx = -player.hSpeed;
@@ -120,7 +119,6 @@ public class PlayState extends AbstractGameState implements GameState {
 			}
 		}
 
-		
 	}
 
 	/*
@@ -179,16 +177,8 @@ public class PlayState extends AbstractGameState implements GameState {
 	 */
 	@Override
 	public void render(Game game, Graphics2D g) {
-		if (!objects.isEmpty()) {
-			for (GameObject o : objects) {
-				if (layers[o.layer - 1]) {
-					o.draw(game, g);
-					if (game.isDebug()) {
-						RenderHelper.drawDebug(g, o, debugFont);
-					}
-				}
-			}
-		}
+		super.render(game, g);
+
 		// display Help if requested
 		if (isHelp) {
 			displayHelp(this.gsm.getGame(), g, 10, 20);

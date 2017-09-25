@@ -29,6 +29,7 @@ public class TextObject extends GameObject {
 	private Font font;
 	private Color frontColor;
 	private Color shadowColor;
+	private int shadowBold;
 	private Color backgroundColor;
 
 	public TextObject() {
@@ -64,6 +65,7 @@ public class TextObject extends GameObject {
 	public TextObject(String name, int x, int y, String text, Font font, int layer, int priority, Color color) {
 		super(name, x, y, 1, 1, layer, priority, color);
 		this.text = text;
+		this.shadowBold = 1;
 	}
 
 	/*
@@ -87,7 +89,9 @@ public class TextObject extends GameObject {
 		}
 		if (shadowColor != null) {
 			g.setColor(shadowColor);
-			g.drawString(text, x + 1, y + 1);
+			for (int i = 0; i < shadowBold; i++) {
+				g.drawString(text, x + i, y + i);
+			}
 		}
 		g.setColor((color != null ? color : frontColor));
 		g.drawString(text, x, y);
