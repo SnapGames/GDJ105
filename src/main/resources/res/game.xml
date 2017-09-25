@@ -4,5 +4,6 @@
 	<default name="title" />
 	<states>
 		<state name="title" class="com.snapgames.gdj.gdj105.TitleState"  />
+		<state name="play" class="com.snapgames.gdj.gdj105.PlayState"  />
 	</states>
 </game>

@@ -11,15 +11,16 @@ package com.snapgames.gdj.core;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.swing.JPanel;
 
 import com.snapgames.gdj.core.gfx.ImageUtils;
-import com.snapgames.gdj.core.gfx.RenderHelper;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.GameStateManager;
 import com.snapgames.gdj.core.ui.Window;
@@ -81,8 +82,6 @@ public class Game extends JPanel {
 	 */
 	private Graphics2D g;
 
-	private Font font;
-
 	/**
 	 * Input manager
 	 */
@@ -114,8 +113,11 @@ public class Game extends JPanel {
 		// Internal display buffer
 		image = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
 		g = image.createGraphics();
+		Map<Object, Object> renderingHints = new HashMap<>();
+		renderingHints.put(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 
-		font = g.getFont();
+		g.addRenderingHints(renderingHints);
+
 		gsm.activateDefaultState();
 	}
 
@@ -187,10 +189,6 @@ public class Game extends JPanel {
 
 		gsm.render(g);
 
-		// Display Pause state
-		if (isPause) {
-			drawPause(g);
-		}
 	}
 
 	/**
@@ -199,24 +197,6 @@ public class Game extends JPanel {
 	private void clearBuffer(Graphics2D g) {
 		g.setColor(Color.BLACK);
 		g.fillRect(0, 0, getWidth(), getHeight());
-	}
-
-	/**
-	 * draw the Pause label.
-	 * 
-	 * @param g
-	 */
-	private void drawPause(Graphics2D g) {
-		String lblPause = "Pause";
-
-		Font bck = g.getFont();
-		Font f = font.deriveFont(28.0f).deriveFont(Font.ITALIC);
-
-		g.setFont(f);
-		RenderHelper.drawShadowString(g, lblPause, getWidth() / (SCALE * 2), getHeight() / (SCALE * 2), Color.WHITE,
-				Color.BLACK, RenderHelper.TextPosition.CENTER, 3);
-		g.setFont(bck);
-
 	}
 
 	/**
@@ -336,6 +316,10 @@ public class Game extends JPanel {
 		Game game = new Game("GDJ");
 		new Window(game);
 		game.run();
+	}
+
+	public GameStateManager getGSM() {
+		return gsm;
 	}
 
 }

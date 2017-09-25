@@ -1,5 +1,11 @@
 /**
+ * SnapGames
  * 
+ * Game Development Java
+ * 
+ * GDJ105
+ * 
+ * @year 2017
  */
 package com.snapgames.gdj.gdj105;
 
@@ -12,15 +18,19 @@ import java.util.List;
 
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
+import com.snapgames.gdj.core.entity.Actions;
 import com.snapgames.gdj.core.entity.GameObject;
 import com.snapgames.gdj.core.gfx.RenderHelper;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.AbstractGameState;
 import com.snapgames.gdj.core.state.GameState;
-import com.snapgames.gdj.core.state.GameStateManager;
 
 /**
- * @author frederic
+ * The Play State class defines default behavior for the playable game state.
+ * This where all the rendering process, the default input processing and update
+ * are performed.
+ * 
+ * @author Frédéric Delorme
  *
  */
 public class PlayState extends AbstractGameState implements GameState {
@@ -34,15 +44,16 @@ public class PlayState extends AbstractGameState implements GameState {
 	private List<AbstractGameObject> entities = new ArrayList<>();
 
 	/**
+	 * internal Font to draw any text on the screen !
+	 */
+	private Font font;
+
+	/**
 	 * Flag to display Help.
 	 */
 	private boolean isHelp = false;
 
-	private GameStateManager gsm = null;
-
-
-	public PlayState(GameStateManager gsm) {
-		this.gsm = gsm;
+	public PlayState() {
 	}
 
 	/*
@@ -56,11 +67,12 @@ public class PlayState extends AbstractGameState implements GameState {
 	public void initialize(Game game) {
 		super.initialize(game);
 
+		font = game.getGraphics().getFont();
 		// prepare Game objects
 		player = new AbstractGameObject("player", game.getWidth() / (2 * game.getScale()),
 				game.getHeight() / (2 * game.getScale()), 16, 16, 1, 1, Color.BLUE);
-		player.hSpeed = 0.6f;
-		player.vSpeed = 0.3f;
+		player.hSpeed = 0.05f;
+		player.vSpeed = 0.05f;
 		player.priority = 1;
 		player.layer = 1;
 		addObject(player);
@@ -73,8 +85,10 @@ public class PlayState extends AbstractGameState implements GameState {
 
 			AbstractGameObject entity = new AbstractGameObject("entity_" + i, game.getWidth() / (2 * game.getScale()),
 					game.getHeight() / (2 * game.getScale()), 16, 16, 1, 1, Color.RED);
-			entity.dx = ((float) Math.random() * 0.1f) - 0.05f;
-			entity.dy = ((float) Math.random() * 0.1f) - 0.05f;
+			entity.dx = ((float) Math.random() * 0.05f) - 0.02f;
+			entity.dy = ((float) Math.random() * 0.05f) - 0.02f;
+			entity.hSpeed = 0.042f;
+			entity.vSpeed = 0.042f;
 
 			if (i < 5) {
 				entity.layer = 2;
@@ -96,13 +110,13 @@ public class PlayState extends AbstractGameState implements GameState {
 	 */
 	@Override
 	public void input(Game game, InputHandler input) {
-
 		// left / right
 		if (input.getKeyPressed(KeyEvent.VK_LEFT)) {
 			player.dx = -player.hSpeed;
-
+			player.action = Actions.WALK;
 		} else if (input.getKeyPressed(KeyEvent.VK_RIGHT)) {
 			player.dx = +player.hSpeed;
+			player.action = Actions.WALK;
 		} else {
 			if (player.dx != 0) {
 				player.dx *= 0.980f;
@@ -112,7 +126,9 @@ public class PlayState extends AbstractGameState implements GameState {
 		// up / down
 		if (input.getKeyPressed(KeyEvent.VK_UP)) {
 			player.dy = -player.vSpeed;
+			player.action = Actions.UP;
 		} else if (input.getKeyPressed(KeyEvent.VK_DOWN)) {
+			player.action = Actions.DOWN;
 			player.dy = +player.vSpeed;
 		} else {
 			if (player.dy != 0) {
@@ -120,6 +136,9 @@ public class PlayState extends AbstractGameState implements GameState {
 			}
 		}
 
+		if (player.dx == 0.0f && player.dy == 0.0f) {
+			player.action = Actions.IDLE;
+		}
 	}
 
 	/*
@@ -135,7 +154,7 @@ public class PlayState extends AbstractGameState implements GameState {
 			o.update(game, dt);
 		}
 
-		int winborder = 16;
+		int winborder = 4;
 		int wl = winborder;
 		int wr = game.getWidth() / game.getScale() - player.width - winborder;
 		int wt = winborder;
@@ -165,8 +184,22 @@ public class PlayState extends AbstractGameState implements GameState {
 			if (o.y <= wt || o.y >= wb) {
 				o.dy = -Math.signum(o.dy) * o.vSpeed;
 			}
+			computeEntityAction(o);
 		}
 
+	}
+
+	private void computeEntityAction(AbstractGameObject o) {
+		if(o.dx<0 || o.dx>0) {
+			o.action=Actions.WALK;
+		}
+		if(o.dy<0) {
+			o.action=Actions.DOWN;
+		}
+		if(o.dy>0) {
+			o.action=Actions.DOWN;
+		}
+		
 	}
 
 	/*
@@ -182,8 +215,31 @@ public class PlayState extends AbstractGameState implements GameState {
 
 		// display Help if requested
 		if (isHelp) {
-			displayHelp(this.gsm.getGame(), g, 10, 20);
+			displayHelp(game, g, 10, 20);
 		}
+
+		// Display Pause state
+		if (game.isPause()) {
+			drawPause(game, g);
+		}
+
+	}
+
+	/**
+	 * draw the Pause label.
+	 * 
+	 * @param g
+	 */
+	private void drawPause(Game game, Graphics2D g) {
+		String lblPause = "Pause";
+
+		Font bck = g.getFont();
+		Font f = font.deriveFont(28.0f).deriveFont(Font.ITALIC);
+
+		g.setFont(f);
+		RenderHelper.drawShadowString(g, lblPause, game.WIDTH / 2, game.HEIGHT / 2, Color.WHITE, Color.BLACK,
+				RenderHelper.TextPosition.CENTER, 3);
+		g.setFont(bck);
 
 	}
 
@@ -194,6 +250,14 @@ public class PlayState extends AbstractGameState implements GameState {
 		return layers;
 	}
 
+	/**
+	 * Display the Help panel.
+	 * 
+	 * @param game
+	 * @param g
+	 * @param x
+	 * @param y
+	 */
 	public void displayHelp(Game game, Graphics2D g, int x, int y) {
 		g.setColor(new Color(.5f, .5f, .5f, .3f));
 		g.fillRect(x - 10, y - 16, 248, 132);
@@ -212,7 +276,12 @@ public class PlayState extends AbstractGameState implements GameState {
 	@Override
 	public void keyReleased(Game game, KeyEvent e) {
 		super.keyReleased(game, e);
+
 		switch (e.getKeyCode()) {
+		case KeyEvent.VK_PAUSE:
+		case KeyEvent.VK_P:
+			game.requestPause();
+			break;
 		case KeyEvent.VK_NUMPAD1:
 		case KeyEvent.VK_1:
 			layers[0] = !layers[0];

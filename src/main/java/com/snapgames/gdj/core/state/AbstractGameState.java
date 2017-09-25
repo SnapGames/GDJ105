@@ -119,10 +119,6 @@ public abstract class AbstractGameState implements GameState {
 		case KeyEvent.VK_Q:
 			game.setExit(true);
 			break;
-		case KeyEvent.VK_PAUSE:
-		case KeyEvent.VK_P:
-			game.requestPause();
-			break;
 		case KeyEvent.VK_F9:
 		case KeyEvent.VK_D:
 			game.setDebug(!game.isDebug());
