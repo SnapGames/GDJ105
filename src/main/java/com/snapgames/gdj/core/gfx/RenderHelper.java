@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -116,28 +117,31 @@ public class RenderHelper {
 	 * @param back
 	 * @param border
 	 */
-	public static void drawShadowString(Graphics2D g, String text, int x, int y, Color front, Color back,
+	public static Rectangle drawShadowString(Graphics2D g, String text, int x, int y, Color front, Color back,
 			TextPosition txtPos, int border) {
 		int textWidth = g.getFontMetrics().stringWidth(text);
+		int textHeight = g.getFontMetrics().getHeight();
+		int dx=x;
 		switch (txtPos) {
 		case LEFT:
 			break;
 		case RIGHT:
-			x = x - textWidth;
+			dx = x - textWidth;
 			break;
 		case CENTER:
-			x = x - (textWidth / 2);
+			dx = x - (textWidth / 2);
 			break;
 		}
 		g.setColor(back);
 		for (int i = 0; i < border; i++) {
-			g.drawString(text, x - i, y + i);
-			g.drawString(text, x - i, y - i);
-			g.drawString(text, x + i, y + i);
-			g.drawString(text, x + i, y - i);
+			g.drawString(text, dx - i, y + i);
+			g.drawString(text, dx - i, y - i);
+			g.drawString(text, dx + i, y + i);
+			g.drawString(text, dx + i, y - i);
 		}
 		g.setColor(front);
-		g.drawString(text, x, y);
+		g.drawString(text, dx, y);
+		return new Rectangle(dx,y,textWidth,textHeight);
 	}
 
 	/**

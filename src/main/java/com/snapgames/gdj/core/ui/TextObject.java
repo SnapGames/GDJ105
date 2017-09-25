@@ -33,7 +33,6 @@ public class TextObject extends AbstractGameObject {
 	private Color shadowColor;
 	private int shadowBold;
 	private Color backgroundColor;
-	private TextPosition txtPos;
 
 	public TextObject() {
 		super();
@@ -65,13 +64,11 @@ public class TextObject extends AbstractGameObject {
 	 * @param color
 	 *            the color to be used if not default foreground Color.
 	 */
-	public TextObject(String name, int x, int y, String text, Font font, int layer, int priority, Color color,
-			TextPosition pos) {
+	public TextObject(String name, int x, int y, String text, Font font, int layer, int priority, Color color) {
 		super(name, x, y, 1, 1, layer, priority, color);
 		this.text = text;
 		this.shadowBold = 1;
 		this.font = font;
-		this.txtPos = pos;
 		this.shadowColor = Color.BLACK;
 		this.frontColor = color;
 		this.shadowBold = 2;
@@ -98,7 +95,8 @@ public class TextObject extends AbstractGameObject {
 			g.fillRect((int) x - 2, (int) y + 2 + height, width + 4, height + 4);
 		}
 
-		RenderHelper.drawShadowString(g, text, (int) x, (int) y, frontColor, shadowColor, txtPos, shadowBold);
+		this.rectangle = RenderHelper.drawShadowString(g, text, (int) x, (int) y + height, frontColor, shadowColor,
+				TextPosition.LEFT, shadowBold);
 	}
 
 	public void addDebugInfo() {

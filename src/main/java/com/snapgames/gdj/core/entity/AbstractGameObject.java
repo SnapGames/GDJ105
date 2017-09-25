@@ -11,6 +11,7 @@ package com.snapgames.gdj.core.entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,11 +70,16 @@ public class AbstractGameObject implements GameObject {
 	 * Size of this object.
 	 */
 	public int width = 32, height = 32;
+	
+	public Rectangle rectangle;
+	
 	/**
 	 * Rendering depth and priority.
 	 */
 	public int layer = 0, priority = 1;
 
+	
+	
 	public Color color = Color.GREEN;
 
 	/**
@@ -148,7 +154,7 @@ public class AbstractGameObject implements GameObject {
 		this.height = DEFAULT_HEIGHT;
 		this.hSpeed = DEFAULT_HSPEED;
 		this.vSpeed = DEFAULT_VSPEED;
-
+		this.rectangle = new Rectangle(x,y,width,height);
 	}
 
 	/*
