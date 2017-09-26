@@ -46,12 +46,12 @@ public class GameStateManager {
 	/**
 	 * List of GameState class to be instantiated on-demand.
 	 */
-	private Map<String, Class<? extends AbstractGameState>> statesClass = new ConcurrentHashMap<>();
+	private Map<String, Class<? extends AbstractGameState>> statesClass = new HashMap<>();
 
 	/**
 	 * The internal buffer to store instances of the available states.
 	 */
-	private Map<String, GameState> states = new HashMap<>();
+	private Map<String, GameState> states = new ConcurrentHashMap<>();
 
 	/**
 	 * The current active state.
@@ -81,12 +81,12 @@ public class GameStateManager {
 	public AbstractGameState loadState(String name) {
 		AbstractGameState state = null;
 		try {
-			StateDefinition stateDef = gsf.getStateDefinition(name);
+			StateDefinition stateDef = gsf.getStateDefintion(name);
 			state = stateDef.classState.newInstance();
-			logger.info("State named {} with class {} has been instantiated with success", stateDef.name,
+			logger.info("State named {0} with class {1} has been instantiated with success", stateDef.name,
 					stateDef.className);
 		} catch (InstantiationException | IllegalAccessException | NoDefaultStateException e) {
-			logger.error("Unable to instatiate the class for state {}", name);
+			logger.error("Unable to instatiate the class for state {0}", name);
 		}
 		if (null != state) {
 			states.put(name, state);
@@ -106,7 +106,7 @@ public class GameStateManager {
 		assert (state != null);
 		assert (states != null);
 		states.put(name, state);
-		logger.info("add the state {} to the cache.", name);
+		logger.info("add the state {0} to the cache.", name);
 	}
 
 	/**
@@ -121,10 +121,9 @@ public class GameStateManager {
 			if (states.containsKey(name)) {
 				currentState = states.get(name);
 				currentState.initialize(game);
-
-				logger.info("State {} actiavted with success", name);
+				logger.info("State {0} actiavted with success", name);
 			} else {
-				logger.error("Unable to load state {}", name);
+				logger.error("Unable to load state {0}", name);
 			}
 		}
 	}
@@ -164,9 +163,9 @@ public class GameStateManager {
 	public void dispose() {
 		for (Entry<String, GameState> gs : states.entrySet()) {
 			gs.getValue().dispose(game);
+			states.remove(gs.getKey());
 			logger.info("Remove all states from cache.");
 		}
-		states.clear();
 	}
 
 	/**

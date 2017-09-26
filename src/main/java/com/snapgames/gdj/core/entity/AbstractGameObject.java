@@ -12,8 +12,8 @@ package com.snapgames.gdj.core.entity;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.snapgames.gdj.core.Game;
 
@@ -71,7 +71,9 @@ public class AbstractGameObject implements GameObject {
 	 */
 	public int width = 32, height = 32;
 
-	public Rectangle boundingBox;
+	public Rectangle rectangle;
+
+	public Actions action = Actions.IDLE;
 
 	/**
 	 * Rendering depth and priority.
@@ -83,9 +85,7 @@ public class AbstractGameObject implements GameObject {
 	/**
 	 * Debug info if needed.
 	 */
-	protected List<String> debugInfo = new CopyOnWriteArrayList<>();
-
-	public Actions action = Actions.IDLE;
+	protected List<String> debugInfo = new ArrayList();
 
 	/**
 	 * Default constructor for this AbstractGameObject.
@@ -154,7 +154,7 @@ public class AbstractGameObject implements GameObject {
 		this.height = DEFAULT_HEIGHT;
 		this.hSpeed = DEFAULT_HSPEED;
 		this.vSpeed = DEFAULT_VSPEED;
-		this.boundingBox = new Rectangle(x, y, width, height);
+		this.rectangle = new Rectangle(x, y, width, height);
 	}
 
 	/*
@@ -177,8 +177,6 @@ public class AbstractGameObject implements GameObject {
 			dy = 0.0f;
 		}
 
-		this.boundingBox.x = (int) x;
-		this.boundingBox.y = (int) y;
 	}
 
 	/*

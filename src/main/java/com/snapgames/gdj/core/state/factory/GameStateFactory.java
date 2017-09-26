@@ -18,8 +18,6 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
@@ -44,8 +42,6 @@ import net.minidev.json.JSONObject;
  *
  */
 public class GameStateFactory {
-
-	private static final Logger logger = LoggerFactory.getLogger(GameStateFactory.class);
 
 	private static GameStateFactory instance;
 
@@ -158,7 +154,7 @@ public class GameStateFactory {
 
 				StateDefinition story = new StateDefinition(stateName, stateClass, classState, attributesState,
 						stateName.equals(defaultState));
-				logger.info("add State {} as class {} to the factory", story.name, story.className);
+
 				listStates.put(stateName, story);
 
 			}
@@ -193,7 +189,7 @@ public class GameStateFactory {
 	 * @throws NoDefaultStateException
 	 */
 	public StateDefinition getDefault() throws NoDefaultStateException {
-		return getStateDefinition(defaultState);
+		return getStateDefintion(defaultState);
 	}
 
 	/**
@@ -202,7 +198,7 @@ public class GameStateFactory {
 	 * @return
 	 * @throws NoDefaultStateException
 	 */
-	public StateDefinition getStateDefinition(String stateName) throws NoDefaultStateException {
+	public StateDefinition getStateDefintion(String stateName) throws NoDefaultStateException {
 		if (stateName != null && !stateName.equals("") && listStates != null && listStates.containsKey(stateName)) {
 			return listStates.get(stateName);
 		} else {

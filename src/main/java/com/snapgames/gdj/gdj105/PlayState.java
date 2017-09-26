@@ -24,6 +24,7 @@ import com.snapgames.gdj.core.gfx.RenderHelper;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.AbstractGameState;
 import com.snapgames.gdj.core.state.GameState;
+import com.snapgames.gdj.core.state.GameStateManager;
 
 /**
  * The Play State class defines default behavior for the playable game state.
@@ -48,12 +49,19 @@ public class PlayState extends AbstractGameState implements GameState {
 	 */
 	private Font font;
 
+	
+	private GameStateManager gsm = null;
+
 	/**
 	 * Flag to display Help.
 	 */
 	private boolean isHelp = false;
 
 	public PlayState() {
+	}
+
+	public PlayState(GameStateManager gsm) {
+		this.gsm = gsm;
 	}
 
 	/*
