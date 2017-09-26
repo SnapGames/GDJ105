@@ -76,7 +76,7 @@ public class TitleState extends AbstractGameState {
 
 		TextObject cpyText = new TextObject("copyright",
 				(int) (game.WIDTH - menuItemFont.getStringBounds(copyrightLabel, frc).getWidth()) / 2, game.HEIGHT - 30,
-				copyrightLabel, debugFont, 1, 1, Color.WHITE);
+				copyrightLabel, debugFont, 2, 1, Color.WHITE);
 		addObject(cpyText);
 
 		// activate needed layers

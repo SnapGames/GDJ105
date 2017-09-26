@@ -152,7 +152,7 @@ public class RenderHelper {
 	 * @param o
 	 *            the object to be debugged.
 	 */
-	public static void drawDebug(Graphics2D g, GameObject o, Font f) {
+	public static void drawDebugInfoObject(Graphics2D g, GameObject o, Font f) {
 
 		AbstractGameObject ago = (AbstractGameObject) o;
 		g.setFont(f);
@@ -177,6 +177,28 @@ public class RenderHelper {
 		g.drawRect((int) ago.x, (int) ago.y, ago.width, ago.height);
 		g.drawRect(pane_x + link, pane_y + link, pane_width, lines.size() * fontHeight + fontHeight / 2);
 		g.drawLine((int) ago.x + ago.width, (int) ago.y + ago.height, (int) pane_x + link, pane_y + link);
+
+		g.setColor(Color.GREEN);
+		switch (ago.direction) {
+		case UP:
+			g.drawLine((int) ago.x, (int) ago.y, (int) ago.x + ago.width, (int) ago.y);
+			break;
+		case LEFT:
+			g.drawLine((int) ago.x, (int) ago.y + (int) ago.height, (int) ago.x, (int) ago.y);
+			break;
+		case RIGHT:
+			g.drawLine((int) ago.x + (int) ago.width, 
+					(int) ago.y + (int) ago.height, 
+					(int)ago.x+(int) ago.width, 
+					(int) ago.y);
+			break;
+		case DOWN:
+			g.drawLine((int) ago.x, (int) ago.y + (int) ago.height, (int) ago.x + ago.width,
+					(int) ago.y + (int) ago.height);
+			break;
+		case NONE:
+			break;
+		}
 
 		for (int i = 0; i < lines.size(); i++) {
 			g.drawString(lines.get(i), pane_x + link + pane_padding, pane_y + link + (i + 1) * fontHeight);

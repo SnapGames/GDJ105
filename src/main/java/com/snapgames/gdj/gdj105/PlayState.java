@@ -19,12 +19,14 @@ import java.util.List;
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.Actions;
+import com.snapgames.gdj.core.entity.Direction;
 import com.snapgames.gdj.core.entity.GameObject;
 import com.snapgames.gdj.core.gfx.RenderHelper;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.AbstractGameState;
 import com.snapgames.gdj.core.state.GameState;
 import com.snapgames.gdj.core.state.GameStateManager;
+import com.snapgames.gdj.core.ui.TextObject;
 
 /**
  * The Play State class defines default behavior for the playable game state.
@@ -43,6 +45,12 @@ public class PlayState extends AbstractGameState implements GameState {
 	private AbstractGameObject player = null;
 	// list of other entities to demonstrate AbstractGameObject usage.
 	private List<AbstractGameObject> entities = new ArrayList<>();
+
+	// Object moved by player
+	private TextObject scoreTextObject = null;
+
+	// score
+	private int score = 0;
 
 	/**
 	 * internal Font to draw any text on the screen !
@@ -73,6 +81,7 @@ public class PlayState extends AbstractGameState implements GameState {
 	@Override
 	public void initialize(Game game) {
 		super.initialize(game);
+		layers = new boolean[5];
 
 		font = game.getGraphics().getFont();
 		// prepare Game objects
@@ -81,32 +90,35 @@ public class PlayState extends AbstractGameState implements GameState {
 		player.hSpeed = 0.05f;
 		player.vSpeed = 0.05f;
 		player.priority = 1;
-		player.layer = 1;
+		player.layer = 2;
 		addObject(player);
 
-		for (int i = 0; i < 3; i++) {
+		for (int i = 0; i < 4; i++) {
 			layers[i] = true;
 		}
 
 		for (int i = 0; i < 10; i++) {
 
 			AbstractGameObject entity = new AbstractGameObject("entity_" + i, game.getWidth() / (2 * game.getScale()),
-					game.getHeight() / (2 * game.getScale()), 16, 16, 1, 1, Color.RED);
+					game.getHeight() / (2 * game.getScale()), 16, 16, 2, 1, Color.RED);
 			entity.dx = ((float) Math.random() * 0.05f) - 0.02f;
 			entity.dy = ((float) Math.random() * 0.05f) - 0.02f;
 			entity.hSpeed = 0.042f;
 			entity.vSpeed = 0.042f;
 
 			if (i < 5) {
-				entity.layer = 2;
+				entity.layer = 3;
 				entity.color = Color.MAGENTA;
 			} else {
-				entity.layer = 3;
+				entity.layer = 4;
 				entity.color = Color.CYAN;
 			}
 			entities.add(entity);
 			addObject(entity);
 		}
+
+		scoreTextObject = new TextObject("score", 4, -4, String.format("%06d", score), font, 1, 1, Color.WHITE);
+		addObject(scoreTextObject);
 	}
 
 	/*
@@ -121,9 +133,11 @@ public class PlayState extends AbstractGameState implements GameState {
 		if (input.getKeyPressed(KeyEvent.VK_LEFT)) {
 			player.dx = -player.hSpeed;
 			player.action = Actions.WALK;
+			player.direction = Direction.LEFT;
 		} else if (input.getKeyPressed(KeyEvent.VK_RIGHT)) {
 			player.dx = +player.hSpeed;
 			player.action = Actions.WALK;
+			player.direction = Direction.RIGHT;
 		} else {
 			if (player.dx != 0) {
 				player.dx *= 0.980f;
@@ -134,8 +148,10 @@ public class PlayState extends AbstractGameState implements GameState {
 		if (input.getKeyPressed(KeyEvent.VK_UP)) {
 			player.dy = -player.vSpeed;
 			player.action = Actions.UP;
+			player.direction = Direction.UP;
 		} else if (input.getKeyPressed(KeyEvent.VK_DOWN)) {
 			player.action = Actions.DOWN;
+			player.direction = Direction.DOWN;
 			player.dy = +player.vSpeed;
 		} else {
 			if (player.dy != 0) {
@@ -300,6 +316,10 @@ public class PlayState extends AbstractGameState implements GameState {
 		case KeyEvent.VK_NUMPAD3:
 		case KeyEvent.VK_3:
 			layers[2] = !layers[2];
+			break;
+		case KeyEvent.VK_NUMPAD4:
+		case KeyEvent.VK_4:
+			layers[3] = !layers[3];
 			break;
 		case KeyEvent.VK_H:
 			isHelp = !isHelp;

@@ -143,7 +143,7 @@ public abstract class AbstractGameState implements GameState {
 				if (layers[o.getLayer() - 1]) {
 					o.draw(game, g);
 					if (game.isDebug()) {
-						RenderHelper.drawDebug(g, o, debugFont);
+						RenderHelper.drawDebugInfoObject(g, o, debugFont);
 					}
 				}
 			}

@@ -74,6 +74,8 @@ public class AbstractGameObject implements GameObject {
 	public Rectangle rectangle;
 
 	public Actions action = Actions.IDLE;
+	
+	public Direction direction = Direction.NONE;
 
 	/**
 	 * Rendering depth and priority.
@@ -251,6 +253,9 @@ public class AbstractGameObject implements GameObject {
 		debugInfo.add(String.format("pos:(%4.2f,%4.2f)", x, y));
 		debugInfo.add(String.format("spd:(%4.2f,%4.2f)", dx, dy));
 		debugInfo.add(String.format("lyr,prio(:(%d,%d)", layer, priority));
+		debugInfo.add(String.format("action:(%s)", action));
+		debugInfo.add(String.format("dir:(%s)", direction));
+		
 	}
 
 	/*
