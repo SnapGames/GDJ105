@@ -121,7 +121,7 @@ public class RenderHelper {
 			TextPosition txtPos, int border) {
 		int textWidth = g.getFontMetrics().stringWidth(text);
 		int textHeight = g.getFontMetrics().getHeight();
-		int dx=x;
+		int dx = x;
 		switch (txtPos) {
 		case LEFT:
 			break;
@@ -141,7 +141,7 @@ public class RenderHelper {
 		}
 		g.setColor(front);
 		g.drawString(text, dx, y);
-		return new Rectangle(dx,y,textWidth,textHeight);
+		return new Rectangle(dx, y, textWidth, textHeight);
 	}
 
 	/**

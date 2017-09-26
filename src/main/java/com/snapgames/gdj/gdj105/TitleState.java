@@ -24,6 +24,7 @@ import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.AbstractGameState;
 import com.snapgames.gdj.core.ui.ImageObject;
+import com.snapgames.gdj.core.ui.Messages;
 import com.snapgames.gdj.core.ui.TextObject;
 
 /**

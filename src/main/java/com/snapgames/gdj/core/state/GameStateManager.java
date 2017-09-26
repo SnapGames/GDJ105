@@ -34,8 +34,14 @@ import com.snapgames.gdj.core.state.factory.NoDefaultStateException;
  */
 public class GameStateManager {
 
+	/**
+	 * Internal Logger.
+	 */
 	private static final Logger logger = LoggerFactory.getLogger(GameStateManager.class);
 
+	/**
+	 * The factory to instatiate the GameState from the games.xml file.
+	 */
 	private GameStateFactory gsf = GameStateFactory.getInstance();
 
 	/**
@@ -46,7 +52,7 @@ public class GameStateManager {
 	/**
 	 * List of GameState class to be instantiated on-demand.
 	 */
-	private Map<String, Class<? extends AbstractGameState>> statesClass = new HashMap<>();
+	private Map<String, Class<? extends AbstractGameState>> statesClass = new ConcurrentHashMap<>();
 
 	/**
 	 * The internal buffer to store instances of the available states.
@@ -78,15 +84,23 @@ public class GameStateManager {
 
 	}
 
+	/**
+	 * Load state to memory and instantiate the corresponding <code>class</code> to
+	 * the <code>name</code> of the GameState.
+	 * 
+	 * @param name
+	 *            the name of the GameState to be instantiated.
+	 * @return The GameState instantiate corresponding to the <code>name</code>.
+	 */
 	public AbstractGameState loadState(String name) {
 		AbstractGameState state = null;
 		try {
 			StateDefinition stateDef = gsf.getStateDefintion(name);
 			state = stateDef.classState.newInstance();
-			logger.info("State named {0} with class {1} has been instantiated with success", stateDef.name,
+			logger.info("State named {} with class {} has been instantiated with success", stateDef.name,
 					stateDef.className);
 		} catch (InstantiationException | IllegalAccessException | NoDefaultStateException e) {
-			logger.error("Unable to instatiate the class for state {0}", name);
+			logger.error("Unable to instatiate the class for state {}", name);
 		}
 		if (null != state) {
 			states.put(name, state);
@@ -106,7 +120,7 @@ public class GameStateManager {
 		assert (state != null);
 		assert (states != null);
 		states.put(name, state);
-		logger.info("add the state {0} to the cache.", name);
+		logger.info("add the state {} to the cache.", name);
 	}
 
 	/**
@@ -121,9 +135,9 @@ public class GameStateManager {
 			if (states.containsKey(name)) {
 				currentState = states.get(name);
 				currentState.initialize(game);
-				logger.info("State {0} actiavted with success", name);
+				logger.info("State {} actiavted with success", name);
 			} else {
-				logger.error("Unable to load state {0}", name);
+				logger.error("Unable to load state {}", name);
 			}
 		}
 	}
@@ -161,11 +175,12 @@ public class GameStateManager {
 	}
 
 	public void dispose() {
+
 		for (Entry<String, GameState> gs : states.entrySet()) {
 			gs.getValue().dispose(game);
-			states.remove(gs.getKey());
 			logger.info("Remove all states from cache.");
 		}
+		states.clear();
 	}
 
 	/**

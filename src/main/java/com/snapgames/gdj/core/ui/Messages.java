@@ -7,7 +7,7 @@
  * 
  * @year 2017
  */
-package com.snapgames.gdj.gdj105;
+package com.snapgames.gdj.core.ui;
 
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;

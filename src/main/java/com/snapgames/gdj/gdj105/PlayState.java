@@ -49,7 +49,6 @@ public class PlayState extends AbstractGameState implements GameState {
 	 */
 	private Font font;
 
-	
 	private GameStateManager gsm = null;
 
 	/**
@@ -198,16 +197,16 @@ public class PlayState extends AbstractGameState implements GameState {
 	}
 
 	private void computeEntityAction(AbstractGameObject o) {
-		if(o.dx<0 || o.dx>0) {
-			o.action=Actions.WALK;
+		if (o.dx < 0 || o.dx > 0) {
+			o.action = Actions.WALK;
 		}
-		if(o.dy<0) {
-			o.action=Actions.DOWN;
+		if (o.dy < 0) {
+			o.action = Actions.DOWN;
 		}
-		if(o.dy>0) {
-			o.action=Actions.DOWN;
+		if (o.dy > 0) {
+			o.action = Actions.DOWN;
 		}
-		
+
 	}
 
 	/*

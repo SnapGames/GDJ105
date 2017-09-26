@@ -85,7 +85,7 @@ public class AbstractGameObject implements GameObject {
 	/**
 	 * Debug info if needed.
 	 */
-	protected List<String> debugInfo = new ArrayList();
+	protected List<String> debugInfo = new ArrayList<>();
 
 	/**
 	 * Default constructor for this AbstractGameObject.
