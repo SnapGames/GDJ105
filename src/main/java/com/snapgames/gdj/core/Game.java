@@ -59,7 +59,7 @@ public class Game extends JPanel {
 	/**
 	 * Flag to activate debug information display.
 	 */
-	private boolean debug = true;
+	private int debug = 3;
 
 	/**
 	 * flag representing the exit request status. true => exit
@@ -272,8 +272,8 @@ public class Game extends JPanel {
 	 * 
 	 * @return
 	 */
-	public boolean isDebug() {
-		return debug;
+	public boolean isDebug(int level) {
+		return debug >= level;
 	}
 
 	/**
@@ -301,8 +301,15 @@ public class Game extends JPanel {
 	 * 
 	 * @param b
 	 */
-	public void setDebug(boolean b) {
-		debug = b;
+	public void setDebug(int level) {
+		debug = level;
+	}
+
+	/**
+	 * @return the debug
+	 */
+	public int getDebug() {
+		return debug;
 	}
 
 	/**

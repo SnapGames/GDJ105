@@ -7,7 +7,7 @@
  * 
  * @year 2017
  */
-package com.snapgames.gdj.core.ui;
+package com.snapgames.gdj.gdj105.entity;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -22,6 +22,8 @@ import com.snapgames.gdj.core.entity.AbstractGameObject;
  *
  */
 public class JaugeObject extends AbstractGameObject {
+	private static final Color borderColor = new Color(0.9f, 0.9f, 0.9f);
+	private static final Color backgroundColor = new Color(0.0f,0.0f,0.0f,0.6f);
 	public int minValue = 0, maxValue = 100;
 	public int value = maxValue;
 
@@ -62,7 +64,7 @@ public class JaugeObject extends AbstractGameObject {
 	public void draw(Game game, Graphics2D g) {
 		g.setColor(Color.BLACK);
 		g.drawRect((int) x - 2, (int) y - 2, (int) width + 4, (int) height + 4);
-		g.setColor(new Color(0.9f, 0.9f, 0.9f));
+		g.setColor(borderColor);
 		g.drawRect((int) x - 1, (int) y - 1, (int) width + 2, (int) height + 2);
 		g.setColor(Color.WHITE);
 		g.drawRect((int) x - 1, (int) y - 1, 1, 1);
@@ -71,7 +73,7 @@ public class JaugeObject extends AbstractGameObject {
 			g.setColor(color);
 			g.fillRect((int) x, (int) y, eWidth + 1, (int) height + 1);
 		}
-		g.setColor(new Color(0.0f,0.0f,0.0f,0.6f));
+		g.setColor(backgroundColor);
 		g.fillRect((int) x+eWidth, (int) y, width-eWidth, (int) height + 1);
 		g.setColor(Color.BLACK);
 		g.drawRect((int) x, (int) y, (int) width, (int) height);

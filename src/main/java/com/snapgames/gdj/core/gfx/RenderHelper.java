@@ -17,6 +17,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.GameObject;
 
@@ -134,10 +135,11 @@ public class RenderHelper {
 		}
 		g.setColor(back);
 		for (int i = 0; i < border; i++) {
-			g.drawString(text, dx - i, y + i);
-			g.drawString(text, dx - i, y - i);
-			g.drawString(text, dx + i, y + i);
-			g.drawString(text, dx + i, y - i);
+			for (int ix = -i; ix < i + 1; ix++) {
+				for (int iy = -i; iy < i + 1; iy++) {
+					g.drawString(text, dx - ix, y + iy);
+				}
+			}
 		}
 		g.setColor(front);
 		g.drawString(text, dx, y);
@@ -152,16 +154,16 @@ public class RenderHelper {
 	 * @param o
 	 *            the object to be debugged.
 	 */
-	public static void drawDebugInfoObject(Graphics2D g, GameObject o, Font f) {
+	public static void drawDebugInfoObject(Graphics2D g, GameObject o, Font f, int debugLevel) {
 
 		AbstractGameObject ago = (AbstractGameObject) o;
 		g.setFont(f);
-		int pane_padding = 4;
-		int pane_x = (int) ago.x + (int) ago.width + pane_padding;
-		int pane_y = (int) ago.y + (int) ago.height + pane_padding;
-		int link = 2;
 		int fontHeight = g.getFontMetrics().getHeight();
-		int pane_width = 100;
+
+		int pane_padding = 4;
+		int pane_width = 60;
+		int pane_height = 40;
+
 		List<String> lines = new ArrayList<>();
 		o.addDebugInfo();
 		lines.addAll(o.getDebugInfo());
@@ -170,38 +172,62 @@ public class RenderHelper {
 					? g.getFontMetrics().stringWidth(lines.get(i)) + (pane_padding * 2)
 					: pane_width);
 		}
-		g.setColor(new Color(0.5f, .5f, .5f, .6f));
-		g.fillRect(pane_x + link, pane_y + link, pane_width, lines.size() * fontHeight + fontHeight / 2);
+		pane_height = lines.size() * fontHeight + fontHeight / 2;
 
-		g.setColor(Color.YELLOW);
-		g.drawRect((int) ago.x, (int) ago.y, ago.width, ago.height);
-		g.drawRect(pane_x + link, pane_y + link, pane_width, lines.size() * fontHeight + fontHeight / 2);
-		g.drawLine((int) ago.x + ago.width, (int) ago.y + ago.height, (int) pane_x + link, pane_y + link);
-
-		g.setColor(Color.GREEN);
-		switch (ago.direction) {
-		case UP:
-			g.drawLine((int) ago.x, (int) ago.y, (int) ago.x + ago.width, (int) ago.y);
-			break;
-		case LEFT:
-			g.drawLine((int) ago.x, (int) ago.y + (int) ago.height, (int) ago.x, (int) ago.y);
-			break;
-		case RIGHT:
-			g.drawLine((int) ago.x + (int) ago.width, 
-					(int) ago.y + (int) ago.height, 
-					(int)ago.x+(int) ago.width, 
-					(int) ago.y);
-			break;
-		case DOWN:
-			g.drawLine((int) ago.x, (int) ago.y + (int) ago.height, (int) ago.x + ago.width,
-					(int) ago.y + (int) ago.height);
-			break;
-		case NONE:
-			break;
+		int pane_x = (int) (ago.x + ago.width + pane_padding);
+		if (pane_x + pane_width >= Game.WIDTH) {
+			pane_x = (int) Game.WIDTH - pane_width - pane_padding;
+			if (pane_x < 0) {
+				pane_x = 0;
+			}
 		}
+		int pane_y = (int) (ago.y + ago.height + pane_padding);
+		if (pane_y + pane_height >= Game.HEIGHT) {
+			pane_y = Game.HEIGHT - (ago.height + pane_height + pane_padding);
+			if (pane_y < 0) {
+				pane_y = 0;
+			}
+		}
+		int link = 2;
 
-		for (int i = 0; i < lines.size(); i++) {
-			g.drawString(lines.get(i), pane_x + link + pane_padding, pane_y + link + (i + 1) * fontHeight);
+		if (debugLevel >= 1) {
+			g.setColor(Color.YELLOW);
+			g.drawRect((int) ago.x, (int) ago.y, ago.width, ago.height);
+			g.drawString(""+ago.index, (int)ago.x, (int)ago.y);
+		}
+		if (debugLevel >= 2) {
+			g.setColor(Color.GREEN);
+			switch (ago.direction) {
+			case UP:
+				g.drawLine((int) ago.x, (int) ago.y, (int) ago.x + ago.width, (int) ago.y);
+				break;
+			case LEFT:
+				g.drawLine((int) ago.x, (int) ago.y + (int) ago.height, (int) ago.x, (int) ago.y);
+				break;
+			case RIGHT:
+				g.drawLine((int) ago.x + (int) ago.width, (int) ago.y + (int) ago.height, (int) ago.x + (int) ago.width,
+						(int) ago.y);
+				break;
+			case DOWN:
+				g.drawLine((int) ago.x, (int) ago.y + (int) ago.height, (int) ago.x + ago.width,
+						(int) ago.y + (int) ago.height);
+				break;
+			case NONE:
+				break;
+			}
+		}
+		if (debugLevel >= 3) {
+			g.setColor(new Color(0.5f, .5f, .5f, .6f));
+			g.fillRect(pane_x + link, pane_y + link, pane_width, pane_height);
+
+			g.setColor(new Color(0.8f, .8f, .8f, .8f));
+			g.drawRect(pane_x + link, pane_y + link, pane_width, pane_height);
+
+			g.setColor(Color.GREEN);
+			g.drawLine((int) ago.x + ago.width, (int) ago.y + ago.height, (int) pane_x + link, pane_y + link);
+			for (int i = 0; i < lines.size(); i++) {
+				g.drawString(lines.get(i), pane_x + link + pane_padding, pane_y + link + (i + 1) * fontHeight);
+			}
 		}
 	}
 }

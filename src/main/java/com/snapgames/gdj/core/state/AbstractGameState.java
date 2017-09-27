@@ -127,7 +127,10 @@ public abstract class AbstractGameState implements GameState {
 			break;
 		case KeyEvent.VK_F9:
 		case KeyEvent.VK_D:
-			game.setDebug(!game.isDebug());
+			int debug = game.getDebug();
+			debug++;
+			debug=(debug>3?0:debug);
+			game.setDebug(debug);
 			break;
 		case KeyEvent.VK_S:
 			game.captureScreenshot();
@@ -148,8 +151,8 @@ public abstract class AbstractGameState implements GameState {
 			for (GameObject o : objects) {
 				if (layers[o.getLayer() - 1]) {
 					o.draw(game, g);
-					if (game.isDebug()) {
-						RenderHelper.drawDebugInfoObject(g, o, debugFont);
+					if (game.isDebug(1)) {
+						RenderHelper.drawDebugInfoObject(g, o, debugFont,game.getDebug());
 					}
 				}
 			}

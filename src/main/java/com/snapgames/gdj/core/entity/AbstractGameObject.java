@@ -25,9 +25,10 @@ import com.snapgames.gdj.core.Game;
  */
 public class AbstractGameObject implements GameObject {
 	/**
-	 * internal index to generate the default object name.
+	 * internal indexCounter to generate the default object name.
 	 */
-	private static int index = 0;
+	private static int indexCounter = 0;
+	public int index;
 
 	/**
 	 * default internal constants.
@@ -74,7 +75,7 @@ public class AbstractGameObject implements GameObject {
 	public Rectangle rectangle;
 
 	public Actions action = Actions.IDLE;
-	
+
 	public Direction direction = Direction.NONE;
 
 	/**
@@ -94,7 +95,8 @@ public class AbstractGameObject implements GameObject {
 	 */
 	public AbstractGameObject() {
 		super();
-		index++;
+		indexCounter++;
+		index = indexCounter;
 	}
 
 	/**
@@ -145,9 +147,9 @@ public class AbstractGameObject implements GameObject {
 	 *            velocity on y direction.
 	 */
 	public AbstractGameObject(String name, int x, int y, int dx, int dy) {
-		super();
+		this();
 		// if name is null, generate a default name.
-		this.name = (name == null || name.equals("") ? "noname_" + index : name);
+		this.name = (name == null || name.equals("") ? "noname_" + indexCounter : name);
 		this.x = x;
 		this.y = y;
 		this.dx = dx;
@@ -250,12 +252,12 @@ public class AbstractGameObject implements GameObject {
 	public void addDebugInfo() {
 		debugInfo.clear();
 		debugInfo.add(name);
-		debugInfo.add(String.format("pos:(%4.2f,%4.2f)", x, y));
+		debugInfo.add(String.format("pos:(%4.0f,%4.0f)", x, y));
 		debugInfo.add(String.format("spd:(%4.2f,%4.2f)", dx, dy));
 		debugInfo.add(String.format("lyr,prio(:(%d,%d)", layer, priority));
 		debugInfo.add(String.format("action:(%s)", action));
 		debugInfo.add(String.format("dir:(%s)", direction));
-		
+
 	}
 
 	/*

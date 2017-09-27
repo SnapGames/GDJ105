@@ -27,7 +27,7 @@ import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
  */
 public class TextObject extends AbstractGameObject {
 
-	private String text;
+	public String text;
 	private Font font;
 	private Color frontColor;
 	private Color shadowColor;
