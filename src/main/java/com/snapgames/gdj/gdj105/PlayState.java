@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -27,8 +28,10 @@ import com.snapgames.gdj.core.state.AbstractGameState;
 import com.snapgames.gdj.core.state.GameState;
 import com.snapgames.gdj.core.state.GameStateManager;
 import com.snapgames.gdj.core.ui.TextObject;
+import com.snapgames.gdj.gdj105.entity.Enemy;
 import com.snapgames.gdj.gdj105.entity.ItemContainerObject;
 import com.snapgames.gdj.gdj105.entity.JaugeObject;
+import com.snapgames.gdj.gdj105.entity.Player;
 
 /**
  * The Play State class defines default behavior for the playable game state.
@@ -44,7 +47,7 @@ public class PlayState extends AbstractGameState implements GameState {
 	 * objects to be animated on the game display.
 	 */
 	// Object moved by player
-	private AbstractGameObject player = null;
+	private Player player = null;
 	// list of other entities to demonstrate AbstractGameObject usage.
 	private List<AbstractGameObject> entities = new CopyOnWriteArrayList<>();
 
@@ -106,7 +109,7 @@ public class PlayState extends AbstractGameState implements GameState {
 		// prepare Game objects
 
 		// player (layer 1)
-		player = new AbstractGameObject("player", Game.WIDTH / 2, Game.HEIGHT / 2, 16, 16, 1, 1, Color.BLUE);
+		player = new Player("player", Game.WIDTH / 2, Game.HEIGHT / 2, 16, 16, 1, 1, Color.BLUE);
 		player.hSpeed = 0.05f;
 		player.vSpeed = 0.05f;
 		player.priority = 1;
@@ -359,6 +362,7 @@ public class PlayState extends AbstractGameState implements GameState {
 		case KeyEvent.VK_PAGE_DOWN:
 			if (score - 10 > 0) {
 				score -= 10;
+				removeAllObjectOfClass(Enemy.class, 10);
 			}
 			break;
 		case KeyEvent.VK_H:
@@ -371,8 +375,7 @@ public class PlayState extends AbstractGameState implements GameState {
 		// NPC (layers 3 & 4)
 		for (int i = 0; i < nb; i++) {
 
-			AbstractGameObject entity = new AbstractGameObject("entity_" + i, Game.WIDTH / 2, Game.HEIGHT / 2, 16, 16,
-					2, 1, Color.RED);
+			Enemy entity = new Enemy("entity_" + i, Game.WIDTH / 2, Game.HEIGHT / 2, 16, 16, 2, 1, Color.RED);
 			entity.x = ((float) Math.random() * Game.WIDTH) + ((Game.WIDTH / 2));
 			entity.y = ((float) Math.random() * Game.HEIGHT) + ((Game.HEIGHT / 2));
 			entity.dx = ((float) Math.random() * 0.05f) - 0.02f;
@@ -392,4 +395,26 @@ public class PlayState extends AbstractGameState implements GameState {
 		}
 
 	}
+
+	/**
+	 * remove a nbObjectoRemove number of object clazz
+	 * 
+	 * @param clazz
+	 * @param nbObjectToRemove
+	 */
+	private void removeAllObjectOfClass(Class<Enemy> clazz, int nbObjectToRemove) {
+		List<GameObject> toBeDeleted = new ArrayList<>();
+		int idx = nbObjectToRemove;
+		for (GameObject o : objects) {
+			if (o.getClass().equals(clazz)) {
+				toBeDeleted.add(o);
+				idx--;
+			}
+			if (idx <= 0) {
+				break;
+			}
+		}
+		objects.removeAll(toBeDeleted);
+	}
+
 }

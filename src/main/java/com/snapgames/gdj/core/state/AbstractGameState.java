@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -29,7 +30,7 @@ import com.snapgames.gdj.core.gfx.RenderHelper;
  * An Abstract Game State to manage all states of the Game !
  */
 public abstract class AbstractGameState implements GameState {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(AbstractGameState.class);
 
 	/**
@@ -88,6 +89,16 @@ public abstract class AbstractGameState implements GameState {
 		logger.debug("Add {} to the objects list", object.name);
 	}
 
+	protected void removeAllObjectOfClass(Class clazz) {
+		List<GameObject> toBeDeleted = new ArrayList<>();
+		for (GameObject o : objects) {
+			if (o.getClass().equals(clazz)) {
+				toBeDeleted.add(o);
+			}
+		}
+		objects.removeAll(toBeDeleted);
+	}
+
 	public void dispose(Game game) {
 		objects.clear();
 	}
@@ -129,7 +140,7 @@ public abstract class AbstractGameState implements GameState {
 		case KeyEvent.VK_D:
 			int debug = game.getDebug();
 			debug++;
-			debug=(debug>3?0:debug);
+			debug = (debug > 3 ? 0 : debug);
 			game.setDebug(debug);
 			break;
 		case KeyEvent.VK_S:
@@ -152,7 +163,7 @@ public abstract class AbstractGameState implements GameState {
 				if (layers[o.getLayer() - 1]) {
 					o.draw(game, g);
 					if (game.isDebug(1)) {
-						RenderHelper.drawDebugInfoObject(g, o, debugFont,game.getDebug());
+						RenderHelper.drawDebugInfoObject(g, o, debugFont, game.getDebug());
 					}
 				}
 			}
