@@ -360,7 +360,7 @@ public class PlayState extends AbstractGameState implements GameState {
 			score += 10;
 			break;
 		case KeyEvent.VK_PAGE_DOWN:
-			if (score - 10 > 0) {
+			if (score - 10 >= 0) {
 				score -= 10;
 				removeAllObjectOfClass(Enemy.class, 10);
 			}
