@@ -62,13 +62,20 @@ public class JaugeObject extends AbstractGameObject {
 	public void draw(Game game, Graphics2D g) {
 		g.setColor(Color.BLACK);
 		g.drawRect((int) x - 2, (int) y - 2, (int) width + 4, (int) height + 4);
-		g.setColor(Color.WHITE);
+		g.setColor(new Color(0.9f, 0.9f, 0.9f));
 		g.drawRect((int) x - 1, (int) y - 1, (int) width + 2, (int) height + 2);
-		int eWidth = (int) width * (maxValue / (value - minValue + 1));
+		g.setColor(Color.WHITE);
+		g.drawRect((int) x - 1, (int) y - 1, 1, 1);
+		int eWidth = (int) (width * (float) ((float) (value + 1) / (float) (maxValue - minValue)));
 		if (value > 0) {
 			g.setColor(color);
 			g.fillRect((int) x, (int) y, eWidth + 1, (int) height + 1);
-
 		}
+		g.setColor(new Color(0.0f,0.0f,0.0f,0.6f));
+		g.fillRect((int) x+eWidth, (int) y, width-eWidth, (int) height + 1);
+		g.setColor(Color.BLACK);
+		g.drawRect((int) x, (int) y, (int) width, (int) height);
+		g.drawLine((int) x + eWidth, (int) y, (int) x + eWidth, (int) y + height);
+
 	}
 }

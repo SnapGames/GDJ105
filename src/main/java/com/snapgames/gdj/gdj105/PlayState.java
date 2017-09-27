@@ -57,6 +57,8 @@ public class PlayState extends AbstractGameState implements GameState {
 
 	// score
 	private int score = 0;
+	
+	private Font scoreFont;
 
 	/**
 	 * internal Font to draw any text on the screen !
@@ -90,6 +92,7 @@ public class PlayState extends AbstractGameState implements GameState {
 		layers = new boolean[5];
 
 		font = game.getGraphics().getFont();
+		scoreFont = game.getGraphics().getFont().deriveFont(14.0f);
 		// prepare Game objects
 		player = new AbstractGameObject("player", game.getWidth() / (2 * game.getScale()),
 				game.getHeight() / (2 * game.getScale()), 16, 16, 1, 1, Color.BLUE);
@@ -123,15 +126,15 @@ public class PlayState extends AbstractGameState implements GameState {
 			addObject(entity);
 		}
 
-		scoreTextObject = new TextObject("score", 4, -4, String.format("%06d", score), font, 1, 1, Color.WHITE);
+		scoreTextObject = new TextObject("score", 4, -4, String.format("%06d", score), scoreFont, 1, 1, Color.WHITE);
 		addObject(scoreTextObject);
 
-		energy = new JaugeObject("energy", game.WIDTH - 50, 4, 42, 4, 1, 1, Color.RED);
+		energy = new JaugeObject("energy", game.WIDTH - 50, 4, 42, 4, 1, 1, new Color(1.0f,0.0f,0.0f,0.7f));
 		energy.minValue=0;
 		energy.maxValue=100;
 		energy.value=90;
 		addObject(energy);
-		mana = new JaugeObject("energy", game.WIDTH - 50, 12, 42, 4, 1, 1, Color.BLUE);
+		mana = new JaugeObject("energy", game.WIDTH - 50, 12, 42, 4, 1, 1,new Color(0.0f,0.0f,1.0f,0.9f));
 		mana.minValue=0;
 		mana.maxValue=100;
 		mana.value=20;
