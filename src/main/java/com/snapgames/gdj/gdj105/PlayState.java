@@ -13,8 +13,8 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
@@ -26,6 +26,7 @@ import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.AbstractGameState;
 import com.snapgames.gdj.core.state.GameState;
 import com.snapgames.gdj.core.state.GameStateManager;
+import com.snapgames.gdj.core.ui.JaugeObject;
 import com.snapgames.gdj.core.ui.TextObject;
 
 /**
@@ -44,13 +45,20 @@ public class PlayState extends AbstractGameState implements GameState {
 	// Object moved by player
 	private AbstractGameObject player = null;
 	// list of other entities to demonstrate AbstractGameObject usage.
-	private List<AbstractGameObject> entities = new ArrayList<>();
+	private List<AbstractGameObject> entities = new CopyOnWriteArrayList<>();
 
 	// Object moved by player
 	private TextObject scoreTextObject = null;
 
+	int dEnergy = 1;
+	private JaugeObject energy;
+	int dMana = 1;
+	private JaugeObject mana;
+
 	// score
 	private int score = 0;
+	
+	private Font scoreFont;
 
 	/**
 	 * internal Font to draw any text on the screen !
@@ -84,6 +92,7 @@ public class PlayState extends AbstractGameState implements GameState {
 		layers = new boolean[5];
 
 		font = game.getGraphics().getFont();
+		scoreFont = game.getGraphics().getFont().deriveFont(14.0f);
 		// prepare Game objects
 		player = new AbstractGameObject("player", game.getWidth() / (2 * game.getScale()),
 				game.getHeight() / (2 * game.getScale()), 16, 16, 1, 1, Color.BLUE);
@@ -117,8 +126,19 @@ public class PlayState extends AbstractGameState implements GameState {
 			addObject(entity);
 		}
 
-		scoreTextObject = new TextObject("score", 4, -4, String.format("%06d", score), font, 1, 1, Color.WHITE);
+		scoreTextObject = new TextObject("score", 4, -4, String.format("%06d", score), scoreFont, 1, 1, Color.WHITE);
 		addObject(scoreTextObject);
+
+		energy = new JaugeObject("energy", game.WIDTH - 50, 4, 42, 4, 1, 1, new Color(1.0f,0.0f,0.0f,0.7f));
+		energy.minValue=0;
+		energy.maxValue=100;
+		energy.value=90;
+		addObject(energy);
+		mana = new JaugeObject("energy", game.WIDTH - 50, 12, 42, 4, 1, 1,new Color(0.0f,0.0f,1.0f,0.9f));
+		mana.minValue=0;
+		mana.maxValue=100;
+		mana.value=20;
+		addObject(mana);
 	}
 
 	/*

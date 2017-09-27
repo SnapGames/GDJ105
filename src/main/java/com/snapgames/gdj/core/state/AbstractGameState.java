@@ -17,6 +17,9 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.GameObject;
@@ -26,6 +29,8 @@ import com.snapgames.gdj.core.gfx.RenderHelper;
  * An Abstract Game State to manage all states of the Game !
  */
 public abstract class AbstractGameState implements GameState {
+	
+	private static final Logger logger = LoggerFactory.getLogger(AbstractGameState.class);
 
 	/**
 	 * Internal rendering layers. by default 3 layers are initialized.
@@ -80,6 +85,7 @@ public abstract class AbstractGameState implements GameState {
 				return (ago1.layer > ago2.layer ? -1 : (ago1.priority > ago2.priority ? -1 : 1));
 			};
 		});
+		logger.debug("Add {} to the objects list", object.name);
 	}
 
 	public void dispose(Game game) {
