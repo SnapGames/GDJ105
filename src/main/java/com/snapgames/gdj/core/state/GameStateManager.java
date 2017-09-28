@@ -50,11 +50,6 @@ public class GameStateManager {
 	private Game game;
 
 	/**
-	 * List of GameState class to be instantiated on-demand.
-	 */
-	private Map<String, Class<? extends AbstractGameState>> statesClass = new ConcurrentHashMap<>();
-
-	/**
 	 * The internal buffer to store instances of the available states.
 	 */
 	private Map<String, GameState> states = new ConcurrentHashMap<>();

@@ -70,7 +70,6 @@ public class PlayState extends AbstractGameState implements GameState {
 	private Font font;
 	private Font helpFont;
 
-	private GameStateManager gsm = null;
 
 	/**
 	 * Flag to display Help.
@@ -82,7 +81,7 @@ public class PlayState extends AbstractGameState implements GameState {
 	}
 
 	public PlayState(GameStateManager gsm) {
-		this.gsm = gsm;
+		super(gsm);
 	}
 
 	/*

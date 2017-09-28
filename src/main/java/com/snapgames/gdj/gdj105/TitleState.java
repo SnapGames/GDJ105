@@ -60,28 +60,29 @@ public class TitleState extends AbstractGameState {
 		String copyrightLabel = Messages.getString("TitleState.label.copyright");
 
 		BufferedImage bgImg = ResourceManager.getImage("/res/images/background-large.jpg");
-		bgi = new ImageObject("background", bgImg, 0, (Game.HEIGHT-bgImg.getHeight())/2, 2, 1);
+		bgi = new ImageObject("background", bgImg, 0, (Game.HEIGHT - bgImg.getHeight()) / 2, 2, 1);
 		bgi.dx = 0.02f;
 		addObject(bgi);
 
 		TextObject titleText = new TextObject("title",
-				(int) (game.WIDTH - titleFont.getStringBounds(titleLabel, frc).getWidth()) / 2, 5, titleLabel,
+				(int) (Game.WIDTH - titleFont.getStringBounds(titleLabel, frc).getWidth()) / 2, 5, titleLabel,
 				titleFont, 1, 1, Color.WHITE);
 		addObject(titleText);
 
 		TextObject msgText = new TextObject("start",
-				(int) (game.WIDTH - menuItemFont.getStringBounds(startLabel, frc).getWidth()) / 2, 100, startLabel,
+				(int) (Game.WIDTH - menuItemFont.getStringBounds(startLabel, frc).getWidth()) / 2, 100, startLabel,
 				menuItemFont, 1, 1, Color.WHITE);
 		addObject(msgText);
 
 		TextObject cpyText = new TextObject("copyright",
-				(int) (game.WIDTH - menuItemFont.getStringBounds(copyrightLabel, frc).getWidth()) / 2, game.HEIGHT - 30,
+				(int) (Game.WIDTH - menuItemFont.getStringBounds(copyrightLabel, frc).getWidth()) / 2, Game.HEIGHT - 30,
 				copyrightLabel, debugFont, 2, 1, Color.WHITE);
 		addObject(cpyText);
 
 		// activate needed layers
 		layers[0] = true;
 		layers[1] = true;
+		logger.info("State TitleState initialized");
 	}
 
 	@Override
@@ -91,7 +92,7 @@ public class TitleState extends AbstractGameState {
 	@Override
 	public void update(Game game, long dt) {
 		bgi.x = bgi.x - bgi.dx * dt;
-		if (bgi.x < -game.WIDTH) {
+		if (bgi.x < -Game.WIDTH) {
 			bgi.x = 0.0f;
 		}
 	}

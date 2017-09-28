@@ -12,7 +12,6 @@ package com.snapgames.gdj.gdj105.entity;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
@@ -61,15 +60,17 @@ public class ItemContainerObject extends AbstractGameObject {
 		g.setColor(Color.BLACK);
 		g.drawRect((int) x - 1, (int) y - 1, width + 2, height + 2);
 		g.setColor(backgroundColor);
-		g.fillRect((int) x, (int) y, width+1, height+1);
+		g.fillRect((int) x, (int) y, width + 1, height + 1);
 		if (image != null) {
 			g.drawImage(image, (int) x, (int) y, null);
 		}
 		if (!attributes.isEmpty()) {
 			if (attributes.containsKey("items")) {
 				g.setFont(font);
-				//g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
-				RenderHelper.drawShadowString(g, attributes.get("items").toString(), (int)x+17, (int)y+20, Color.WHITE, backgroundColor, TextPosition.RIGHT, 2);
+				// g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
+				// RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
+				RenderHelper.drawShadowString(g, attributes.get("items").toString(), (int) x + 17, (int) y + 20,
+						Color.WHITE, backgroundColor, TextPosition.RIGHT, 2);
 			}
 		}
 	};

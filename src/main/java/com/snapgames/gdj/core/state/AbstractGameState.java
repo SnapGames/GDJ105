@@ -34,6 +34,11 @@ public abstract class AbstractGameState implements GameState {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractGameState.class);
 
 	/**
+	 * Referring GameStateManager
+	 */
+	protected GameStateManager gsm = null;
+
+	/**
 	 * Internal rendering layers. by default 3 layers are initialized.
 	 */
 	protected boolean[] layers = new boolean[3];
@@ -58,6 +63,10 @@ public abstract class AbstractGameState implements GameState {
 	 */
 	public AbstractGameState() {
 		super();
+	}
+
+	public AbstractGameState(GameStateManager gsm) {
+		this.gsm = gsm;
 	}
 
 	/*
@@ -89,7 +98,7 @@ public abstract class AbstractGameState implements GameState {
 		logger.debug("Add {} to the objects list", object.name);
 	}
 
-	protected void removeAllObjectOfClass(Class clazz) {
+	protected void removeAllObjectOfClass(Class<? extends AbstractGameObject> clazz) {
 		List<GameObject> toBeDeleted = new ArrayList<>();
 		for (GameObject o : objects) {
 			if (o.getClass().equals(clazz)) {
