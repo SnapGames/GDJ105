@@ -382,6 +382,7 @@ public class PlayState extends AbstractGameState implements GameState {
 
 	private void generateEnemies(int nb) {
 		// NPC (layers 3 & 4)
+		int halfNb = nb/2;
 		for (int i = 0; i < nb; i++) {
 
 			Enemy entity = new Enemy("entity_" + i, Game.WIDTH / 2, Game.HEIGHT / 2, 16, 16, 2, 1, Color.RED);
@@ -392,7 +393,7 @@ public class PlayState extends AbstractGameState implements GameState {
 			entity.hSpeed = 0.042f;
 			entity.vSpeed = 0.042f;
 
-			if (i < 3) {
+			if (i < halfNb) {
 				entity.layer = 3;
 				entity.color = Color.MAGENTA;
 			} else {
