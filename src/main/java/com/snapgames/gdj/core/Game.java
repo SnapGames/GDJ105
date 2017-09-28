@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 
@@ -34,6 +35,8 @@ public class Game extends JPanel {
 	public final static int WIDTH = 320;
 	public final static int HEIGHT = 200;
 	public final static int SCALE = 3;
+
+	public final static Rectangle bbox = new Rectangle(0, 0, WIDTH, HEIGHT);
 
 	/**
 	 * The title for the game instance.

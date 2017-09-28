@@ -16,6 +16,8 @@ import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.slf4j.Logger;
@@ -32,6 +34,7 @@ import com.snapgames.gdj.core.gfx.RenderHelper;
 public abstract class AbstractGameState implements GameState {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractGameState.class);
+	public Map<String, Integer> statistics = new ConcurrentHashMap<>();
 
 	/**
 	 * Referring GameStateManager
@@ -95,6 +98,7 @@ public abstract class AbstractGameState implements GameState {
 				return (ago1.layer > ago2.layer ? -1 : (ago1.priority > ago2.priority ? -1 : 1));
 			};
 		});
+		statistics.put("objectCount", objects.size());
 		logger.debug("Add {} to the objects list", object.name);
 	}
 
@@ -167,17 +171,29 @@ public abstract class AbstractGameState implements GameState {
 	 * .core.Game, java.awt.Graphics2D)
 	 */
 	public void render(Game game, Graphics2D g) {
+		int renderedObjectCount = 0;
 		if (!objects.isEmpty()) {
 			for (GameObject o : objects) {
-				if (layers[o.getLayer() - 1]) {
+				if (screenContainsObject(o) && layers[o.getLayer() - 1]) {
+					renderedObjectCount++;
 					o.draw(game, g);
 					if (game.isDebug(1)) {
 						RenderHelper.drawDebugInfoObject(g, o, debugFont, game.getDebug());
 					}
 				}
 			}
+			statistics.put("renderedObject", renderedObjectCount);
 		}
+		if (game.isDebug(1)) {
+			RenderHelper.drawShadowString(g, String.format("OCount:%04d,RCount:%04d", statistics.get("objectCount"),
+					statistics.get("renderedObject")), 4, 180, Color.GREEN, Color.BLACK);
+		}
+	}
 
+	private boolean screenContainsObject(GameObject o) {
+		AbstractGameObject ago = (AbstractGameObject) o;
+
+		return true;//Game.bbox.contains(ago.rectangle);
 	}
 
 }

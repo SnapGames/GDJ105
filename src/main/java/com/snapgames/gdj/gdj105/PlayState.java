@@ -70,7 +70,6 @@ public class PlayState extends AbstractGameState implements GameState {
 	private Font font;
 	private Font helpFont;
 
-
 	/**
 	 * Flag to display Help.
 	 */
@@ -119,7 +118,7 @@ public class PlayState extends AbstractGameState implements GameState {
 		generateEnemies(10);
 
 		// HUD Definition (layer 1)
-		scoreTextObject = new TextObject("score", 4, -4, String.format("%06d", score), scoreFont, 1, 1, Color.WHITE);
+		scoreTextObject = new TextObject("score", 4, 0, String.format("%06d", score), scoreFont, 1, 1, Color.WHITE);
 		addObject(scoreTextObject);
 
 		energy = new JaugeObject("energy", Game.WIDTH - 50, 4, 42, 4, 1, 1, new Color(1.0f, 0.0f, 0.0f, 0.7f));
@@ -332,7 +331,13 @@ public class PlayState extends AbstractGameState implements GameState {
 	@Override
 	public void keyReleased(Game game, KeyEvent e) {
 		super.keyReleased(game, e);
-
+		int nbElem = 10;
+		if (e.isControlDown()) {
+			nbElem += 50;
+		}
+		if (e.isShiftDown()) {
+			nbElem += 100;
+		}
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_PAUSE:
 		case KeyEvent.VK_P:
@@ -355,14 +360,19 @@ public class PlayState extends AbstractGameState implements GameState {
 			layers[3] = !layers[3];
 			break;
 		case KeyEvent.VK_PAGE_UP:
-			generateEnemies(10);
-			score += 10;
+			generateEnemies(nbElem);
+			score += nbElem;
 			break;
 		case KeyEvent.VK_PAGE_DOWN:
-			if (score - 10 >= 0) {
-				score -= 10;
-				removeAllObjectOfClass(Enemy.class, 10);
+			if (score - nbElem >= 0) {
+				score -= nbElem;
+				removeAllObjectOfClass(Enemy.class, nbElem);
 			}
+			break;
+		case KeyEvent.VK_BACK_SPACE:
+		case KeyEvent.VK_DELETE:
+			removeAllObjectOfClass(Enemy.class);
+			score = 0;
 			break;
 		case KeyEvent.VK_H:
 			isHelp = !isHelp;
