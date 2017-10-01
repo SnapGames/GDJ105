@@ -108,10 +108,7 @@ public class PlayState extends AbstractGameState implements GameState {
 
 		// player (layer 1)
 		player = new Player("player", Game.WIDTH / 2, Game.HEIGHT / 2, 16, 16, 1, 1, Color.BLUE);
-		player.hSpeed = 0.05f;
-		player.vSpeed = 0.05f;
-		player.priority = 1;
-		player.layer = 2;
+
 		addObject(player);
 
 		// NPC
@@ -156,6 +153,19 @@ public class PlayState extends AbstractGameState implements GameState {
 	public void input(Game game, InputHandler input) {
 		// left / right
 		if (player != null) {
+			if(input.getKeyPressed(KeyEvent.VK_SHIFT) && input.getKeyPressed(KeyEvent.VK_CONTROL)) {
+				player.hSpeed=0.4f;
+				player.vSpeed=0.4f;
+			}else if(input.getKeyPressed(KeyEvent.VK_SHIFT)) {
+				player.hSpeed=0.1f;
+				player.vSpeed=0.1f;
+			}else if(input.getKeyPressed(KeyEvent.VK_CONTROL)) {
+				player.hSpeed=0.2f;
+				player.vSpeed=0.2f;
+			}else {
+				player.hSpeed=0.05f;
+				player.vSpeed=0.05f;
+			}
 			if (input.getKeyPressed(KeyEvent.VK_LEFT)) {
 				player.dx = -player.hSpeed;
 				player.action = Actions.WALK;
@@ -390,8 +400,7 @@ public class PlayState extends AbstractGameState implements GameState {
 			entity.y = ((float) Math.random() * Game.HEIGHT) + ((Game.HEIGHT / 2));
 			entity.dx = ((float) Math.random() * 0.05f) - 0.02f;
 			entity.dy = ((float) Math.random() * 0.05f) - 0.02f;
-			entity.hSpeed = 0.042f;
-			entity.vSpeed = 0.042f;
+
 
 			if (i < halfNb) {
 				entity.layer = 3;

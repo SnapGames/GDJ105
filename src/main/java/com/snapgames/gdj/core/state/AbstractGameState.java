@@ -193,7 +193,7 @@ public abstract class AbstractGameState implements GameState {
 	private boolean screenContainsObject(GameObject o) {
 		AbstractGameObject ago = (AbstractGameObject) o;
 
-		return true;//Game.bbox.contains(ago.rectangle);
+		return Game.bbox.contains(ago.rectangle);
 	}
 
 }
