@@ -4,8 +4,9 @@ import java.awt.Graphics2D;
 import java.util.List;
 
 import com.snapgames.gdj.core.Game;
+import com.snapgames.gdj.core.collision.Sizeable;
 
-public interface GameObject {
+public interface GameObject extends Sizeable{
 
 	/**
 	 * Update object position.

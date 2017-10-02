@@ -1,9 +1,24 @@
+/**
+ * SnapGames
+ * 
+ * Game Development Java
+ * 
+ * GDJ105
+ * 
+ * @year 2017
+ */
 package com.snapgames.gdj.gdj105.entity;
 
 import java.awt.Color;
 
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 
+/**
+ * The Player entity.
+ * 
+ * @author Frédéric Delorme
+ *
+ */
 public class Player extends AbstractGameObject {
 
 	/**
@@ -11,7 +26,6 @@ public class Player extends AbstractGameObject {
 	 */
 	public Player() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -26,7 +40,13 @@ public class Player extends AbstractGameObject {
 	 */
 	public Player(String name, int x, int y, int width, int height, int layer, int priority, Color color) {
 		super(name, x, y, width, height, layer, priority, color);
-		// TODO Auto-generated constructor stub
+		this.hSpeed = 0.05f;
+		this.vSpeed = 0.05f;
+		this.priority = 1;
+		this.layer = 2;
+		attributes.put("energy", new Integer(100));
+		attributes.put("mana", new Integer(100));
+		attributes.put("level", new Integer(1));
 	}
 
 	/**
@@ -38,7 +58,6 @@ public class Player extends AbstractGameObject {
 	 */
 	public Player(String name, int x, int y, int dx, int dy) {
 		super(name, x, y, dx, dy);
-		// TODO Auto-generated constructor stub
 	}
 
 }

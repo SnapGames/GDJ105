@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.snapgames.gdj.core.Game;
+import com.snapgames.gdj.core.collision.QuadTree;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.GameObject;
 import com.snapgames.gdj.core.gfx.RenderHelper;
@@ -34,7 +35,10 @@ import com.snapgames.gdj.core.gfx.RenderHelper;
 public abstract class AbstractGameState implements GameState {
 
 	private static final Logger logger = LoggerFactory.getLogger(AbstractGameState.class);
+
 	public Map<String, Integer> statistics = new ConcurrentHashMap<>();
+
+	public QuadTree quadTree;
 
 	/**
 	 * Referring GameStateManager
@@ -81,6 +85,7 @@ public abstract class AbstractGameState implements GameState {
 	@Override
 	public void initialize(Game game) {
 		debugFont = game.getRender().getFont().deriveFont(9f);
+		quadTree = new QuadTree(Game.WIDTH, Game.HEIGHT);
 	}
 
 	/**
@@ -90,6 +95,7 @@ public abstract class AbstractGameState implements GameState {
 	 * @param object
 	 */
 	protected void addObject(AbstractGameObject object) {
+		// add object to rendering list
 		objects.add(object);
 		objects.sort(new Comparator<GameObject>() {
 			public int compare(GameObject o1, GameObject o2) {
@@ -193,7 +199,7 @@ public abstract class AbstractGameState implements GameState {
 	private boolean screenContainsObject(GameObject o) {
 		AbstractGameObject ago = (AbstractGameObject) o;
 
-		return true;//Game.bbox.contains(ago.rectangle);
+		return Game.bbox.contains(ago.rectangle);
 	}
 
 }
