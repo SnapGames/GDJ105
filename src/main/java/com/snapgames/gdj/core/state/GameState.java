@@ -13,6 +13,7 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 
 import com.snapgames.gdj.core.Game;
+import com.snapgames.gdj.core.entity.CameraObject;
 import com.snapgames.gdj.core.io.InputHandler;
 
 /**
@@ -65,23 +66,34 @@ public interface GameState {
 	public void dispose(Game game);
 
 	/**
-	 * Intercept Key typed Event 
+	 * Intercept Key typed Event
+	 * 
 	 * @param game
 	 * @param e
 	 */
 	public void keyTyped(Game game, KeyEvent e);
 
 	/**
-	 * Intercept Key pressed Event 
+	 * Intercept Key pressed Event
+	 * 
 	 * @param game
 	 * @param e
 	 */
 	public void keyPressed(Game game, KeyEvent e);
 
 	/**
-	 * Intercept Key released Event 
+	 * Intercept Key released Event
+	 * 
 	 * @param game
 	 * @param e
 	 */
 	public void keyReleased(Game game, KeyEvent e);
+
+	/**
+	 * return the coirrent active camera object.
+	 * 
+	 * @return
+	 */
+	public CameraObject getDefaultCamera();
+
 }

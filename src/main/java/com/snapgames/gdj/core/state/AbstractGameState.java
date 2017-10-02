@@ -74,7 +74,7 @@ public abstract class AbstractGameState implements GameState {
 	/**
 	 * current active camera.
 	 */
-	protected CameraObject defaultCamera=null;;
+	protected CameraObject defaultCamera = null;;
 
 	/**
 	 * Default constructor for the AbstractGameState
@@ -209,17 +209,40 @@ public abstract class AbstractGameState implements GameState {
 		}
 	}
 
+	/**
+	 * Test if object is in screen.
+	 * 
+	 * @param o
+	 * @return
+	 */
 	private boolean screenContainsObject(GameObject o) {
 		AbstractGameObject ago = (AbstractGameObject) o;
 
 		return Game.bbox.contains(ago.rectangle);
 	}
 
+	/**
+	 * Add a Camera to the set.
+	 * 
+	 * @param cameraObject
+	 */
 	public void addCamera(CameraObject cameraObject) {
 		cameras.add(cameraObject);
 	}
 
-	public void setCamera(CameraObject camera) {
-		this.defaultCamera = camera;
+	/**
+	 * @return the defaultCamera
+	 */
+	public CameraObject getDefaultCamera() {
+		return defaultCamera;
 	}
+
+	/**
+	 * @param defaultCamera
+	 *            the defaultCamera to set
+	 */
+	public void setDefaultCamera(CameraObject defaultCamera) {
+		this.defaultCamera = defaultCamera;
+	}
+
 }

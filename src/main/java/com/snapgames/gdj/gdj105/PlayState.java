@@ -24,6 +24,7 @@ import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.collision.Sizeable;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.Actions;
+import com.snapgames.gdj.core.entity.CameraObject;
 import com.snapgames.gdj.core.entity.Direction;
 import com.snapgames.gdj.core.entity.GameObject;
 import com.snapgames.gdj.core.gfx.RenderHelper;
@@ -146,6 +147,10 @@ public class PlayState extends AbstractGameState implements GameState {
 			itemContainers[i].font = game.getFont().deriveFont(8.0f);
 			addObject(itemContainers[i]);
 		}
+
+		CameraObject cam1 = new CameraObject("cam1", player, 0.018f);
+		cameras.add(cam1);
+		setDefaultCamera(cam1);
 
 	}
 
