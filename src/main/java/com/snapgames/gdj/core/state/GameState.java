@@ -64,10 +64,24 @@ public interface GameState {
 	 */
 	public void dispose(Game game);
 
+	/**
+	 * Intercept Key typed Event 
+	 * @param game
+	 * @param e
+	 */
 	public void keyTyped(Game game, KeyEvent e);
 
+	/**
+	 * Intercept Key pressed Event 
+	 * @param game
+	 * @param e
+	 */
 	public void keyPressed(Game game, KeyEvent e);
 
+	/**
+	 * Intercept Key released Event 
+	 * @param game
+	 * @param e
+	 */
 	public void keyReleased(Game game, KeyEvent e);
-
 }

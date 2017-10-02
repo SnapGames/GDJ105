@@ -26,6 +26,7 @@ import org.slf4j.LoggerFactory;
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.collision.QuadTree;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
+import com.snapgames.gdj.core.entity.CameraObject;
 import com.snapgames.gdj.core.entity.GameObject;
 import com.snapgames.gdj.core.gfx.RenderHelper;
 
@@ -64,6 +65,16 @@ public abstract class AbstractGameState implements GameState {
 	 * List of managed objects. Use a list that can put up with concurrent access.
 	 */
 	protected List<GameObject> objects = new CopyOnWriteArrayList<>();
+
+	/**
+	 * List Of camera
+	 */
+	protected List<CameraObject> cameras = new CopyOnWriteArrayList<>();
+
+	/**
+	 * current active camera.
+	 */
+	protected CameraObject defaultCamera=null;;
 
 	/**
 	 * Default constructor for the AbstractGameState
@@ -191,8 +202,10 @@ public abstract class AbstractGameState implements GameState {
 			statistics.put("renderedObject", renderedObjectCount);
 		}
 		if (game.isDebug(1)) {
-			RenderHelper.drawShadowString(g, String.format("FPS:%03d, OCount:%04d, RCount:%04d", game.framesPerSecond, statistics.get("objectCount"),
-					statistics.get("renderedObject")), 4, 190, Color.GRAY, Color.BLACK);
+			RenderHelper.drawShadowString(g,
+					String.format("FPS:%03d, OCount:%04d, RCount:%04d", game.framesPerSecond,
+							statistics.get("objectCount"), statistics.get("renderedObject")),
+					4, 190, Color.GRAY, Color.BLACK);
 		}
 	}
 
@@ -202,4 +215,11 @@ public abstract class AbstractGameState implements GameState {
 		return Game.bbox.contains(ago.rectangle);
 	}
 
+	public void addCamera(CameraObject cameraObject) {
+		cameras.add(cameraObject);
+	}
+
+	public void setCamera(CameraObject camera) {
+		this.defaultCamera = camera;
+	}
 }

@@ -35,17 +35,41 @@ import com.snapgames.gdj.core.ui.Window;
  */
 public class Game extends JPanel {
 
+	/**
+	 * Internal logger.
+	 */
 	public static final Logger logger = LoggerFactory.getLogger(Game.class);
 
+	/**
+	 * Game screen width.
+	 */
 	public final static int WIDTH = 320;
+	/**
+	 * Game screen height.
+	 */
 	public final static int HEIGHT = 200;
+	/**
+	 * game screen scaling
+	 */
 	public final static int SCALE = 3;
 
+	/**
+	 * Number of frame per seconds
+	 */
 	public long FPS = 60;
+	/**
+	 * duration of a frame.
+	 */
 	public long fpsTargetTime = 1000 / 60;
 
+	/**
+	 * Number of frames in a second.
+	 */
 	public long framesPerSecond = 0;
 
+	/**
+	 * The rectangle containing the Game screen.
+	 */
 	public final static Rectangle bbox = new Rectangle(0, 0, WIDTH, HEIGHT);
 
 	/**
@@ -153,6 +177,7 @@ public class Game extends JPanel {
 			// copy buffer
 			drawToScreen();
 
+			// manage wait time
 			long laps = System.currentTimeMillis() - currentTime;
 			second += laps;
 			framesCounter += 1;
@@ -161,7 +186,6 @@ public class Game extends JPanel {
 				framesPerSecond = framesCounter;
 				framesCounter = 0;
 			}
-			lastTime = currentTime;
 			long wait = fpsTargetTime - laps;
 			if (wait > 0) {
 				try {
@@ -170,6 +194,8 @@ public class Game extends JPanel {
 					logger.error("unable to wait 1 ms");
 				}
 			}
+			lastTime = currentTime;
+			
 		}
 	}
 
