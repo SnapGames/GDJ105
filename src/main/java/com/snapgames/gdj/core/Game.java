@@ -41,6 +41,11 @@ public class Game extends JPanel {
 	public final static int HEIGHT = 200;
 	public final static int SCALE = 3;
 
+	public long FPS = 60;
+	public long fpsTargetTime = 1000 / 60;
+
+	public long framesPerSecond = 0;
+
 	public final static Rectangle bbox = new Rectangle(0, 0, WIDTH, HEIGHT);
 
 	/**
@@ -131,6 +136,8 @@ public class Game extends JPanel {
 	private void loop() {
 		long currentTime = System.currentTimeMillis();
 		long lastTime = currentTime;
+		long second = 0;
+		long framesCounter = 0;
 		while (!exit) {
 			currentTime = System.currentTimeMillis();
 			long dt = currentTime - lastTime;
@@ -146,14 +153,23 @@ public class Game extends JPanel {
 			// copy buffer
 			drawToScreen();
 
-			lastTime = currentTime;
-			try {
-				Thread.sleep(1);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				logger.error("unable to wait 1 ms");
+			long laps = System.currentTimeMillis() - currentTime;
+			second += laps;
+			framesCounter += 1;
+			if (second > 1000) {
+				second = 0;
+				framesPerSecond = framesCounter;
+				framesCounter = 0;
 			}
-			;
+			lastTime = currentTime;
+			long wait = fpsTargetTime - laps;
+			if (wait > 0) {
+				try {
+					Thread.sleep(wait);
+				} catch (InterruptedException e) {
+					logger.error("unable to wait 1 ms");
+				}
+			}
 		}
 	}
 
