@@ -14,6 +14,8 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.snapgames.gdj.core.Game;
 
@@ -77,6 +79,8 @@ public class AbstractGameObject implements GameObject {
 	public Actions action = Actions.IDLE;
 
 	public Direction direction = Direction.NONE;
+
+	public Map<String, Object> attributes = new ConcurrentHashMap<>();
 
 	/**
 	 * Rendering depth and priority.
@@ -180,6 +184,7 @@ public class AbstractGameObject implements GameObject {
 		if (Math.abs(dy) < 0.01) {
 			dy = 0.0f;
 		}
+		rectangle.setBounds((int) x, (int) y, width, height);
 
 	}
 
@@ -268,6 +273,26 @@ public class AbstractGameObject implements GameObject {
 	@Override
 	public List<String> getDebugInfo() {
 		return debugInfo;
+	}
+
+	@Override
+	public float getX() {
+		return x;
+	}
+
+	@Override
+	public float getY() {
+		return y;
+	}
+
+	@Override
+	public float getWidth() {
+		return width;
+	}
+
+	@Override
+	public float getHeight() {
+		return height;
 	}
 
 }

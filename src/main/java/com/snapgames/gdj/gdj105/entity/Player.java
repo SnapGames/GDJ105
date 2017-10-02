@@ -44,6 +44,9 @@ public class Player extends AbstractGameObject {
 		this.vSpeed = 0.05f;
 		this.priority = 1;
 		this.layer = 2;
+		attributes.put("energy", new Integer(100));
+		attributes.put("mana", new Integer(100));
+		attributes.put("level", new Integer(1));
 	}
 
 	/**

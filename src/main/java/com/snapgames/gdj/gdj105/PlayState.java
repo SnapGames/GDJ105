@@ -17,7 +17,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.snapgames.gdj.core.Game;
+import com.snapgames.gdj.core.collision.Sizeable;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.Actions;
 import com.snapgames.gdj.core.entity.Direction;
@@ -28,6 +32,7 @@ import com.snapgames.gdj.core.state.AbstractGameState;
 import com.snapgames.gdj.core.state.GameState;
 import com.snapgames.gdj.core.state.GameStateManager;
 import com.snapgames.gdj.core.ui.TextObject;
+import com.snapgames.gdj.gdj105.entity.Eatable;
 import com.snapgames.gdj.gdj105.entity.Enemy;
 import com.snapgames.gdj.gdj105.entity.ItemContainerObject;
 import com.snapgames.gdj.gdj105.entity.JaugeObject;
@@ -75,6 +80,7 @@ public class PlayState extends AbstractGameState implements GameState {
 	 */
 	private boolean isHelp = false;
 	private ItemContainerObject[] itemContainers;
+	private static final Logger logger = LoggerFactory.getLogger(PlayState.class);
 
 	public PlayState() {
 	}
@@ -153,18 +159,18 @@ public class PlayState extends AbstractGameState implements GameState {
 	public void input(Game game, InputHandler input) {
 		// left / right
 		if (player != null) {
-			if(input.getKeyPressed(KeyEvent.VK_SHIFT) && input.getKeyPressed(KeyEvent.VK_CONTROL)) {
-				player.hSpeed=0.4f;
-				player.vSpeed=0.4f;
-			}else if(input.getKeyPressed(KeyEvent.VK_SHIFT)) {
-				player.hSpeed=0.1f;
-				player.vSpeed=0.1f;
-			}else if(input.getKeyPressed(KeyEvent.VK_CONTROL)) {
-				player.hSpeed=0.2f;
-				player.vSpeed=0.2f;
-			}else {
-				player.hSpeed=0.05f;
-				player.vSpeed=0.05f;
+			if (input.getKeyPressed(KeyEvent.VK_SHIFT) && input.getKeyPressed(KeyEvent.VK_CONTROL)) {
+				player.hSpeed = 0.4f;
+				player.vSpeed = 0.4f;
+			} else if (input.getKeyPressed(KeyEvent.VK_SHIFT)) {
+				player.hSpeed = 0.1f;
+				player.vSpeed = 0.1f;
+			} else if (input.getKeyPressed(KeyEvent.VK_CONTROL)) {
+				player.hSpeed = 0.2f;
+				player.vSpeed = 0.2f;
+			} else {
+				player.hSpeed = 0.05f;
+				player.vSpeed = 0.05f;
 			}
 			if (input.getKeyPressed(KeyEvent.VK_LEFT)) {
 				player.dx = -player.hSpeed;
@@ -210,8 +216,11 @@ public class PlayState extends AbstractGameState implements GameState {
 	 */
 	@Override
 	public void update(Game game, long dt) {
+		quadTree.clear();
 		for (GameObject o : objects) {
 			o.update(game, dt);
+			// inert object into quadtree for collision detection.
+			quadTree.insert(o);
 		}
 
 		int winborder = 4;
@@ -249,6 +258,62 @@ public class PlayState extends AbstractGameState implements GameState {
 		if (scoreTextObject != null) {
 			scoreTextObject.text = String.format("%06d", score);
 		}
+
+		manageCollision();
+		energy.value = (Integer) player.attributes.get("energy");
+		mana.value = (Integer) player.attributes.get("mana");
+	}
+
+	/**
+	 * Manage collision from Player to other objects.
+	 */
+	private void manageCollision() {
+		List<Sizeable> collisionList = new CopyOnWriteArrayList<>();
+		quadTree.retrieve(collisionList, player);
+		if (collisionList != null && !collisionList.isEmpty()) {
+			for (Sizeable s : collisionList) {
+				AbstractGameObject ago = (AbstractGameObject) s;
+				if (player.rectangle.intersects(ago.rectangle)) {
+					int d = 0;
+					if (ago.getClass().equals(Eatable.class)) {
+						d = (Integer) ago.attributes.get("power");
+						// eat only if energy low.
+						if (addValueToAttribute(player, "energy", d, 0, 100)) {
+							objects.remove(ago);
+						}
+					}
+					if (ago.getClass().equals(Enemy.class)) {
+						addValueToAttribute(player, "energy", -1, 0, 100);
+					}
+				}
+			}
+		}
+	}
+
+	/**
+	 * add <code>d</code> to attribute <code>name</code> from game object
+	 * <code>ago</code> and verify <code>min</code> and <code>max</code> value. If
+	 * value as been updated, return <code>true</code>, else <code>false</code>.
+	 * 
+	 * @param ago
+	 * @param name
+	 * @param d
+	 * @param min
+	 * @param max
+	 * @return
+	 */
+	private boolean addValueToAttribute(AbstractGameObject ago, String name, int d, int min, int max) {
+		if (ago != null && ago.attributes != null && ago.attributes.containsKey(name)) {
+			int value = (Integer) ago.attributes.get(name);
+			if (value + d < max && value + d > min) {
+				value += d;
+				player.attributes.put(name, value);
+				return true;
+			}
+		} else {
+			logger.error("GameObject {} does not have property named {}", ago.name, name);
+		}
+		return false;
 	}
 
 	private void computeEntityAction(AbstractGameObject o) {
@@ -377,11 +442,13 @@ public class PlayState extends AbstractGameState implements GameState {
 			if (score - nbElem >= 0) {
 				score -= nbElem;
 				removeAllObjectOfClass(Enemy.class, nbElem);
+				removeAllObjectOfClass(Eatable.class, nbElem);
 			}
 			break;
 		case KeyEvent.VK_BACK_SPACE:
 		case KeyEvent.VK_DELETE:
 			removeAllObjectOfClass(Enemy.class);
+			removeAllObjectOfClass(Eatable.class);
 			score = 0;
 			break;
 		case KeyEvent.VK_H:
@@ -392,22 +459,26 @@ public class PlayState extends AbstractGameState implements GameState {
 
 	private void generateEnemies(int nb) {
 		// NPC (layers 3 & 4)
-		int halfNb = nb/2;
+		int halfNb = nb / 2;
 		for (int i = 0; i < nb; i++) {
 
-			Enemy entity = new Enemy("entity_" + i, Game.WIDTH / 2, Game.HEIGHT / 2, 16, 16, 2, 1, Color.RED);
-			entity.x = ((float) Math.random() * Game.WIDTH) + ((Game.WIDTH / 2));
-			entity.y = ((float) Math.random() * Game.HEIGHT) + ((Game.HEIGHT / 2));
-			entity.dx = ((float) Math.random() * 0.05f) - 0.02f;
-			entity.dy = ((float) Math.random() * 0.05f) - 0.02f;
-
-
+			AbstractGameObject entity = null;
 			if (i < halfNb) {
+				entity = new Enemy("enemy_" + i, Game.WIDTH / 2, Game.HEIGHT / 2, 16, 16, 2, 1, Color.RED);
+				entity.x = ((float) Math.random() * Game.WIDTH) + ((Game.WIDTH / 2));
+				entity.y = ((float) Math.random() * Game.HEIGHT) + ((Game.HEIGHT / 2));
+				entity.dx = ((float) Math.random() * 0.05f) - 0.02f;
+				entity.dy = ((float) Math.random() * 0.05f) - 0.02f;
+				entity.color = Color.RED;
 				entity.layer = 3;
-				entity.color = Color.MAGENTA;
 			} else {
-				entity.layer = 4;
+				entity = new Eatable("eatable_" + i, Game.WIDTH / 2, Game.HEIGHT / 2, 16, 16, 2, 1, Color.RED);
+				entity.x = ((float) Math.random() * Game.WIDTH) + ((Game.WIDTH / 2));
+				entity.y = ((float) Math.random() * Game.HEIGHT) + ((Game.HEIGHT / 2));
+				entity.dx = ((float) Math.random() * 0.05f) - 0.02f;
+				entity.dy = ((float) Math.random() * 0.05f) - 0.02f;
 				entity.color = Color.CYAN;
+				entity.layer = 4;
 			}
 			entities.add(entity);
 			addObject(entity);
@@ -421,7 +492,7 @@ public class PlayState extends AbstractGameState implements GameState {
 	 * @param clazz
 	 * @param nbObjectToRemove
 	 */
-	private void removeAllObjectOfClass(Class<Enemy> clazz, int nbObjectToRemove) {
+	private void removeAllObjectOfClass(Class<? extends AbstractGameObject> clazz, int nbObjectToRemove) {
 		List<GameObject> toBeDeleted = new ArrayList<>();
 		int idx = nbObjectToRemove;
 		for (GameObject o : objects) {
