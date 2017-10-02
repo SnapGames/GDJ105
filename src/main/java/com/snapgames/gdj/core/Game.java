@@ -19,6 +19,9 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.snapgames.gdj.core.gfx.ImageUtils;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.GameStateManager;
@@ -32,9 +35,16 @@ import com.snapgames.gdj.core.ui.Window;
  */
 public class Game extends JPanel {
 
+	public static final Logger logger = LoggerFactory.getLogger(Game.class);
+
 	public final static int WIDTH = 320;
 	public final static int HEIGHT = 200;
 	public final static int SCALE = 3;
+
+	public long FPS = 60;
+	public long fpsTargetTime = 1000 / 60;
+
+	public long framesPerSecond = 0;
 
 	public final static Rectangle bbox = new Rectangle(0, 0, WIDTH, HEIGHT);
 
@@ -126,6 +136,8 @@ public class Game extends JPanel {
 	private void loop() {
 		long currentTime = System.currentTimeMillis();
 		long lastTime = currentTime;
+		long second = 0;
+		long framesCounter = 0;
 		while (!exit) {
 			currentTime = System.currentTimeMillis();
 			long dt = currentTime - lastTime;
@@ -141,7 +153,23 @@ public class Game extends JPanel {
 			// copy buffer
 			drawToScreen();
 
+			long laps = System.currentTimeMillis() - currentTime;
+			second += laps;
+			framesCounter += 1;
+			if (second > 1000) {
+				second = 0;
+				framesPerSecond = framesCounter;
+				framesCounter = 0;
+			}
 			lastTime = currentTime;
+			long wait = fpsTargetTime - laps;
+			if (wait > 0) {
+				try {
+					Thread.sleep(wait);
+				} catch (InterruptedException e) {
+					logger.error("unable to wait 1 ms");
+				}
+			}
 		}
 	}
 

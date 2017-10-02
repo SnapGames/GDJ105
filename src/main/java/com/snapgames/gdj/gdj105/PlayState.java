@@ -256,12 +256,15 @@ public class PlayState extends AbstractGameState implements GameState {
 			computeEntityAction(o);
 		}
 		if (scoreTextObject != null) {
+			score = objects.size();
 			scoreTextObject.text = String.format("%06d", score);
 		}
 
 		manageCollision();
-		energy.value = (Integer) player.attributes.get("energy");
-		mana.value = (Integer) player.attributes.get("mana");
+		if (energy != null && mana != null && player.attributes != null && !player.attributes.isEmpty()) {
+			energy.value = (Integer) player.attributes.get("energy");
+			mana.value = (Integer) player.attributes.get("mana");
+		}
 	}
 
 	/**
@@ -436,11 +439,9 @@ public class PlayState extends AbstractGameState implements GameState {
 			break;
 		case KeyEvent.VK_PAGE_UP:
 			generateEnemies(nbElem);
-			score += nbElem;
 			break;
 		case KeyEvent.VK_PAGE_DOWN:
 			if (score - nbElem >= 0) {
-				score -= nbElem;
 				removeAllObjectOfClass(Enemy.class, nbElem);
 				removeAllObjectOfClass(Eatable.class, nbElem);
 			}
