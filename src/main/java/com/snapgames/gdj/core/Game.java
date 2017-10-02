@@ -19,6 +19,9 @@ import java.awt.image.BufferedImage;
 
 import javax.swing.JPanel;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.snapgames.gdj.core.gfx.ImageUtils;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.GameStateManager;
@@ -31,6 +34,8 @@ import com.snapgames.gdj.core.ui.Window;
  *
  */
 public class Game extends JPanel {
+
+	public static final Logger logger = LoggerFactory.getLogger(Game.class);
 
 	public final static int WIDTH = 320;
 	public final static int HEIGHT = 200;
@@ -142,6 +147,13 @@ public class Game extends JPanel {
 			drawToScreen();
 
 			lastTime = currentTime;
+			try {
+				Thread.sleep(1);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				logger.error("unable to wait 1 ms");
+			}
+			;
 		}
 	}
 

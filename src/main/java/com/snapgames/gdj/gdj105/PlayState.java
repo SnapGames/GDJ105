@@ -260,7 +260,7 @@ public class PlayState extends AbstractGameState implements GameState {
 		}
 
 		manageCollision();
-		if(player.attributes!=null && !player.attributes.isEmpty()) {
+		if(energy!=null && mana!=null && player.attributes!=null && !player.attributes.isEmpty()) {
 			energy.value = (Integer) player.attributes.get("energy");
 			mana.value = (Integer) player.attributes.get("mana");
 		}
