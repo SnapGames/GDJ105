@@ -175,19 +175,19 @@ public class RenderHelper {
 		pane_height = lines.size() * fontHeight + fontHeight / 2;
 
 		int pane_x = (int) (ago.x + ago.width + pane_padding);
-		if (pane_x + pane_width >= Game.WIDTH) {
-			pane_x = (int) Game.WIDTH - pane_width - pane_padding;
-			if (pane_x < 0) {
-				pane_x = 0;
-			}
-		}
+//		if (pane_x + pane_width >= Game.WIDTH) {
+//			pane_x = (int) Game.WIDTH - pane_width - pane_padding;
+//			if (pane_x < 0) {
+//				pane_x = 0;
+//			}
+//		}
 		int pane_y = (int) (ago.y + ago.height + pane_padding);
-		if (pane_y + pane_height >= Game.HEIGHT) {
-			pane_y = Game.HEIGHT - (ago.height + pane_height + pane_padding);
-			if (pane_y < 0) {
-				pane_y = 0;
-			}
-		}
+//		if (pane_y + pane_height >= Game.HEIGHT) {
+//			pane_y = Game.HEIGHT - (ago.height + pane_height + pane_padding);
+//			if (pane_y < 0) {
+//				pane_y = 0;
+//			}
+//		}
 		int link = 2;
 
 		if (debugLevel >= 1) {

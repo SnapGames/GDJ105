@@ -43,7 +43,7 @@ public class CameraObject extends AbstractGameObject {
 	 * @param priority
 	 * @param color
 	 */
-	public CameraObject(String name, GameObject target, int tween) {
+	public CameraObject(String name, GameObject target, float tween) {
 		super(name, (int) target.getX(), (int) target.getY(), Game.WIDTH, Game.HEIGHT, -1, -1, Color.BLUE);
 		this.target = target;
 		this.tween = tween;
@@ -62,21 +62,16 @@ public class CameraObject extends AbstractGameObject {
 
 	@Override
 	public void update(Game game, long dt) {
-		this.x = target.getX() * tween;
-		this.y = target.getY() * tween;
-
-	}
-
-	public void beforeDraw(Game game, Graphics2D g) {
-		g.translate(-this.x / 2, -this.y / 2);
+		if (target != null) {
+			this.x += (((target.getX()) - (Game.WIDTH / 2) - x) * tween * dt);
+			this.y += (((target.getY()) - (Game.HEIGHT / 2) - y) * tween * dt);
+			rectangle.x = (int) x;
+			rectangle.y = (int) y;
+		}
 	}
 
 	@Override
 	public void draw(Game game, Graphics2D g) {
-	}
-
-	public void afterDraw(Game game, Graphics2D g) {
-		g.translate(this.x / 2, this.y / 2);
 	}
 
 }

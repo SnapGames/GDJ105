@@ -178,15 +178,18 @@ public class Game extends JPanel {
 			drawToScreen();
 
 			// manage wait time
-			long laps = System.currentTimeMillis() - currentTime;
+			long laps = System.currentTimeMillis() - lastTime;
 			second += laps;
 			framesCounter += 1;
-			if (second > 1000) {
+			if (second >= 1000) {
 				second = 0;
 				framesPerSecond = framesCounter;
 				framesCounter = 0;
 			}
 			long wait = fpsTargetTime - laps;
+
+			logger.debug("FPS: {} (laps:{}, wait:{})", framesPerSecond, laps, wait);
+
 			if (wait > 0) {
 				try {
 					Thread.sleep(wait);
