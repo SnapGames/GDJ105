@@ -169,6 +169,7 @@
 					</execution>
 				</executions>
 			</plugin>
+			<!-- run class from maven -->
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>exec-maven-plugin</artifactId>
@@ -183,11 +184,87 @@
 				<configuration>
 					<mainClass>${mainClass}</mainClass>
 					<arguments>
-						<argument>foo</argument>
-						<argument>bar</argument>
+						<!-- to be soon interpreted by a CLI impl. -->
+						<argument>-d true</argument>
+						<argument>-w 800x300</argument>
 					</arguments>
 				</configuration>
 			</plugin>
+
+			<!-- Build executable from jar -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-shade-plugin</artifactId>
+				<version>3.1.0</version>
+				<configuration>
+				  <!-- put your configurations here -->
+				  <shadedArtifactAttached>true</shadedArtifactAttached>
+                <shadedClassifierName>shaded</shadedClassifierName>
+                <transformers>
+                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                        <mainClass>${mùainClass}</mainClass>
+                    </transformer>
+                    <transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+                        <resource>src/main/resources/res</resource>
+                        <file>server.properties</file>
+                    </transformer>
+                </transformers>
+				  <!-- end of config-->
+				</configuration>
+				<executions>
+				  <execution>
+				    <phase>package</phase>
+				    <goals>
+				      <goal>shade</goal>
+				    </goals>
+				  </execution>
+				</executions>
+			</plugin>
+			<!-- create a Windows EXE -->
+			<!-- https://github.com/lukaszlenart/launch4j-maven-plugin/blob/master/src/main/resources/README.adoc -->
+			<!-- see http://launch4j.sourceforge.net/ -->
+			<plugin>
+				<groupId>com.akathist.maven.plugins.launch4j</groupId>
+				<artifactId>launch4j-maven-plugin</artifactId>
+				<version>1.7.21</version>
+	            <executions>
+	                <execution>
+	                    <id>l4j-clui</id>
+	                    <phase>package</phase>
+	                    <goals>
+	                        <goal>launch4j</goal>
+	                    </goals>
+	                    <configuration>
+	                        <headerType>gui</headerType>
+							<jar>${project.build.directory}/${artifactId}-${version}-shaded.jar</jar>
+							<outfile>${project.build.directory}/${project.name}.exe</outfile>
+							<downloadUrl>http://java.com/download</downloadUrl>
+							<classPath>
+								<mainClass>${mainClass}</mainClass>
+								<preCp>anything</preCp>
+							</classPath>
+							<icon>src/main/resources/res/gdj-application.ico</icon>
+							<jre>
+								<minVersion>1.8.0</minVersion>
+								<jdkPreference>preferJre</jdkPreference>
+							</jre>
+							<versionInfo>
+								<fileVersion>1.0.0.0</fileVersion>
+								<txtFileVersion>${project.version}</txtFileVersion>
+								<fileDescription>${project.name}</fileDescription>
+								<copyright>2017 snapgames.fr</copyright>
+								<productVersion>1.0.0.0</productVersion>
+								<txtProductVersion>1.0.0.0</txtProductVersion>
+								<productName>${project.name}</productName>
+								<companyName>SnapGames</companyName>
+								<internalName>${project.name}</internalName>
+								<originalFilename>${project.name}.exe</originalFilename>
+							</versionInfo>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+
 		</plugins>
 	</build>
 </project>
