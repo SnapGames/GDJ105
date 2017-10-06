@@ -43,15 +43,15 @@ public class Game extends JPanel {
 	/**
 	 * Game screen width.
 	 */
-	public final static int WIDTH = 320;
+	public final static int WIDTH = 640;
 	/**
 	 * Game screen height.
 	 */
-	public final static int HEIGHT = 200;
+	public final static int HEIGHT = 400;
 	/**
 	 * game screen scaling
 	 */
-	public final static int SCALE = 3;
+	public final static float SCALE = 1.5f;
 
 	/**
 	 * Number of frame per seconds
@@ -133,7 +133,7 @@ public class Game extends JPanel {
 	 */
 	private Game(String title) {
 		this.title = title;
-		this.dimension = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
+		this.dimension = new Dimension((int) (WIDTH * SCALE), (int) (HEIGHT * SCALE));
 		exit = false;
 		gsm = new GameStateManager(this);
 		inputHandler = new InputHandler(gsm);
@@ -198,7 +198,7 @@ public class Game extends JPanel {
 				}
 			}
 			lastTime = currentTime;
-			
+
 		}
 	}
 
@@ -209,7 +209,7 @@ public class Game extends JPanel {
 
 		// copy buffer to window.
 		Graphics g2 = this.getGraphics();
-		g2.drawImage(image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, 0, 0, WIDTH, HEIGHT, Color.BLACK, null);
+		g2.drawImage(image, 0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE), 0, 0, WIDTH, HEIGHT, Color.BLACK, null);
 		g2.dispose();
 
 		if (screenshot) {
@@ -343,7 +343,7 @@ public class Game extends JPanel {
 		return g;
 	}
 
-	public int getScale() {
+	public float getScale() {
 		return SCALE;
 	}
 

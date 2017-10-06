@@ -67,22 +67,23 @@ public class TitleState extends AbstractGameState {
 
 		BufferedImage bgImg = ResourceManager.getImage("/res/images/background-large.jpg");
 		bgi = new ImageObject("background", bgImg, 0, (Game.HEIGHT - bgImg.getHeight()) / 2, 2, 1);
+		bgi.scale = 2.0f;
 		bgi.dx = 0.029f;
 		addObject(bgi);
 
 		TextObject titleText = new TextObject("title",
-				(int) (Game.WIDTH - titleFont.getStringBounds(titleLabel, frc).getWidth()) / 2, 5, titleLabel,
-				titleFont, 1, 1, Color.WHITE);
+				(int) (Game.WIDTH - titleFont.getStringBounds(titleLabel, frc).getWidth()) / 2,
+				(int) (Game.HEIGHT * 0.10f), titleLabel, titleFont, 1, 1, Color.WHITE);
 		addObject(titleText);
 
 		TextObject msgText = new TextObject("start",
-				(int) (Game.WIDTH - menuItemFont.getStringBounds(startLabel, frc).getWidth()) / 2, 100, startLabel,
-				menuItemFont, 1, 1, Color.WHITE);
+				(int) (Game.WIDTH - menuItemFont.getStringBounds(startLabel, frc).getWidth()) / 2,
+				(int) (Game.HEIGHT * 0.70f), startLabel, menuItemFont, 1, 1, Color.WHITE);
 		addObject(msgText);
 
 		TextObject cpyText = new TextObject("copyright",
-				(int) (Game.WIDTH - menuItemFont.getStringBounds(copyrightLabel, frc).getWidth()) / 2, Game.HEIGHT - 30,
-				copyrightLabel, debugFont, 2, 1, Color.WHITE);
+				(int) (Game.WIDTH - menuItemFont.getStringBounds(copyrightLabel, frc).getWidth()) / 2,
+				(int) (Game.HEIGHT * 0.85f), copyrightLabel, debugFont, 2, 1, Color.WHITE);
 		addObject(cpyText);
 
 		logger.info("State TitleState initialized");

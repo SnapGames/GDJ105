@@ -12,8 +12,10 @@ package com.snapgames.gdj.core.ui;
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
+import javax.swing.JRootPane;
 
 import com.snapgames.gdj.core.Game;
+import com.snapgames.gdj.core.ResourceManager;
 
 /**
  * the {@link Window} class to contains and display all the game.
@@ -44,6 +46,7 @@ public class Window {
 		frame.setPreferredSize(game.getDimension());
 		frame.setMaximumSize(game.getDimension());
 		frame.setResizable(false);
+		frame.setIconImage(ResourceManager.getImage("/res/icons/gdj-app.png"));
 
 		// add the Game InputHandler as a KeyListener
 		frame.addKeyListener(game.getInputHandler());

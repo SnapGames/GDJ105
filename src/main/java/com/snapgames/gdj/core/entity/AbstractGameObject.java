@@ -180,10 +180,10 @@ public class AbstractGameObject implements GameObject {
 		y += dy * dt;
 
 		// limit speed
-		if (Math.abs(dx) < 0.01) {
+		if (Math.abs(dx) < 0.005) {
 			dx = 0.0f;
 		}
-		if (Math.abs(dy) < 0.01) {
+		if (Math.abs(dy) < 0.005) {
 			dy = 0.0f;
 		}
 		rectangle.setBounds((int) x, (int) y, width, height);

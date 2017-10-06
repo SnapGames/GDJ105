@@ -281,7 +281,7 @@ public abstract class AbstractGameState implements GameState {
 			RenderHelper.drawShadowString(g,
 					String.format("FPS:%03d, ROC:%04d, SOC:%04d", game.framesPerSecond,
 							statistics.get("renderedObjCount"), statistics.get("staticObjCount")),
-					4, 180, Color.BLUE, Color.BLACK);
+					4, (int)(Game.HEIGHT*0.93f), Color.BLUE, Color.BLACK);
 		}
 
 	}
