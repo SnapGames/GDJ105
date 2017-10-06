@@ -44,12 +44,9 @@ public class CameraObject extends AbstractGameObject {
 	 * @param color
 	 */
 	public CameraObject(String name, GameObject target, float tween) {
-		super(name, (int) target.getX(), (int) target.getY(), Game.WIDTH, Game.HEIGHT, -1, -1, Color.BLUE);
+		super(name, (int) target.getX(), (int) target.getY(), Game.WIDTH, Game.HEIGHT, -1, -1, Color.ORANGE);
 		this.target = target;
 		this.tween = tween;
-		this.x = 0;
-		this.y = 0;
-		this.color = Color.ORANGE;
 	}
 
 	/**
@@ -63,16 +60,36 @@ public class CameraObject extends AbstractGameObject {
 		super(name, x, y, dx, dy);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.snapgames.gdj.core.entity.AbstractGameObject#update(com.snapgames.gdj.core.Game, long)
+	 */
 	@Override
 	public void update(Game game, long dt) {
 		if (target != null) {
-			x += Math.round((target.getX() - (Game.WIDTH / 2) - x) * tween * dt);
-			y += Math.round((target.getY() - (Game.HEIGHT / 2) - y) * tween * dt);
+			this.x += ((target.getX()) - (Game.WIDTH / 2) - x) * tween * dt;
+			this.y += ((target.getY()) - (Game.HEIGHT / 2) - y) * tween * dt;
+			rectangle.x = (int) x;
+			rectangle.y = (int) y;
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.snapgames.gdj.core.entity.AbstractGameObject#draw(com.snapgames.gdj.core.Game, java.awt.Graphics2D)
+	 */
 	@Override
 	public void draw(Game game, Graphics2D g) {
+		// draw debug information for this camera.
+		if(game.isDebug(1)) {
+			g.setColor(color);
+			g.drawRect(2,2,width-8,height-16);
+			g.drawString(String.format("%s:[%01.0f,%01.0f], tgt:[%01.0f,%01.0f]",
+					name,
+					this.x,this.y,
+					(target!=null?target.getX():0.0f),
+					(target!=null?target.getY():0.0f)), 4, 12);
+		}
 	}
 
 }

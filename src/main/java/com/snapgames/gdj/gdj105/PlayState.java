@@ -12,6 +12,7 @@ package com.snapgames.gdj.gdj105;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,7 @@ import com.snapgames.gdj.core.entity.Actions;
 import com.snapgames.gdj.core.entity.CameraObject;
 import com.snapgames.gdj.core.entity.Direction;
 import com.snapgames.gdj.core.entity.GameObject;
+import com.snapgames.gdj.core.entity.Layer;
 import com.snapgames.gdj.core.gfx.RenderHelper;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.AbstractGameState;
@@ -81,6 +83,7 @@ public class PlayState extends AbstractGameState implements GameState {
 	 */
 	private boolean isHelp = false;
 	private ItemContainerObject[] itemContainers;
+	private Rectangle playZone;
 	private static final Logger logger = LoggerFactory.getLogger(PlayState.class);
 
 	public PlayState() {
@@ -106,17 +109,20 @@ public class PlayState extends AbstractGameState implements GameState {
 		scoreFont = game.getGraphics().getFont().deriveFont(14.0f);
 		helpFont = font.deriveFont(8f);
 
-		// Activate Layers
-		layers = new boolean[5];
-		for (int i = 0; i < 4; i++) {
-			layers[i] = true;
-		}
-		// prepare Game objects
+		this.playZone = new Rectangle(0, 0, 1000, 1000);
 
+		// Activate Layers
+		layers = new Layer[5];
+		resetLayers();
+		layers[0].moveWithCamera = false;
+
+		// prepare Game objects
 		// player (layer 1)
 		player = new Player("player", Game.WIDTH / 2, Game.HEIGHT / 2, 16, 16, 1, 1, Color.BLUE);
 
 		addObject(player);
+
+		addCamera(new CameraObject("cam1", player, 0.025f));
 
 		// NPC
 		generateEnemies(10);
@@ -147,10 +153,6 @@ public class PlayState extends AbstractGameState implements GameState {
 			itemContainers[i].font = game.getFont().deriveFont(8.0f);
 			addObject(itemContainers[i]);
 		}
-
-		CameraObject cam1 = new CameraObject("cam1", player, 0.018f);
-		cameras.add(cam1);
-		setDefaultCamera(cam1);
 
 	}
 
@@ -228,11 +230,11 @@ public class PlayState extends AbstractGameState implements GameState {
 			quadTree.insert(o);
 		}
 
-		int winborder = 4;
-		int wl = winborder;
-		int wr = game.getWidth() / game.getScale() - player.width - winborder;
-		int wt = winborder;
-		int wb = game.getHeight() / game.getScale() - player.height - winborder;
+		float winborder = 4;
+		float wl = winborder;
+		float wr = (float) playZone.getWidth() - player.width - winborder;
+		float wt = winborder;
+		float wb = (float) playZone.getHeight() - player.height - winborder;
 
 		// player limit to border window
 		if (player.x < wl)
@@ -252,10 +254,10 @@ public class PlayState extends AbstractGameState implements GameState {
 		}
 
 		for (AbstractGameObject o : entities) {
-			if (o.x <= wl || o.x >= wr) {
+			if (o.x <= 0 || o.x >= playZone.getWidth()) {
 				o.dx = -Math.signum(o.dx) * o.hSpeed;
 			}
-			if (o.y <= wt || o.y >= wb) {
+			if (o.y <= 0 || o.y >= playZone.getHeight()) {
 				o.dy = -Math.signum(o.dy) * o.vSpeed;
 			}
 			computeEntityAction(o);
@@ -269,6 +271,9 @@ public class PlayState extends AbstractGameState implements GameState {
 		if (energy != null && mana != null && player.attributes != null && !player.attributes.isEmpty()) {
 			energy.value = (Integer) player.attributes.get("energy");
 			mana.value = (Integer) player.attributes.get("mana");
+		}
+		if (defaultCamera != null) {
+			defaultCamera.update(game, dt);
 		}
 	}
 
@@ -385,7 +390,7 @@ public class PlayState extends AbstractGameState implements GameState {
 	/**
 	 * @return the layers
 	 */
-	public boolean[] getLayers() {
+	public Layer[] getLayers() {
 		return layers;
 	}
 
@@ -400,9 +405,9 @@ public class PlayState extends AbstractGameState implements GameState {
 	public void displayHelp(Game game, Graphics2D g, int x, int y, Font helpFont) {
 		g.setFont(helpFont);
 		g.setColor(Color.WHITE);
-		String[] text = { "[" + RenderHelper.showBoolean(layers[0]) + "] 1: show/hide layer 1",
-				"[" + RenderHelper.showBoolean(layers[1]) + "] 2: show/hide layer 2",
-				"[" + RenderHelper.showBoolean(layers[2]) + "] 3: show/hide layer 3",
+		String[] text = { "[" + RenderHelper.showBoolean(layers[0].active) + "] 1: show/hide layer 1",
+				"[" + RenderHelper.showBoolean(layers[1].active) + "] 2: show/hide layer 2",
+				"[" + RenderHelper.showBoolean(layers[2].active) + "] 3: show/hide layer 3",
 				"[" + game.getDebug() + "] D: display debug info",
 				"[" + RenderHelper.showBoolean(game.isPause()) + "] P/PAUSE: pause the computation",
 				"[" + RenderHelper.showBoolean(isHelp) + "] H: display this help", "   CTRL+S: save a screenshot",
@@ -428,19 +433,19 @@ public class PlayState extends AbstractGameState implements GameState {
 			break;
 		case KeyEvent.VK_NUMPAD1:
 		case KeyEvent.VK_1:
-			layers[0] = !layers[0];
+			layers[0].active = !layers[0].active;
 			break;
 		case KeyEvent.VK_NUMPAD2:
 		case KeyEvent.VK_2:
-			layers[1] = !layers[1];
+			layers[1].active = !layers[1].active;
 			break;
 		case KeyEvent.VK_NUMPAD3:
 		case KeyEvent.VK_3:
-			layers[2] = !layers[2];
+			layers[2].active = !layers[2].active;
 			break;
 		case KeyEvent.VK_NUMPAD4:
 		case KeyEvent.VK_4:
-			layers[3] = !layers[3];
+			layers[3].active = !layers[3].active;
 			break;
 		case KeyEvent.VK_PAGE_UP:
 			generateEnemies(nbElem);
@@ -470,7 +475,7 @@ public class PlayState extends AbstractGameState implements GameState {
 
 			AbstractGameObject entity = null;
 			if (i < halfNb) {
-				entity = new Enemy("enemy_" + i, Game.WIDTH / 2, Game.HEIGHT / 2, 16, 16, 2, 1, Color.RED);
+				entity = new Enemy("enemy_" + i, Game.WIDTH / 2, Game.HEIGHT / 2);
 				entity.x = ((float) Math.random() * Game.WIDTH) + ((Game.WIDTH / 2));
 				entity.y = ((float) Math.random() * Game.HEIGHT) + ((Game.HEIGHT / 2));
 				entity.dx = ((float) Math.random() * 0.05f) - 0.02f;
@@ -478,7 +483,7 @@ public class PlayState extends AbstractGameState implements GameState {
 				entity.color = Color.RED;
 				entity.layer = 3;
 			} else {
-				entity = new Eatable("eatable_" + i, Game.WIDTH / 2, Game.HEIGHT / 2, 16, 16, 2, 1, Color.RED);
+				entity = new Eatable("eatable_" + i, Game.WIDTH / 2, Game.HEIGHT / 2);
 				entity.x = ((float) Math.random() * Game.WIDTH) + ((Game.WIDTH / 2));
 				entity.y = ((float) Math.random() * Game.HEIGHT) + ((Game.HEIGHT / 2));
 				entity.dx = ((float) Math.random() * 0.05f) - 0.02f;

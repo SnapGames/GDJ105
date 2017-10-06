@@ -12,6 +12,7 @@ package com.snapgames.gdj.core.state;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -28,6 +29,7 @@ import com.snapgames.gdj.core.collision.QuadTree;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.CameraObject;
 import com.snapgames.gdj.core.entity.GameObject;
+import com.snapgames.gdj.core.entity.Layer;
 import com.snapgames.gdj.core.gfx.RenderHelper;
 
 /**
@@ -47,9 +49,11 @@ public abstract class AbstractGameState implements GameState {
 	protected GameStateManager gsm = null;
 
 	/**
-	 * Internal rendering layers. by default 3 layers are initialized.
+	 * Internal rendering layers. by default 4 layers (0->3) are initialized.
 	 */
-	protected boolean[] layers = new boolean[3];
+	protected Layer[] layers = new Layer[3];
+	protected List<Layer> layersWith = new CopyOnWriteArrayList<>();
+	protected List<Layer> layersWithoutCamera = new CopyOnWriteArrayList<>();
 
 	/**
 	 * embedded debug font to draw on screen debug information.
@@ -97,6 +101,20 @@ public abstract class AbstractGameState implements GameState {
 	public void initialize(Game game) {
 		debugFont = game.getRender().getFont().deriveFont(9f);
 		quadTree = new QuadTree(Game.WIDTH, Game.HEIGHT);
+
+		// activate needed layers
+		resetLayers();
+	}
+
+	/**
+	 * 
+	 */
+	protected void resetLayers() {
+		for (int i = 0; i < layers.length; i++) {
+			layers[i] = new Layer(true, true);
+		}
+		layersWith.clear();
+		layersWithoutCamera.clear();
 	}
 
 	/**
@@ -115,8 +133,23 @@ public abstract class AbstractGameState implements GameState {
 				return (ago1.layer > ago2.layer ? -1 : (ago1.priority > ago2.priority ? -1 : 1));
 			};
 		});
+		// add object to a specific Layer.
+		addObjectToLayer(object);
+
 		statistics.put("objectCount", objects.size());
 		logger.debug("Add {} to the objects list", object.name);
+	}
+
+	private void addObjectToLayer(AbstractGameObject object) {
+		if (object.layer >= 0 && layers[object.layer] != null) {
+
+			layers[object.layer].objects.add(object);
+		}
+		if (!layers[object.layer].moveWithCamera) {
+			layersWithoutCamera.add(layers[object.layer]);
+		} else {
+			layersWith.add(layers[object.layer]);
+		}
 	}
 
 	protected void removeAllObjectOfClass(Class<? extends AbstractGameObject> clazz) {
@@ -127,6 +160,33 @@ public abstract class AbstractGameState implements GameState {
 			}
 		}
 		objects.removeAll(toBeDeleted);
+	}
+
+	/**
+	 * add a Camera object.
+	 * 
+	 * @param cameraObject
+	 */
+	public void addCamera(CameraObject cameraObject) {
+		cameras.add(cameraObject);
+		if (defaultCamera == null) {
+			defaultCamera = cameraObject;
+		}
+	}
+
+	/**
+	 * activate one of the camera.
+	 * 
+	 * @param camera
+	 */
+	public void setCamera(String cameraName) {
+		for (CameraObject c : cameras) {
+			if (c.name.equals(cameraName)) {
+				this.defaultCamera = c;
+				return;
+			}
+		}
+		logger.error("Unable to activate the camera, {} does not exist", cameraName);
 	}
 
 	public void dispose(Game game) {
@@ -191,22 +251,39 @@ public abstract class AbstractGameState implements GameState {
 		int renderedObjectCount = 0;
 		if (!objects.isEmpty()) {
 			for (GameObject o : objects) {
-				if (screenContainsObject(o) && layers[o.getLayer() - 1]) {
-					renderedObjectCount++;
-					o.draw(game, g);
-					if (game.isDebug(1)) {
-						RenderHelper.drawDebugInfoObject(g, o, debugFont, game.getDebug());
+				Layer layer = layers[o.getLayer() - 1];
+				if (layer.active) {
+					if (defaultCamera != null && layer.moveWithCamera) {
+						g.translate(-defaultCamera.getX(), -defaultCamera.getY());
+					}
+					if (viewContainsObject(o,
+							(defaultCamera != null && defaultCamera.rectangle != null ? defaultCamera.rectangle
+									: Game.bbox))) {
+						renderedObjectCount++;
+						o.draw(game, g);
+						if (game.isDebug(1)) {
+							RenderHelper.drawDebugInfoObject(g, o, debugFont, game.getDebug());
+						}
+					}
+					if (defaultCamera != null && layer.moveWithCamera) {
+						g.translate(defaultCamera.getX(), defaultCamera.getY());
 					}
 				}
 			}
-			statistics.put("renderedObject", renderedObjectCount);
+			if (defaultCamera != null) {
+				defaultCamera.draw(game, g);
+			}
+			statistics.put("renderedObjCount", renderedObjectCount);
+			statistics.put("staticObjCount", renderedObjectCount);
 		}
+
 		if (game.isDebug(1)) {
 			RenderHelper.drawShadowString(g,
-					String.format("FPS:%03d, OCount:%04d, RCount:%04d", game.framesPerSecond,
-							statistics.get("objectCount"), statistics.get("renderedObject")),
-					4, 190, Color.GRAY, Color.BLACK);
+					String.format("FPS:%03d, ROC:%04d, SOC:%04d", game.framesPerSecond,
+							statistics.get("renderedObjCount"), statistics.get("staticObjCount")),
+					4, 180, Color.BLUE, Color.BLACK);
 		}
+
 	}
 
 	/**
@@ -215,19 +292,9 @@ public abstract class AbstractGameState implements GameState {
 	 * @param o
 	 * @return
 	 */
-	private boolean screenContainsObject(GameObject o) {
+	private boolean viewContainsObject(GameObject o, Rectangle view) {
 		AbstractGameObject ago = (AbstractGameObject) o;
-
-		return Game.bbox.contains(ago.rectangle);
-	}
-
-	/**
-	 * Add a Camera to the set.
-	 * 
-	 * @param cameraObject
-	 */
-	public void addCamera(CameraObject cameraObject) {
-		cameras.add(cameraObject);
+		return true;
 	}
 
 	/**
@@ -244,5 +311,4 @@ public abstract class AbstractGameState implements GameState {
 	public void setDefaultCamera(CameraObject defaultCamera) {
 		this.defaultCamera = defaultCamera;
 	}
-
 }

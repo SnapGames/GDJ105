@@ -132,6 +132,8 @@ public class AbstractGameObject implements GameObject {
 		this.layer = layer;
 		this.priority = priority;
 		this.color = color;
+
+		this.rectangle = new Rectangle(x, y, width, height);
 	}
 
 	/**

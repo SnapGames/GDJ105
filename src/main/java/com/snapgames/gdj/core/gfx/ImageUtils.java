@@ -12,6 +12,8 @@ package com.snapgames.gdj.core.gfx;
 import java.awt.image.BufferedImage;
 import java.io.File;
 
+import com.snapgames.gdj.core.Game;
+
 /**
  * Image utilities
  * 
@@ -43,7 +45,7 @@ public class ImageUtils {
 	public static void screenshot(BufferedImage image) {
 		try {
 			java.io.File out = new java.io.File(path + File.separator + "screenshot " + System.nanoTime() + ".jpg");
-			javax.imageio.ImageIO.write(image, "JPG", out);
+			javax.imageio.ImageIO.write(image.getSubimage(0, 0, Game.WIDTH, Game.HEIGHT), "JPG", out);
 		} catch (Exception e) {
 			System.err.println("Unable to write screenshot to user.dir: "+path);
 		}

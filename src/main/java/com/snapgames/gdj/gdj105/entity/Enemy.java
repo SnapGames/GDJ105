@@ -38,8 +38,8 @@ public class Enemy extends AbstractGameObject {
 	 * @param priority
 	 * @param color
 	 */
-	public Enemy(String name, int x, int y, int width, int height, int layer, int priority, Color color) {
-		super(name, x, y, width, height, layer, priority, color);
+	public Enemy(String name, int x, int y) {
+		super(name, x, y, 16,16, 3, 1, Color.RED);
 		this.hSpeed = 0.042f;
 		this.vSpeed = 0.042f;
 	}

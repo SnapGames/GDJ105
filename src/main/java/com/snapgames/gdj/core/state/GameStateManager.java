@@ -166,13 +166,7 @@ public class GameStateManager {
 	 *            The Graphics2D interface to render things !
 	 */
 	public void render(Graphics2D g) {
-		if (currentState.getDefaultCamera() != null) {
-			g.translate(-currentState.getDefaultCamera().getX(), -currentState.getDefaultCamera().getY());
-		}
 		currentState.render(game, g);
-		if (currentState.getDefaultCamera() != null) {
-			g.translate(currentState.getDefaultCamera().getX(), currentState.getDefaultCamera().getY());
-		}
 	}
 
 	public void dispose() {
