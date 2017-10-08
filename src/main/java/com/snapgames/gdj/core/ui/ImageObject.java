@@ -52,7 +52,6 @@ public class ImageObject extends AbstractGameObject {
 	 */
 	@Override
 	public void draw(Game game, Graphics2D g) {
-		g.drawImage(image, (int) x, (int) y, null);
+		g.drawImage(image, (int) (x), (int) (y), null);
 	}
-
 }

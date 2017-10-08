@@ -26,19 +26,19 @@ public class Eatable extends AbstractGameObject {
 		super();
 	}
 
-	public Eatable(String name, int x, int y, int width, int height, int layer, int priority, Color color) {
-		super(name, x, y, width, height, layer, priority, color);
+	public Eatable(String name, int x, int y) {
+		super(name, x, y, 8, 8, 1, 2, Color.CYAN);
 		attributes.put("power", 20);
 	}
 
 	public Eatable(String name, int x, int y, int dx, int dy) {
 		super(name, x, y, dx, dy);
 	}
-	
+
 	@Override
 	public void draw(Game game, Graphics2D g) {
 		g.setColor(color);
-		g.fillArc((int)x, (int)y, 8, 8, 0, 360);
+		g.fillArc((int) x, (int) y, 8, 8, 0, 360);
 	}
 
 }

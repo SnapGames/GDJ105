@@ -35,17 +35,41 @@ import com.snapgames.gdj.core.ui.Window;
  */
 public class Game extends JPanel {
 
+	/**
+	 * Internal logger.
+	 */
 	public static final Logger logger = LoggerFactory.getLogger(Game.class);
 
+	/**
+	 * Game screen width.
+	 */
 	public final static int WIDTH = 320;
+	/**
+	 * Game screen height.
+	 */
 	public final static int HEIGHT = 200;
-	public final static int SCALE = 3;
+	/**
+	 * game screen scaling
+	 */
+	public final static float SCALE = 2.6f;
 
+	/**
+	 * Number of frame per seconds
+	 */
 	public long FPS = 60;
+	/**
+	 * duration of a frame.
+	 */
 	public long fpsTargetTime = 1000 / 60;
 
+	/**
+	 * Number of frames in a second.
+	 */
 	public long framesPerSecond = 0;
 
+	/**
+	 * The rectangle containing the Game screen.
+	 */
 	public final static Rectangle bbox = new Rectangle(0, 0, WIDTH, HEIGHT);
 
 	/**
@@ -109,7 +133,7 @@ public class Game extends JPanel {
 	 */
 	private Game(String title) {
 		this.title = title;
-		this.dimension = new Dimension(WIDTH * SCALE, HEIGHT * SCALE);
+		this.dimension = new Dimension((int) (WIDTH * SCALE), (int) (HEIGHT * SCALE));
 		exit = false;
 		gsm = new GameStateManager(this);
 		inputHandler = new InputHandler(gsm);
@@ -153,16 +177,19 @@ public class Game extends JPanel {
 			// copy buffer
 			drawToScreen();
 
-			long laps = System.currentTimeMillis() - currentTime;
+			// manage wait time
+			long laps = System.currentTimeMillis() - lastTime;
 			second += laps;
 			framesCounter += 1;
-			if (second > 1000) {
+			if (second >= 1000) {
 				second = 0;
 				framesPerSecond = framesCounter;
 				framesCounter = 0;
 			}
-			lastTime = currentTime;
 			long wait = fpsTargetTime - laps;
+
+			logger.debug("FPS: {} (laps:{}, wait:{})", framesPerSecond, laps, wait);
+
 			if (wait > 0) {
 				try {
 					Thread.sleep(wait);
@@ -170,6 +197,8 @@ public class Game extends JPanel {
 					logger.error("unable to wait 1 ms");
 				}
 			}
+			lastTime = currentTime;
+
 		}
 	}
 
@@ -180,7 +209,7 @@ public class Game extends JPanel {
 
 		// copy buffer to window.
 		Graphics g2 = this.getGraphics();
-		g2.drawImage(image, 0, 0, WIDTH * SCALE, HEIGHT * SCALE, 0, 0, WIDTH, HEIGHT, Color.BLACK, null);
+		g2.drawImage(image, 0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE), 0, 0, WIDTH, HEIGHT, Color.BLACK, null);
 		g2.dispose();
 
 		if (screenshot) {
@@ -314,7 +343,7 @@ public class Game extends JPanel {
 		return g;
 	}
 
-	public int getScale() {
+	public float getScale() {
 		return SCALE;
 	}
 
