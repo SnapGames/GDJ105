@@ -53,4 +53,16 @@ public interface GameObject extends Sizeable{
 	public void addDebugInfo();
 
 	public List<String> getDebugInfo();
+
+	/**
+	 * Return the object scale factor.
+	 * @return
+	 */
+	public float getScale();
+
+	/**
+	 * Does the debug info must be displayed for this object ?
+	 * @return
+	 */
+	public boolean isDebugInfoDisplayed();
 }

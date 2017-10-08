@@ -169,6 +169,7 @@ public abstract class AbstractGameState implements GameState {
 	 */
 	public void addCamera(CameraObject cameraObject) {
 		cameras.add(cameraObject);
+		//objects.add(cameraObject);
 		if (defaultCamera == null) {
 			defaultCamera = cameraObject;
 		}
@@ -249,6 +250,8 @@ public abstract class AbstractGameState implements GameState {
 	 */
 	public void render(Game game, Graphics2D g) {
 		int renderedObjectCount = 0;
+		Rectangle view = (defaultCamera != null && defaultCamera.rectangle != null ? defaultCamera.rectangle
+				: Game.bbox);
 		if (!objects.isEmpty()) {
 			for (GameObject o : objects) {
 				Layer layer = layers[o.getLayer() - 1];
@@ -256,12 +259,10 @@ public abstract class AbstractGameState implements GameState {
 					if (defaultCamera != null && layer.moveWithCamera) {
 						g.translate(-defaultCamera.getX(), -defaultCamera.getY());
 					}
-					if (viewContainsObject(o,
-							(defaultCamera != null && defaultCamera.rectangle != null ? defaultCamera.rectangle
-									: Game.bbox))) {
+					if (viewContainsObject(o, view) || defaultCamera == null || layer.moveWithCamera==false) {
 						renderedObjectCount++;
 						o.draw(game, g);
-						if (game.isDebug(1)) {
+						if (game.isDebug(1)&&o.isDebugInfoDisplayed()) {
 							RenderHelper.drawDebugInfoObject(g, o, debugFont, game.getDebug());
 						}
 					}
@@ -281,7 +282,7 @@ public abstract class AbstractGameState implements GameState {
 			RenderHelper.drawShadowString(g,
 					String.format("FPS:%03d, ROC:%04d, SOC:%04d", game.framesPerSecond,
 							statistics.get("renderedObjCount"), statistics.get("staticObjCount")),
-					4, (int)(Game.HEIGHT*0.93f), Color.BLUE, Color.BLACK);
+					4, (int) (Game.HEIGHT * 0.93f), Color.BLUE, Color.BLACK);
 		}
 
 	}
@@ -294,7 +295,8 @@ public abstract class AbstractGameState implements GameState {
 	 */
 	private boolean viewContainsObject(GameObject o, Rectangle view) {
 		AbstractGameObject ago = (AbstractGameObject) o;
-		return true;
+
+		return view.contains(ago.rectangle);
 	}
 
 	/**

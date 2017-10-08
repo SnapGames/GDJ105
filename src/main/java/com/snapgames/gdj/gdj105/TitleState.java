@@ -67,7 +67,7 @@ public class TitleState extends AbstractGameState {
 
 		BufferedImage bgImg = ResourceManager.getImage("/res/images/background-large.jpg");
 		bgi = new ImageObject("background", bgImg, 0, (Game.HEIGHT - bgImg.getHeight()) / 2, 2, 1);
-		bgi.scale = 2.0f;
+		bgi.scale = 1.0f;
 		bgi.dx = 0.029f;
 		addObject(bgi);
 

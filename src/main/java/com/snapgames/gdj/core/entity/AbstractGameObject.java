@@ -12,6 +12,7 @@ package com.snapgames.gdj.core.entity;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
+import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -74,6 +75,8 @@ public class AbstractGameObject implements GameObject {
 	 */
 	public int width = 32, height = 32;
 
+	public float scale = 1.0f;
+
 	public Rectangle rectangle;
 
 	public Actions action = Actions.IDLE;
@@ -82,6 +85,11 @@ public class AbstractGameObject implements GameObject {
 
 	public Map<String, Object> attributes = new ConcurrentHashMap<>();
 
+	public Point2D offsetInfo; 
+
+	public boolean showDebuginfo;
+	
+	
 	/**
 	 * Rendering depth and priority.
 	 */
@@ -277,24 +285,63 @@ public class AbstractGameObject implements GameObject {
 		return debugInfo;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.collision.Sizeable#getX()
+	 */
 	@Override
 	public float getX() {
 		return x;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.collision.Sizeable#getY()
+	 */
 	@Override
 	public float getY() {
 		return y;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.collision.Sizeable#getWidth()
+	 */
 	@Override
 	public float getWidth() {
 		return width;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.collision.Sizeable#getHeight()
+	 */
 	@Override
 	public float getHeight() {
 		return height;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.entity.GameObject#getScale()
+	 */
+	@Override
+	public float getScale() {
+		return scale;
+	}
+
+	
+	/*
+	 * (non-Javadoc)
+	 * @see com.snapgames.gdj.core.entity.GameObject#isDebugInfoDisplayed()
+	 */
+	@Override
+	public boolean isDebugInfoDisplayed() {
+		return showDebuginfo;
+	}
 }

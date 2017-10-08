@@ -24,7 +24,6 @@ import com.snapgames.gdj.core.entity.AbstractGameObject;
 public class ImageObject extends AbstractGameObject {
 
 	public BufferedImage image;
-	public float scale = 1.0f;
 
 	/**
 	 * 
@@ -53,9 +52,6 @@ public class ImageObject extends AbstractGameObject {
 	 */
 	@Override
 	public void draw(Game game, Graphics2D g) {
-		g.scale(scale, scale);
-		g.drawImage(image, (int) (x/scale), (int) (y/scale), null);
-		g.scale(1/scale, 1/scale);
+		g.drawImage(image, (int) (x), (int) (y), null);
 	}
-
 }

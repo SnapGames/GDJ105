@@ -122,22 +122,29 @@ public class PlayState extends AbstractGameState implements GameState {
 
 		addObject(player);
 
-		addCamera(new CameraObject("cam1", player, 0.025f));
+		CameraObject camera = new CameraObject("cam1", player, 0.1f);
+		addCamera(camera);
 
 		// NPC
 		generateEnemies(10);
 
+		int marginLeft = (int) (Game.WIDTH * camera.getMargin()*2);
+		int marginTop = (int) (Game.HEIGHT * camera.getMargin()*2);
+		int marginRight = (int) (Game.WIDTH * (1-camera.getMargin()*2));
+		int marginBottom = (int) (Game.HEIGHT * (1-camera.getMargin()*2));
+
 		// HUD Definition (layer 1)
-		scoreTextObject = new TextObject("score", 4, 0, String.format("%06d", score), scoreFont, 1, 1, Color.WHITE);
+		scoreTextObject = new TextObject("score", marginLeft,marginTop,
+				String.format("%06d", score), scoreFont, 1, 1, Color.WHITE);
 		addObject(scoreTextObject);
 
-		energy = new JaugeObject("energy", Game.WIDTH - 50, 4, 42, 4, 1, 1, new Color(1.0f, 0.0f, 0.0f, 0.7f));
+		energy = new JaugeObject("energy", marginRight - 50, marginTop, 42, 4, 1, 1, new Color(1.0f, 0.0f, 0.0f, 0.7f));
 		energy.minValue = 0;
 		energy.maxValue = 100;
 		energy.value = 90;
 		addObject(energy);
 
-		mana = new JaugeObject("mana", Game.WIDTH - 50, 12, 42, 4, 1, 1, new Color(0.0f, 0.0f, 1.0f, 0.9f));
+		mana = new JaugeObject("mana", marginRight - 50, marginTop+12, 42, 4, 1, 1, new Color(0.0f, 0.0f, 1.0f, 0.9f));
 		mana.minValue = 0;
 		mana.maxValue = 100;
 		mana.value = 20;
@@ -145,8 +152,8 @@ public class PlayState extends AbstractGameState implements GameState {
 
 		itemContainers = new ItemContainerObject[2];
 		for (int i = 0; i < itemContainers.length; i++) {
-			itemContainers[i] = new ItemContainerObject("itContainer_" + i, Game.WIDTH - (6 + (i + 1) * 22),
-					Game.HEIGHT - 40, 22, 22);
+			itemContainers[i] = new ItemContainerObject("itContainer_" + i, marginRight - (6 + (i + 1) * 22),
+					marginBottom - 40, 22, 22);
 			itemContainers[i].layer = 1;
 			itemContainers[i].priority = 1;
 			itemContainers[i].attributes.put("items", new Integer((int) Math.random() * 10));

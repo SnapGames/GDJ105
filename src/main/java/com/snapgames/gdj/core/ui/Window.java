@@ -37,7 +37,9 @@ public class Window {
 	 *            the game to display in.
 	 */
 	public Window(Game game) {
-		game.setSize(game.getDimension());
+		
+		//game.setSize(game.getDimension());
+		
 		frame = new JFrame(game.getTitle());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setContentPane(game);

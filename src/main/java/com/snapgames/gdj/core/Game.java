@@ -43,15 +43,15 @@ public class Game extends JPanel {
 	/**
 	 * Game screen width.
 	 */
-	public final static int WIDTH = 640;
+	public final static int WIDTH = 320;
 	/**
 	 * Game screen height.
 	 */
-	public final static int HEIGHT = 400;
+	public final static int HEIGHT = 200;
 	/**
 	 * game screen scaling
 	 */
-	public final static float SCALE = 1.5f;
+	public final static float SCALE = 2.6f;
 
 	/**
 	 * Number of frame per seconds

@@ -17,7 +17,6 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.GameObject;
 
@@ -174,43 +173,39 @@ public class RenderHelper {
 		}
 		pane_height = lines.size() * fontHeight + fontHeight / 2;
 
-		int pane_x = (int) (ago.x + ago.width + pane_padding);
-//		if (pane_x + pane_width >= Game.WIDTH) {
-//			pane_x = (int) Game.WIDTH - pane_width - pane_padding;
-//			if (pane_x < 0) {
-//				pane_x = 0;
-//			}
-//		}
-		int pane_y = (int) (ago.y + ago.height + pane_padding);
-//		if (pane_y + pane_height >= Game.HEIGHT) {
-//			pane_y = Game.HEIGHT - (ago.height + pane_height + pane_padding);
-//			if (pane_y < 0) {
-//				pane_y = 0;
-//			}
-//		}
+		int pane_x=0, pane_y=0;
 		int link = 2;
-
+		if (ago.offsetInfo != null) {
+			pane_x = (int) ago.offsetInfo.getX();
+			pane_y = (int) ago.offsetInfo.getY();
+		} else {
+			pane_x = (int) (ago.rectangle.x + ago.width + pane_padding);
+			pane_y = (int) (ago.rectangle.y + ago.height + pane_padding);
+		}
+		if (o.getScale() != 1.0f) {
+			g.scale(o.getScale(), o.getScale());
+		}
 		if (debugLevel >= 1) {
 			g.setColor(Color.YELLOW);
-			g.drawRect((int) ago.x, (int) ago.y, ago.width, ago.height);
-			g.drawString(""+ago.index, (int)ago.x, (int)ago.y);
+			g.drawRect((int) ago.rectangle.x, (int) ago.rectangle.y, ago.width, ago.height);
+			g.drawString("" + ago.index, (int) ago.rectangle.x, (int) ago.rectangle.y);
 		}
 		if (debugLevel >= 2) {
 			g.setColor(Color.GREEN);
 			switch (ago.direction) {
 			case UP:
-				g.drawLine((int) ago.x, (int) ago.y, (int) ago.x + ago.width, (int) ago.y);
+				g.drawLine((int) ago.rectangle.x, (int) ago.rectangle.y, (int) ago.rectangle.x + ago.rectangle.width, (int) ago.rectangle.y);
 				break;
 			case LEFT:
-				g.drawLine((int) ago.x, (int) ago.y + (int) ago.height, (int) ago.x, (int) ago.y);
+				g.drawLine((int) ago.rectangle.x, (int) ago.rectangle.y + (int) ago.rectangle.height, (int) ago.rectangle.x, (int) ago.rectangle.y);
 				break;
 			case RIGHT:
-				g.drawLine((int) ago.x + (int) ago.width, (int) ago.y + (int) ago.height, (int) ago.x + (int) ago.width,
-						(int) ago.y);
+				g.drawLine((int) ago.rectangle.x + (int) ago.rectangle.width, (int) ago.rectangle.y + (int) ago.rectangle.height, (int) ago.rectangle.x + (int) ago.rectangle.width,
+						(int) ago.rectangle.y);
 				break;
 			case DOWN:
-				g.drawLine((int) ago.x, (int) ago.y + (int) ago.height, (int) ago.x + ago.width,
-						(int) ago.y + (int) ago.height);
+				g.drawLine((int) ago.rectangle.x, (int) ago.rectangle.y + (int) ago.rectangle.height, (int) ago.rectangle.x + ago.rectangle.width,
+						(int) ago.rectangle.y + (int) ago.rectangle.height);
 				break;
 			case NONE:
 				break;
@@ -224,10 +219,13 @@ public class RenderHelper {
 			g.drawRect(pane_x + link, pane_y + link, pane_width, pane_height);
 
 			g.setColor(Color.GREEN);
-			g.drawLine((int) ago.x + ago.width, (int) ago.y + ago.height, (int) pane_x + link, pane_y + link);
+			g.drawLine((int) ago.rectangle.x + ago.rectangle.width, (int) ago.rectangle.y + ago.rectangle.height, (int) pane_x + link, pane_y + link);
 			for (int i = 0; i < lines.size(); i++) {
 				g.drawString(lines.get(i), pane_x + link + pane_padding, pane_y + link + (i + 1) * fontHeight);
 			}
+		}
+		if (o.getScale() != 1.0f) {
+			g.scale(1 / o.getScale(), 1 / o.getScale());
 		}
 	}
 }
