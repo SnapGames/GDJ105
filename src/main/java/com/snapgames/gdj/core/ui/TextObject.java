@@ -92,10 +92,10 @@ public class TextObject extends AbstractGameObject {
 
 		if (backgroundColor != null) {
 			g.setColor(backgroundColor);
-			g.fillRect((int) x - 2, (int) y + 2 + height, width + 4, height + 4);
+			g.fillRect((int) x - 2, (int) y + 2, width + 4, height + 4);
 		}
 
-		this.rectangle = RenderHelper.drawShadowString(g, text, (int) x, (int) y + height-2, frontColor, shadowColor,
+		this.rectangle = RenderHelper.drawShadowString(g, text, (int) x, (int) y + height - 2, frontColor, shadowColor,
 				TextPosition.LEFT, shadowBold);
 	}
 

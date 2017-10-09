@@ -169,7 +169,7 @@ public abstract class AbstractGameState implements GameState {
 	 */
 	public void addCamera(CameraObject cameraObject) {
 		cameras.add(cameraObject);
-		//objects.add(cameraObject);
+		// objects.add(cameraObject);
 		if (defaultCamera == null) {
 			defaultCamera = cameraObject;
 		}
@@ -259,10 +259,10 @@ public abstract class AbstractGameState implements GameState {
 					if (defaultCamera != null && layer.moveWithCamera) {
 						g.translate(-defaultCamera.getX(), -defaultCamera.getY());
 					}
-					if (viewContainsObject(o, view) || defaultCamera == null || layer.moveWithCamera==false) {
+					if (viewContainsObject(o, view) || defaultCamera == null || layer.moveWithCamera == false) {
 						renderedObjectCount++;
 						o.draw(game, g);
-						if (game.isDebug(1)&&o.isDebugInfoDisplayed()) {
+						if (game.isDebug(1) || o.isDebugInfoDisplayed()) {
 							RenderHelper.drawDebugInfoObject(g, o, debugFont, game.getDebug());
 						}
 					}
@@ -275,7 +275,7 @@ public abstract class AbstractGameState implements GameState {
 				defaultCamera.draw(game, g);
 			}
 			statistics.put("renderedObjCount", renderedObjectCount);
-			statistics.put("staticObjCount", renderedObjectCount);
+			statistics.put("staticObjCount", objects.size());
 		}
 
 		if (game.isDebug(1)) {
