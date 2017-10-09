@@ -72,10 +72,10 @@ Use the following keys:
 - <kbd>D</kbd> / <kbd>F9</kbd> switch between DEBUG modes (see previous table)
     
 - <kbd>H</kbd> display a help panel to show keyboard shortcuts :)    
-- <kbd>UP</kbd>, <kbd>DOWN</kbd>, <kbd>LEFT</kbd>, <kbd>RIGHT</kbd> to move the blue square which is the `Player` game object,
-- <kbd>SHIFT</kbd> - <kbd>CTRL</kbd> with  cursor key will accelerate move,
-- <kbd>PG-UP</kbd>, <kbd>PG-DOWN</kbd> will increase decrease number of `Enemy` and `Eatable` game objects (to raise-up your energy), 
-- <kbd>SHIFT</kbd> - <kbd>CTRL</kbd> with <kbd>PG-UP</kbd> and <kbd>PG-DOWN</kbd> keys will accelerate increasing.
+- <kbd>UP</kbd> / <kbd>DOWN</kbd> / <kbd>LEFT</kbd> / <kbd>RIGHT</kbd> to move the blue square which is the `Player` game object,
+- <kbd>SHIFT</kbd> / <kbd>CTRL</kbd> with  cursor key will accelerate move,
+- <kbd>PG-UP</kbd> / <kbd>PG-DOWN</kbd> will increase decrease number of `Enemy` and `Eatable` game objects (to raise-up your energy), 
+- <kbd>SHIFT</kbd> / <kbd>CTRL</kbd> with <kbd>PG-UP</kbd> and <kbd>PG-DOWN</kbd> keys will accelerate increasing.
 
 Have Fun !
 
