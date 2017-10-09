@@ -46,7 +46,7 @@ Import this project as an Existing Maven Project into your prefered IDE,
 
 Here are some screenshots from the Title screen from the `TitleState`:
 
-![TitleState without debug information](src/main/docs/images/screenshot 81537552334024.jpg "TitleState without debug information") ![TitleState with to much debug information](src/main/docs/images/screenshot 81534842800074.jpg "TitleState with to much debug information")
+![TitleState with to much debug information](src/main/docs/images/screenshot%2081534842800074.jpg "TitleState with to much debug information") ![TitleState without debug information](src/main/docs/images/screenshot%2081537552334024.jpg "TitleState without debug information")
 
 - Just press the <kbd>SPACE</kbd>/<kbd>ENTER</kbd> to start the demo,
 - <kbd>D</kbd> / <kbd>F9</kbd> switch between DEBUG modes 
@@ -65,7 +65,7 @@ Here are some screenshots from the Title screen from the `TitleState`:
 
 The `PlayState` is only a capabilities demonstration purpose state.
 
-![PlayState with minimum debug info](src/main/docs/images/screenshot 81542505497219.jpg "PlayState with minimum debug info") ![PlayState without any debug info](src/main/docs/images/screenshot 81547820149296.jpg "PlayState without any debug info");
+![PlayState with minimum debug info](src/main/docs/images/screenshot%2081542505497219.jpg "PlayState with minimum debug info") ![PlayState without any debug info](src/main/docs/images/screenshot%2081547820149296.jpg "PlayState without any debug info");
 
 Use the following keys:
 
@@ -73,9 +73,9 @@ Use the following keys:
     
 - <kbd>H</kbd> display a help panel to show keyboard shortcuts :)    
 - <kbd>UP</kbd>, <kbd>DOWN</kbd>, <kbd>LEFT</kbd>, <kbd>RIGHT</kbd> to move the blue square which is the `Player` game object,
-- <kbd>SHIFT</kbd> / <kbd>CTRL</kbd> with  cursor key will accelerate move,
+- <kbd>SHIFT</kbd> - <kbd>CTRL</kbd> with  cursor key will accelerate move,
 - <kbd>PG-UP</kbd>, <kbd>PG-DOWN</kbd> will increase decrease number of `Enemy` and `Eatable` game objects (to raise-up your energy), 
-- <kbd>SHIFT</kbd> / <kbd>CTRL</kbd> with <kbd>PG-UP<kbd> and <kbd>PG-DOWN</kbd> keys will accelerate increasing.
+- <kbd>SHIFT</kbd> - <kbd>CTRL</kbd> with <kbd>PG-UP</kbd> and <kbd>PG-DOWN</kbd> keys will accelerate increasing.
 
 Have Fun !
 
