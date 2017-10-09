@@ -12,7 +12,6 @@ package com.snapgames.gdj.core.ui;
 import java.awt.BorderLayout;
 
 import javax.swing.JFrame;
-import javax.swing.JRootPane;
 
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
@@ -37,9 +36,9 @@ public class Window {
 	 *            the game to display in.
 	 */
 	public Window(Game game) {
-		
-		//game.setSize(game.getDimension());
-		
+
+		// game.setSize(game.getDimension());
+
 		frame = new JFrame(game.getTitle());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setContentPane(game);
