@@ -21,18 +21,23 @@ Graphical objects to create some new States :
 
 To compile the full project, please execute the following command :
 
-    $> mvn clean install
-
+```bash
+$> mvn clean install
+```
 
 ## Execute
 
 to execute the the compiled jar, please execute the command bellow :
 
-    $> mvn exec:java
+```bash
+$> mvn exec:java
+```
 
 or :
 
-    $> java -jar gdj105-0.0.1-SNAPSHOT.jar
+```bash
+$> java -jar gdj105-0.0.1-SNAPSHOT.jar
+```
 
 ## Edit
 
