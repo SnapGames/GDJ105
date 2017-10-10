@@ -36,6 +36,11 @@ import com.snapgames.gdj.core.ui.Window;
 public class Game extends JPanel {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -1159822737613073769L;
+
+	/**
 	 * Internal logger.
 	 */
 	public static final Logger logger = LoggerFactory.getLogger(Game.class);
