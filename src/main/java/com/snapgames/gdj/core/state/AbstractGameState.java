@@ -25,6 +25,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.snapgames.gdj.core.Game;
+import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.collision.QuadTree;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.CameraObject;
@@ -99,7 +100,7 @@ public abstract class AbstractGameState implements GameState {
 	 */
 	@Override
 	public void initialize(Game game) {
-		debugFont = game.getRender().getFont().deriveFont(9f);
+		ResourceManager.add("debugFont", game.getRender().getFont().deriveFont(9f));
 		quadTree = new QuadTree(Game.WIDTH, Game.HEIGHT);
 
 		// activate needed layers
@@ -263,7 +264,8 @@ public abstract class AbstractGameState implements GameState {
 						renderedObjectCount++;
 						o.draw(game, g);
 						if (game.isDebug(1) || o.isDebugInfoDisplayed()) {
-							RenderHelper.drawDebugInfoObject(g, o, debugFont, game.getDebug());
+							o.drawSpecialDebugInfo(game, g);
+
 						}
 					}
 					if (defaultCamera != null && layer.moveWithCamera) {

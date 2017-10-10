@@ -9,6 +9,7 @@
  */
 package com.snapgames.gdj.core;
 
+import java.awt.Font;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.util.Map;
@@ -41,6 +42,8 @@ public class ResourceManager {
 	 * @return
 	 */
 	private Object getResource(String name) {
+		assert (resources != null);
+		assert (name != null);
 		if (!resources.containsKey(name)) {
 			String extension = name.substring(name.lastIndexOf("."), name.length());
 			switch (extension) {
@@ -58,6 +61,15 @@ public class ResourceManager {
 		return resources.get(name);
 	}
 
+	private void addResource(String name, Object value) {
+		assert (resources != null);
+		assert (name != null);
+		assert (value != null);
+		if (!resources.containsKey(name)) {
+			resources.put(name, value);
+		}
+	}
+
 	/**
 	 * retrieve a resource for this name
 	 * 
@@ -69,13 +81,34 @@ public class ResourceManager {
 	}
 
 	/**
-	 * Retrieve an image from the resources.
+	 * Add an external (<code>name</code>,<code>value</code>) resource to the
+	 * manager.
+	 * 
+	 * @param name
+	 * @param value
+	 */
+	public static void add(String name, Object value) {
+		getInstance().addResource(name, value);
+	}
+
+	/**
+	 * Retrieve an image <code>name</code> from the resources.
 	 * 
 	 * @param name
 	 * @return
 	 */
 	public static BufferedImage getImage(String name) {
 		return (BufferedImage) getInstance().getResource(name);
+	}
+
+	/**
+	 * Retrieve a Font <code>name</code> from the resources
+	 * 
+	 * @param name
+	 * @return
+	 */
+	public static Font getFont(String name) {
+		return (Font) getInstance().getResource(name);
 	}
 
 	/**

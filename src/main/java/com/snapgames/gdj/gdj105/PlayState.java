@@ -22,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.snapgames.gdj.core.Game;
+import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.collision.Sizeable;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.Actions;
@@ -108,6 +109,9 @@ public class PlayState extends AbstractGameState implements GameState {
 		font = game.getGraphics().getFont();
 		scoreFont = game.getGraphics().getFont().deriveFont(14.0f);
 		helpFont = font.deriveFont(8f);
+		ResourceManager.add("font", font);
+		ResourceManager.add("helpFont", helpFont);
+		ResourceManager.add("scoreFont", scoreFont);
 
 		this.playZone = new Rectangle(0, 0, 1000, 1000);
 
@@ -128,14 +132,14 @@ public class PlayState extends AbstractGameState implements GameState {
 		// NPC
 		generateEnemies(10);
 
-		int marginLeft = (int) (Game.WIDTH * camera.getMargin()*2);
-		int marginTop = (int) (Game.HEIGHT * camera.getMargin()*2);
-		int marginRight = (int) (Game.WIDTH * (1-camera.getMargin()*2));
-		int marginBottom = (int) (Game.HEIGHT * (1-camera.getMargin()*2));
+		int marginLeft = (int) (Game.WIDTH * camera.getMargin() * 2);
+		int marginTop = (int) (Game.HEIGHT * camera.getMargin() * 2);
+		int marginRight = (int) (Game.WIDTH * (1 - camera.getMargin() * 2));
+		int marginBottom = (int) (Game.HEIGHT * (1 - camera.getMargin() * 2));
 
 		// HUD Definition (layer 1)
-		scoreTextObject = new TextObject("score", marginLeft,marginTop,
-				String.format("%06d", score), scoreFont, 1, 1, Color.WHITE);
+		scoreTextObject = new TextObject("score", marginLeft, marginTop, String.format("%06d", score), scoreFont, 1, 1,
+				Color.WHITE);
 		addObject(scoreTextObject);
 
 		energy = new JaugeObject("energy", marginRight - 50, marginTop, 42, 4, 1, 1, new Color(1.0f, 0.0f, 0.0f, 0.7f));
@@ -144,7 +148,8 @@ public class PlayState extends AbstractGameState implements GameState {
 		energy.value = 90;
 		addObject(energy);
 
-		mana = new JaugeObject("mana", marginRight - 50, marginTop+12, 42, 4, 1, 1, new Color(0.0f, 0.0f, 1.0f, 0.9f));
+		mana = new JaugeObject("mana", marginRight - 50, marginTop + 12, 42, 4, 1, 1,
+				new Color(0.0f, 0.0f, 1.0f, 0.9f));
 		mana.minValue = 0;
 		mana.maxValue = 100;
 		mana.value = 20;
@@ -380,7 +385,7 @@ public class PlayState extends AbstractGameState implements GameState {
 	private void drawPause(Game game, Graphics2D g) {
 		String lblPause = "Pause";
 
-		Font bck = g.getFont();
+		Font bck = ResourceManager.getFont("font");
 		Font f = font.deriveFont(14.0f).deriveFont(Font.ITALIC);
 
 		g.setFont(f);

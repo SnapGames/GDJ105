@@ -10,6 +10,7 @@
 package com.snapgames.gdj.core.entity;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
@@ -19,6 +20,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.snapgames.gdj.core.Game;
+import com.snapgames.gdj.core.ResourceManager;
+import com.snapgames.gdj.core.gfx.RenderHelper;
 
 /**
  * AbstractGameObject
@@ -85,11 +88,10 @@ public class AbstractGameObject implements GameObject {
 
 	public Map<String, Object> attributes = new ConcurrentHashMap<>();
 
-	public Point2D offsetInfo; 
+	public Point2D offsetInfo;
 
 	public boolean showDebuginfo;
-	
-	
+
 	/**
 	 * Rendering depth and priority.
 	 */
@@ -103,12 +105,19 @@ public class AbstractGameObject implements GameObject {
 	protected List<String> debugInfo = new ArrayList<>();
 
 	/**
+	 * internal debug font.
+	 */
+	private Font debugFont;
+
+	/**
 	 * Default constructor for this AbstractGameObject.
 	 */
 	public AbstractGameObject() {
 		super();
 		indexCounter++;
 		index = indexCounter;
+		debugFont = ResourceManager.getFont("debugFont");
+
 	}
 
 	/**
@@ -209,6 +218,18 @@ public class AbstractGameObject implements GameObject {
 		g.setColor(color);
 		g.fillRect((int) x, (int) y, width, height);
 		// Extended object will use their own draw process.
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.snapgames.gdj.core.entity.GameObject#drawSpecialDebugInfo(com.snapgames.
+	 * gdj.core.Game, java.awt.Graphics2D)
+	 */
+	public void drawSpecialDebugInfo(Game game, Graphics2D g) {
+		RenderHelper.drawDebugInfoObject(g, this, debugFont, game.getDebug());
 
 	}
 
@@ -335,9 +356,9 @@ public class AbstractGameObject implements GameObject {
 		return scale;
 	}
 
-	
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.snapgames.gdj.core.entity.GameObject#isDebugInfoDisplayed()
 	 */
 	@Override

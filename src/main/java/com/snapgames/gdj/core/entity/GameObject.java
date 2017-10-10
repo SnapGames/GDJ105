@@ -6,7 +6,7 @@ import java.util.List;
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.collision.Sizeable;
 
-public interface GameObject extends Sizeable{
+public interface GameObject extends Sizeable {
 
 	/**
 	 * Update object position.
@@ -56,13 +56,26 @@ public interface GameObject extends Sizeable{
 
 	/**
 	 * Return the object scale factor.
+	 * 
 	 * @return
 	 */
 	public float getScale();
 
 	/**
 	 * Does the debug info must be displayed for this object ?
+	 * 
 	 * @return
 	 */
 	public boolean isDebugInfoDisplayed();
+
+	/**
+	 * If an object need to add specific debug information at display time, this
+	 * method can be overridden.
+	 * 
+	 * @param game
+	 *            the parent game.
+	 * @param g
+	 *            the Graphics interface to render things.
+	 */
+	public void drawSpecialDebugInfo(Game game, Graphics2D g);
 }

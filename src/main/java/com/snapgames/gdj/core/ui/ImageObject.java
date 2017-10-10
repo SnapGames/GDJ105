@@ -9,7 +9,9 @@
  */
 package com.snapgames.gdj.core.ui;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 
 import com.snapgames.gdj.core.Game;
@@ -52,6 +54,7 @@ public class ImageObject extends AbstractGameObject {
 	 */
 	@Override
 	public void draw(Game game, Graphics2D g) {
-		g.drawImage(image, (int) (x), (int) (y), null);
+		g.drawImage(image, (int) (x), (int) (y),null);
+		g.drawImage(image, (int) (x)+width, (int) (y),null);
 	}
 }
