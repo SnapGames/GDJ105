@@ -22,9 +22,11 @@ import org.slf4j.LoggerFactory;
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.entity.Layer;
+import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.AbstractGameState;
 import com.snapgames.gdj.core.ui.ImageObject;
+import com.snapgames.gdj.core.ui.MenuObject;
 import com.snapgames.gdj.core.ui.Messages;
 import com.snapgames.gdj.core.ui.TextObject;
 
@@ -42,6 +44,8 @@ public class TitleState extends AbstractGameState {
 	private Font menuItemFont;
 	private ImageObject bgi;
 
+	private MenuObject menu;
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -58,11 +62,10 @@ public class TitleState extends AbstractGameState {
 		}
 
 		titleFont = game.getGraphics().getFont().deriveFont(24.0f);
-		menuItemFont = game.getGraphics().getFont().deriveFont(10.0f);
+		menuItemFont = game.getGraphics().getFont().deriveFont(16.0f);
 		FontRenderContext frc = new FontRenderContext(new AffineTransform(), true, true);
 
 		String titleLabel = Messages.getString("TitleState.label.title");
-		String startLabel = Messages.getString("TitleState.label.start");
 		String copyrightLabel = Messages.getString("TitleState.label.copyright");
 
 		BufferedImage bgImg = ResourceManager.getImage("/res/images/background-large.jpg");
@@ -71,19 +74,23 @@ public class TitleState extends AbstractGameState {
 		bgi.dx = 0.029f;
 		addObject(bgi);
 
-		TextObject titleText = new TextObject("title",
-				(int) (Game.WIDTH - titleFont.getStringBounds(titleLabel, frc).getWidth()) / 2,
-				(int) (Game.HEIGHT * 0.10f), titleLabel, titleFont, 1, 1, Color.WHITE);
+		TextObject titleText = new TextObject("title", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.10f), titleLabel,
+				titleFont, 1, 1, Color.WHITE, TextPosition.CENTER);
 		addObject(titleText);
 
-		TextObject msgText = new TextObject("start",
-				(int) (Game.WIDTH - menuItemFont.getStringBounds(startLabel, frc).getWidth()) / 2,
-				(int) (Game.HEIGHT * 0.70f), startLabel, menuItemFont, 1, 1, Color.WHITE);
-		addObject(msgText);
+		menu = new MenuObject("menu", (int) (Game.WIDTH * 0.50f), (int) (Game.HEIGHT * 0.50f), 0, menuItemFont,
+				Color.WHITE, Color.BLACK, TextPosition.CENTER);
+		menu.layer = 2;
+		menu.priority = 1;
 
-		TextObject cpyText = new TextObject("copyright",
-				(int) (Game.WIDTH - menuItemFont.getStringBounds(copyrightLabel, frc).getWidth()) / 2,
-				(int) (Game.HEIGHT * 0.85f), copyrightLabel, debugFont, 2, 1, Color.WHITE);
+		menu.addItem("start", "TitleState.label.start", "Start");
+		menu.addItem("options", "TitleState.label.options", "Options");
+		menu.addItem("quit", "TitleState.label.quit", "Quit");
+
+		addObject(menu);
+
+		TextObject cpyText = new TextObject("copyright", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.85f),
+				copyrightLabel, debugFont, 2, 1, Color.WHITE, TextPosition.CENTER);
 		addObject(cpyText);
 
 		logger.info("State TitleState initialized");
@@ -99,15 +106,34 @@ public class TitleState extends AbstractGameState {
 		if (bgi.x < -Game.WIDTH) {
 			bgi.x = 0.0f;
 		}
+		menu.update(game, dt);
 	}
 
 	@Override
 	public void keyReleased(Game game, KeyEvent e) {
 		super.keyReleased(game, e);
 		switch (e.getKeyCode()) {
+
+		case KeyEvent.VK_UP:
+		case KeyEvent.VK_KP_UP:
+			menu.previous();
+			break;
+		case KeyEvent.VK_DOWN:
+		case KeyEvent.VK_KP_DOWN:
+			menu.next();
+			break;
 		case KeyEvent.VK_ENTER:
 		case KeyEvent.VK_SPACE:
-			game.getGSM().activate("play");
+			switch (menu.getActiveItem().getValue()) {
+			case "start":
+				game.getGSM().activate("play");
+				break;
+			case "options":
+				break;
+			case "quit":
+				game.setExit(true);
+				break;
+			}
 			break;
 		}
 	}
