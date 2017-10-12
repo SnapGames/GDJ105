@@ -32,8 +32,8 @@ import com.snapgames.gdj.core.state.factory.NoDefaultStateException;
  * @author Frédéric Delorme
  *
  */
-public class GameStateManager {
 
+public class GameStateManager {
 	/**
 	 * Internal Logger.
 	 */
@@ -92,10 +92,10 @@ public class GameStateManager {
 		try {
 			StateDefinition stateDef = gsf.getStateDefintion(name);
 			state = stateDef.classState.newInstance();
-			logger.info("State named {} with class {} has been instantiated with success", stateDef.name,
+			logger.info("State named '{}' with class '{}' has been instantiated with success", stateDef.name,
 					stateDef.className);
 		} catch (InstantiationException | IllegalAccessException | NoDefaultStateException e) {
-			logger.error("Unable to instatiate the class for state {}", name);
+			logger.error("Unable to instatiate the class for state '{}'", name);
 		}
 		if (null != state) {
 			states.put(name, state);
@@ -115,7 +115,7 @@ public class GameStateManager {
 		assert (state != null);
 		assert (states != null);
 		states.put(name, state);
-		logger.info("add the state {} to the cache.", name);
+		logger.info("add the state '{}' to the cache.", name);
 	}
 
 	/**
@@ -130,9 +130,9 @@ public class GameStateManager {
 			if (states.containsKey(name)) {
 				currentState = states.get(name);
 				currentState.initialize(game);
-				logger.info("State {} actiavted with success", name);
+				logger.info("State '{}' activated with success", name);
 			} else {
-				logger.error("Unable to load state {}", name);
+				logger.error("Unable to load state '{}'", name);
 			}
 		}
 	}

@@ -32,7 +32,7 @@ public class CameraObject extends AbstractGameObject {
 	int cHeight = (int) (height * inverseMargin);
 
 	/**
-	 * 
+	 * Default CameraObject constructor.
 	 */
 	public CameraObject() {
 		super();
@@ -84,15 +84,11 @@ public class CameraObject extends AbstractGameObject {
 			rectangle.x = (int) x;
 			rectangle.y = (int) y;
 		}
-		// rectangle.x = (int) (x + (width * margin));
-		// rectangle.y = (int) (y + (height * margin));
-		// rectangle.width = (int) (width * inverseMargin);
-		// rectangle.height = (int) (height * inverseMargin);
-	
-		 rectangle.x = (int) x-16;
-		 rectangle.y = (int) y-16 ;
-		 rectangle.width = (int) width+32;
-		 rectangle.height = (int) height+32;
+
+		rectangle.x = (int) x - 16;
+		rectangle.y = (int) y - 16;
+		rectangle.width = (int) width + 32;
+		rectangle.height = (int) height + 32;
 
 	}
 
@@ -107,9 +103,9 @@ public class CameraObject extends AbstractGameObject {
 	 */
 	@Override
 	public void draw(Game game, Graphics2D g) {
-		if(game.isDebug(1)) {
-			g.setColor(color);
-			g.drawRect(16, 16, width-32, height-32);
+		if (game.isDebug(1)) {
+			g.setColor(Color.GREEN);
+			g.drawRect(16, 16, rectangle.width - 32, height - 32);
 			g.drawString(name, 16, 16);
 		}
 	}

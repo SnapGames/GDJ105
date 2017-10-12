@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -155,12 +156,12 @@ public class MenuObject extends AbstractGameObject {
 		this.font = font;
 	}
 
-	
-	public MenuObject(String name, int x, int y, int defaultActiveItem, Font font, Color foreColor, Color shadowColor, TextPosition pos) {
-		this(name,x,y,defaultActiveItem,font,foreColor,shadowColor);
+	public MenuObject(String name, int x, int y, int defaultActiveItem, Font font, Color foreColor, Color shadowColor,
+			TextPosition pos) {
+		this(name, x, y, defaultActiveItem, font, foreColor, shadowColor);
 		this.textPosition = pos;
 	}
-	
+
 	/**
 	 * Add a new Item to the menu.
 	 * 
@@ -229,11 +230,16 @@ public class MenuObject extends AbstractGameObject {
 			} else {
 				drawColor = color;
 			}
-			RenderHelper.drawShadowString(g, item.getLabel(), (int) x, (int) y + (i * fm.getHeight()), drawColor,
-					shadowColor, (textPosition!=null?textPosition:TextPosition.LEFT), 2);
+			Rectangle rect = RenderHelper.drawShadowString(g, item.getLabel(), (int) x, (int) y + (i * fm.getHeight()),
+					drawColor, shadowColor, (textPosition != null ? textPosition : TextPosition.LEFT), 2);
 			i++;
-			height = i * fm.getHeight();
-			width = (fm.stringWidth(item.getLabel()) > width ? fm.stringWidth(item.getLabel()) : width);
+			// update rectangle Bounding Box for this object.
+			rectangle.x = (int) (rect.x < rectangle.x ? rect.x : rectangle.x);
+			rectangle.y = (int) (y - fm.getHeight());
+			rectangle.width = (int) (rect.width > width ? rect.width : width);
+			rectangle.height = i * fm.getHeight();
+			rectangle.width = width = (fm.stringWidth(item.getLabel()) > width ? fm.stringWidth(item.getLabel())
+					: width);
 		}
 	}
 

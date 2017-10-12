@@ -121,28 +121,28 @@ public class RenderHelper {
 			TextPosition txtPos, int border) {
 		int textWidth = g.getFontMetrics().stringWidth(text);
 		int textHeight = g.getFontMetrics().getHeight();
-		int dx = x;
+		int dx = 0;
 		switch (txtPos) {
 		case LEFT:
 			break;
 		case RIGHT:
-			dx = x - textWidth;
+			dx = -textWidth;
 			break;
 		case CENTER:
-			dx = x - (textWidth / 2);
+			dx = -(textWidth / 2);
 			break;
 		}
 		g.setColor(back);
 		for (int i = 0; i < border; i++) {
 			for (int ix = -i; ix < i + 1; ix++) {
 				for (int iy = -i; iy < i + 1; iy++) {
-					g.drawString(text, dx - ix, y + iy);
+					g.drawString(text, x+dx - ix, y + iy);
 				}
 			}
 		}
 		g.setColor(front);
-		g.drawString(text, dx, y);
-		return new Rectangle(dx, y, textWidth, textHeight);
+		g.drawString(text, x+dx, y);
+		return new Rectangle(x+dx, y, textWidth, textHeight);
 	}
 
 	/**
@@ -187,7 +187,7 @@ public class RenderHelper {
 		}
 		if (debugLevel >= 1) {
 			g.setColor(Color.YELLOW);
-			g.drawRect((int) ago.rectangle.x, (int) ago.rectangle.y, ago.width, ago.height);
+			g.drawRect((int) ago.rectangle.x, (int) ago.rectangle.y, ago.rectangle.width, ago.rectangle.height);
 			g.drawString("" + ago.index, (int) ago.rectangle.x, (int) ago.rectangle.y);
 		}
 		if (debugLevel >= 2) {

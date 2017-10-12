@@ -13,6 +13,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
+import java.awt.Rectangle;
 
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
@@ -76,8 +77,8 @@ public class TextObject extends AbstractGameObject {
 
 	}
 
-	
-	public TextObject(String name, int x, int y, String text, Font font, int layer, int priority, Color color, TextPosition pos) {
+	public TextObject(String name, int x, int y, String text, Font font, int layer, int priority, Color color,
+			TextPosition pos) {
 		super(name, x, y, 1, 1, layer, priority, color);
 		this.text = text;
 		this.shadowBold = 1;
@@ -89,8 +90,6 @@ public class TextObject extends AbstractGameObject {
 
 	}
 
-	
-	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -111,8 +110,13 @@ public class TextObject extends AbstractGameObject {
 			g.fillRect((int) x - 2, (int) y + 2, width + 4, height + 4);
 		}
 
-		this.rectangle = RenderHelper.drawShadowString(g, text, (int) x, (int) y + height - 2, frontColor, shadowColor,
-				(textPosition!=null?textPosition:TextPosition.LEFT), shadowBold);
+		Rectangle rect = RenderHelper.drawShadowString(g, text, (int) x, (int) y + height - 2, frontColor, shadowColor,
+				(textPosition != null ? textPosition : TextPosition.LEFT), shadowBold);
+		rectangle.x = (int) (rect.x < rectangle.x ? rect.x : rectangle.x);
+		rectangle.y = (int) (y);
+		rectangle.width = (int) (rect.width > width ? rect.width : width);
+		rectangle.height = fm.getHeight();
+		rectangle.width = width = (fm.stringWidth(text) > width ? fm.stringWidth(text) : width);
 	}
 
 	public void addDebugInfo() {

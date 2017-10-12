@@ -238,7 +238,7 @@ public class PlayState extends AbstractGameState implements GameState {
 		quadTree.clear();
 		for (GameObject o : objects) {
 			o.update(game, dt);
-			// inert object into quadtree for collision detection.
+			// inert object into QuadTree for collision detection.
 			quadTree.insert(o);
 		}
 
