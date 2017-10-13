@@ -235,20 +235,98 @@ public class PlayState extends AbstractGameState implements GameState {
 	 */
 	@Override
 	public void update(Game game, long dt) {
-		quadTree.clear();
-		for (GameObject o : objects) {
-			o.update(game, dt);
-			// inert object into QuadTree for collision detection.
-			quadTree.insert(o);
-		}
+		// add all objects to QuadTree
+		updateQuadTree(game, dt);
 
+		// compute play zone borders.
 		float winborder = 4;
 		float wl = winborder;
 		float wr = (float) playZone.getWidth() - player.width - winborder;
 		float wt = winborder;
 		float wb = (float) playZone.getHeight() - player.height - winborder;
 
-		// player limit to border window
+		// player limit to playzone
+		constrainPlayerTo(wl, wr, wt, wb);
+		// entities moving limit to playzone.
+		constrainObjectTo();
+		// compute score
+		updateScore();
+		// manage all collision
+		manageCollision();
+		// update all HUD attributes according to player object attriubtes
+		updateHUDAttributes();
+
+		// Update camera
+		if (defaultCamera != null) {
+			defaultCamera.update(game, dt);
+		}
+	}
+
+	/**
+	 * @param game
+	 * @param dt
+	 */
+	private void updateQuadTree(Game game, long dt) {
+		quadTree.clear();
+		for (GameObject o : objects) {
+			o.update(game, dt);
+			// inert object into QuadTree for collision detection.
+			quadTree.insert(o);
+		}
+	}
+
+	/**
+	 * update HUD attributes according to player attributes.
+	 */
+	private void updateHUDAttributes() {
+		if (energy != null && mana != null && player.attributes != null && !player.attributes.isEmpty()) {
+			energy.value = (Integer) player.attributes.get("energy");
+			mana.value = (Integer) player.attributes.get("mana");
+		}
+	}
+
+	/**
+	 * Update Score object on HUD
+	 */
+	private void updateScore() {
+		if (scoreTextObject != null) {
+			score = objects.size();
+			scoreTextObject.text = String.format("%06d", score);
+		}
+	}
+
+	/**
+	 * Constrain all object to play zone.
+	 */
+	private void constrainObjectTo() {
+		for (AbstractGameObject o : entities) {
+			if (o.x <= 0 ) {
+				o.dx = -Math.signum(o.dx) * o.hSpeed;
+				o.x = 1;
+			}
+			if(o.x >= playZone.getWidth()) {
+				o.dx = -Math.signum(o.dx) * o.hSpeed;
+				o.x = (int)playZone.getWidth()-1;				
+			}
+			if (o.y <= 0){
+				o.dy = -Math.signum(o.dy) * o.vSpeed;
+				o.y = 1;
+			}
+			if(o.y >= playZone.getHeight()) {
+				o.dy = -Math.signum(o.dy) * o.vSpeed;
+				o.y = (int)playZone.getHeight()-1;
+			}
+			computeEntityAction(o);
+		}
+	}
+
+	/**
+	 * @param wl
+	 * @param wr
+	 * @param wt
+	 * @param wb
+	 */
+	private void constrainPlayerTo(float wl, float wr, float wt, float wb) {
 		if (player.x < wl)
 			player.x = wl;
 		if (player.y < wt)
@@ -257,35 +335,11 @@ public class PlayState extends AbstractGameState implements GameState {
 			player.x = wr;
 		if (player.y > wb)
 			player.y = wb;
-
 		if (player.dx != 0) {
 			player.dx *= 0.980f;
 		}
 		if (player.dy != 0) {
 			player.dy *= 0.980f;
-		}
-
-		for (AbstractGameObject o : entities) {
-			if (o.x <= 0 || o.x >= playZone.getWidth()) {
-				o.dx = -Math.signum(o.dx) * o.hSpeed;
-			}
-			if (o.y <= 0 || o.y >= playZone.getHeight()) {
-				o.dy = -Math.signum(o.dy) * o.vSpeed;
-			}
-			computeEntityAction(o);
-		}
-		if (scoreTextObject != null) {
-			score = objects.size();
-			scoreTextObject.text = String.format("%06d", score);
-		}
-
-		manageCollision();
-		if (energy != null && mana != null && player.attributes != null && !player.attributes.isEmpty()) {
-			energy.value = (Integer) player.attributes.get("energy");
-			mana.value = (Integer) player.attributes.get("mana");
-		}
-		if (defaultCamera != null) {
-			defaultCamera.update(game, dt);
 		}
 	}
 

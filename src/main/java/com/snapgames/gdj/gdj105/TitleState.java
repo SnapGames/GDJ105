@@ -42,6 +42,7 @@ public class TitleState extends AbstractGameState {
 
 	private Font titleFont;
 	private Font menuItemFont;
+	private Font copyFont;
 	private ImageObject bgi;
 
 	private MenuObject menu;
@@ -61,8 +62,9 @@ public class TitleState extends AbstractGameState {
 			layers[i] = new Layer(true, false);
 		}
 
-		titleFont = game.getGraphics().getFont().deriveFont(24.0f);
-		menuItemFont = game.getGraphics().getFont().deriveFont(16.0f);
+		titleFont = game.getGraphics().getFont().deriveFont(3.0f*Game.SCREEN_FONT_RATIO);
+		menuItemFont = game.getGraphics().getFont().deriveFont(1.2f*Game.SCREEN_FONT_RATIO);
+		copyFont = game.getGraphics().getFont().deriveFont(1.0f*Game.SCREEN_FONT_RATIO);
 		FontRenderContext frc = new FontRenderContext(new AffineTransform(), true, true);
 
 		String titleLabel = Messages.getString("TitleState.label.title");
@@ -90,7 +92,7 @@ public class TitleState extends AbstractGameState {
 		addObject(menu);
 
 		TextObject cpyText = new TextObject("copyright", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.85f),
-				copyrightLabel, debugFont, 2, 1, Color.WHITE, TextPosition.CENTER);
+				copyrightLabel, copyFont, 2, 1, Color.WHITE, TextPosition.CENTER);
 		addObject(cpyText);
 
 		logger.info("State TitleState initialized");
