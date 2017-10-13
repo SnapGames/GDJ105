@@ -10,7 +10,9 @@
 package com.snapgames.gdj.gdj105.entity;
 
 import java.awt.Color;
+import java.awt.Graphics2D;
 
+import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 
 /**
@@ -55,4 +57,12 @@ public class Enemy extends AbstractGameObject {
 		super(name, x, y, dx, dy);
 	}
 
+	
+	@Override
+	public void draw(Game game, Graphics2D g) {
+		super.draw(game, g);
+		g.setColor(Color.BLACK);
+		g.drawRect((int)x,  (int)y, width, height);
+	}
+	
 }

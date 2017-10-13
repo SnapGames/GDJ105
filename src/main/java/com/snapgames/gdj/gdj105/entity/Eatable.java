@@ -39,6 +39,8 @@ public class Eatable extends AbstractGameObject {
 	public void draw(Game game, Graphics2D g) {
 		g.setColor(color);
 		g.fillArc((int) x, (int) y, 8, 8, 0, 360);
+		g.setColor(Color.BLACK);
+		g.drawArc((int) x, (int) y, 8, 8, 0, 360);
 	}
 
 }
