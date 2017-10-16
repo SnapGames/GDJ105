@@ -177,7 +177,7 @@ public class GameStateFactory {
 			@Override
 			public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {
 				if (systemId.contains("states.dtd")) {
-					return new InputSource(GameStateFactory.class.getResourceAsStream("/dtd/states.dtd"));
+					return new InputSource(GameStateFactory.class.getResourceAsStream("/res/dtd/states.dtd"));
 				} else {
 					return null;
 				}

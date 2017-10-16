@@ -41,7 +41,7 @@ public class ResourceManager {
 	 * @param name
 	 * @return
 	 */
-	private Object getResource(String name) {
+	private Object addResource(String name) {
 		assert (resources != null);
 		assert (name != null);
 		if (!resources.containsKey(name)) {
@@ -77,7 +77,7 @@ public class ResourceManager {
 	 * @return
 	 */
 	public static Object get(String name) {
-		return getInstance().getResource(name);
+		return getInstance().addResource(name);
 	}
 
 	/**
@@ -98,7 +98,7 @@ public class ResourceManager {
 	 * @return
 	 */
 	public static BufferedImage getImage(String name) {
-		return (BufferedImage) getInstance().getResource(name);
+		return (BufferedImage) getInstance().addResource(name);
 	}
 
 	/**
@@ -108,7 +108,7 @@ public class ResourceManager {
 	 * @return
 	 */
 	public static Font getFont(String name) {
-		return (Font) getInstance().getResource(name);
+		return (Font) getInstance().addResource(name);
 	}
 
 	/**
