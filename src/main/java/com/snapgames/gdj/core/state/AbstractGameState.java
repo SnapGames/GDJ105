@@ -42,8 +42,6 @@ public abstract class AbstractGameState implements GameState {
 
 	public Map<String, Integer> statistics = new ConcurrentHashMap<>();
 
-	public QuadTree quadTree;
-
 	/**
 	 * Referring GameStateManager
 	 */
@@ -101,8 +99,6 @@ public abstract class AbstractGameState implements GameState {
 	@Override
 	public void initialize(Game game) {
 		ResourceManager.add("debugFont", game.getRender().getFont().deriveFont(9f));
-		quadTree = new QuadTree(Game.WIDTH, Game.HEIGHT);
-
 		// activate needed layers
 		resetLayers();
 	}

@@ -13,9 +13,6 @@ provided by the [SnapGames](http://snapgames.fr) site.
 As we have got now some great piece of game code, we need to start buildig a real framework by refactoring the code and adding some new objects.
 Graphical objects to create some new States : 
 - Let's create `TextObject`, `BackgroundObject` to build `TitleState`, 
-- and to enhance the `PlayState`, the `JaugeObject` and `ItemContainerObject` will be used to display HUD. 
-- But also adds some important concept like collision system with `QuadTree`, a resource manager, and the main entities like `Player`, `Enemy`, `Eatable`,  etc...
-- And add a `CameraObject` to manage viewport target following. 
 
 ## Compile
 
