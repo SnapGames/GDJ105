@@ -14,7 +14,6 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -23,10 +22,8 @@ import org.slf4j.LoggerFactory;
 
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
-import com.snapgames.gdj.core.collision.Sizeable;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.Actions;
-import com.snapgames.gdj.core.entity.CameraObject;
 import com.snapgames.gdj.core.entity.Direction;
 import com.snapgames.gdj.core.entity.GameObject;
 import com.snapgames.gdj.core.entity.Layer;
@@ -35,11 +32,8 @@ import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.AbstractGameState;
 import com.snapgames.gdj.core.state.GameState;
 import com.snapgames.gdj.core.state.GameStateManager;
-import com.snapgames.gdj.core.ui.TextObject;
 import com.snapgames.gdj.gdj105.entity.Eatable;
 import com.snapgames.gdj.gdj105.entity.Enemy;
-import com.snapgames.gdj.gdj105.entity.ItemContainerObject;
-import com.snapgames.gdj.gdj105.entity.JaugeObject;
 import com.snapgames.gdj.gdj105.entity.Player;
 
 /**
@@ -52,6 +46,8 @@ import com.snapgames.gdj.gdj105.entity.Player;
  */
 public class PlayState extends AbstractGameState implements GameState {
 
+	private static final Logger logger = LoggerFactory.getLogger(PlayState.class);
+
 	/**
 	 * objects to be animated on the game display.
 	 */
@@ -59,19 +55,6 @@ public class PlayState extends AbstractGameState implements GameState {
 	private Player player = null;
 	// list of other entities to demonstrate AbstractGameObject usage.
 	private List<AbstractGameObject> entities = new CopyOnWriteArrayList<>();
-
-	// Object moved by player
-	private TextObject scoreTextObject = null;
-
-	int dEnergy = 1;
-	private JaugeObject energy;
-	int dMana = 1;
-	private JaugeObject mana;
-
-	// score
-	private int score = 0;
-
-	private Font scoreFont;
 
 	/**
 	 * internal Font to draw any text on the screen !
@@ -83,9 +66,7 @@ public class PlayState extends AbstractGameState implements GameState {
 	 * Flag to display Help.
 	 */
 	private boolean isHelp = false;
-	private ItemContainerObject[] itemContainers;
 	private Rectangle playZone;
-	private static final Logger logger = LoggerFactory.getLogger(PlayState.class);
 
 	public PlayState() {
 	}
@@ -107,11 +88,9 @@ public class PlayState extends AbstractGameState implements GameState {
 
 		// prepare Fonts
 		font = game.getGraphics().getFont();
-		scoreFont = game.getGraphics().getFont().deriveFont(14.0f);
 		helpFont = font.deriveFont(8f);
 		ResourceManager.add("font", font);
 		ResourceManager.add("helpFont", helpFont);
-		ResourceManager.add("scoreFont", scoreFont);
 
 		this.playZone = new Rectangle(0, 0, 1000, 1000);
 
@@ -126,45 +105,8 @@ public class PlayState extends AbstractGameState implements GameState {
 
 		addObject(player);
 
-		CameraObject camera = new CameraObject("cam1", player, 0.1f);
-		addCamera(camera);
-
 		// NPC
 		generateEnemies(10);
-
-		int marginLeft = (int) (Game.WIDTH * camera.getMargin() * 2);
-		int marginTop = (int) (Game.HEIGHT * camera.getMargin() * 2);
-		int marginRight = (int) (Game.WIDTH * (1 - camera.getMargin() * 2));
-		int marginBottom = (int) (Game.HEIGHT * (1 - camera.getMargin() * 2));
-
-		// HUD Definition (layer 1)
-		scoreTextObject = new TextObject("score", marginLeft, marginTop, String.format("%06d", score), scoreFont, 1, 1,
-				Color.WHITE);
-		addObject(scoreTextObject);
-
-		energy = new JaugeObject("energy", marginRight - 50, marginTop, 42, 4, 1, 1, new Color(1.0f, 0.0f, 0.0f, 0.7f));
-		energy.minValue = 0;
-		energy.maxValue = 100;
-		energy.value = 90;
-		addObject(energy);
-
-		mana = new JaugeObject("mana", marginRight - 50, marginTop + 12, 42, 4, 1, 1,
-				new Color(0.0f, 0.0f, 1.0f, 0.9f));
-		mana.minValue = 0;
-		mana.maxValue = 100;
-		mana.value = 20;
-		addObject(mana);
-
-		itemContainers = new ItemContainerObject[2];
-		for (int i = 0; i < itemContainers.length; i++) {
-			itemContainers[i] = new ItemContainerObject("itContainer_" + i, marginRight - (6 + (i + 1) * 22),
-					marginBottom - 40, 22, 22);
-			itemContainers[i].layer = 1;
-			itemContainers[i].priority = 1;
-			itemContainers[i].attributes.put("items", new Integer((int) Math.random() * 10));
-			itemContainers[i].font = game.getFont().deriveFont(8.0f);
-			addObject(itemContainers[i]);
-		}
 
 	}
 
@@ -249,17 +191,7 @@ public class PlayState extends AbstractGameState implements GameState {
 		constrainPlayerTo(wl, wr, wt, wb);
 		// entities moving limit to playzone.
 		constrainObjectTo();
-		// compute score
-		updateScore();
-		// manage all collision
-		manageCollision();
-		// update all HUD attributes according to player object attriubtes
-		updateHUDAttributes();
 
-		// Update camera
-		if (defaultCamera != null) {
-			defaultCamera.update(game, dt);
-		}
 	}
 
 	/**
@@ -267,31 +199,8 @@ public class PlayState extends AbstractGameState implements GameState {
 	 * @param dt
 	 */
 	private void updateQuadTree(Game game, long dt) {
-		quadTree.clear();
 		for (GameObject o : objects) {
 			o.update(game, dt);
-			// inert object into QuadTree for collision detection.
-			quadTree.insert(o);
-		}
-	}
-
-	/**
-	 * update HUD attributes according to player attributes.
-	 */
-	private void updateHUDAttributes() {
-		if (energy != null && mana != null && player.attributes != null && !player.attributes.isEmpty()) {
-			energy.value = (Integer) player.attributes.get("energy");
-			mana.value = (Integer) player.attributes.get("mana");
-		}
-	}
-
-	/**
-	 * Update Score object on HUD
-	 */
-	private void updateScore() {
-		if (scoreTextObject != null) {
-			score = objects.size();
-			scoreTextObject.text = String.format("%06d", score);
 		}
 	}
 
@@ -300,21 +209,21 @@ public class PlayState extends AbstractGameState implements GameState {
 	 */
 	private void constrainObjectTo() {
 		for (AbstractGameObject o : entities) {
-			if (o.x <= 0 ) {
+			if (o.x <= 0) {
 				o.dx = -Math.signum(o.dx) * o.hSpeed;
 				o.x = 1;
 			}
-			if(o.x >= playZone.getWidth()) {
+			if (o.x >= playZone.getWidth()) {
 				o.dx = -Math.signum(o.dx) * o.hSpeed;
-				o.x = (int)playZone.getWidth()-1;				
+				o.x = (int) playZone.getWidth() - 1;
 			}
-			if (o.y <= 0){
+			if (o.y <= 0) {
 				o.dy = -Math.signum(o.dy) * o.vSpeed;
 				o.y = 1;
 			}
-			if(o.y >= playZone.getHeight()) {
+			if (o.y >= playZone.getHeight()) {
 				o.dy = -Math.signum(o.dy) * o.vSpeed;
-				o.y = (int)playZone.getHeight()-1;
+				o.y = (int) playZone.getHeight() - 1;
 			}
 			computeEntityAction(o);
 		}
@@ -341,58 +250,6 @@ public class PlayState extends AbstractGameState implements GameState {
 		if (player.dy != 0) {
 			player.dy *= 0.980f;
 		}
-	}
-
-	/**
-	 * Manage collision from Player to other objects.
-	 */
-	private void manageCollision() {
-		List<Sizeable> collisionList = new CopyOnWriteArrayList<>();
-		quadTree.retrieve(collisionList, player);
-		if (collisionList != null && !collisionList.isEmpty()) {
-			for (Sizeable s : collisionList) {
-				AbstractGameObject ago = (AbstractGameObject) s;
-				if (player.rectangle.intersects(ago.rectangle)) {
-					int d = 0;
-					if (ago.getClass().equals(Eatable.class)) {
-						d = (Integer) ago.attributes.get("power");
-						// eat only if energy low.
-						if (addValueToAttribute(player, "energy", d, 0, 100)) {
-							objects.remove(ago);
-						}
-					}
-					if (ago.getClass().equals(Enemy.class)) {
-						addValueToAttribute(player, "energy", -1, 0, 100);
-					}
-				}
-			}
-		}
-	}
-
-	/**
-	 * add <code>d</code> to attribute <code>name</code> from game object
-	 * <code>ago</code> and verify <code>min</code> and <code>max</code> value. If
-	 * value as been updated, return <code>true</code>, else <code>false</code>.
-	 * 
-	 * @param ago
-	 * @param name
-	 * @param d
-	 * @param min
-	 * @param max
-	 * @return
-	 */
-	private boolean addValueToAttribute(AbstractGameObject ago, String name, int d, int min, int max) {
-		if (ago != null && ago.attributes != null && ago.attributes.containsKey(name)) {
-			int value = (Integer) ago.attributes.get(name);
-			if (value + d < max && value + d > min) {
-				value += d;
-				player.attributes.put(name, value);
-				return true;
-			}
-		} else {
-			logger.error("GameObject {} does not have property named {}", ago.name, name);
-		}
-		return false;
 	}
 
 	private void computeEntityAction(AbstractGameObject o) {
@@ -423,33 +280,6 @@ public class PlayState extends AbstractGameState implements GameState {
 		if (isHelp) {
 			displayHelp(game, g, 10, 20, helpFont);
 		}
-
-		// Display Pause state
-		if (game.isPause()) {
-			drawPause(game, g);
-		}
-
-	}
-
-	/**
-	 * draw the Pause label.
-	 * 
-	 * @param g
-	 */
-	private void drawPause(Game game, Graphics2D g) {
-		String lblPause = "Pause";
-
-		Font bck = ResourceManager.getFont("font");
-		Font f = font.deriveFont(14.0f).deriveFont(Font.ITALIC);
-
-		g.setFont(f);
-		RenderHelper.drawShadowString(g, lblPause, Game.WIDTH / 2, Game.HEIGHT / 2, Color.WHITE, Color.BLACK,
-				RenderHelper.TextPosition.CENTER, 3);
-		g.setFont(bck);
-		g.setColor(Color.WHITE);
-		g.drawLine((Game.WIDTH / 2) - 30, (Game.HEIGHT / 2) + 2, (Game.WIDTH / 2) + 30, (Game.HEIGHT / 2) + 2);
-		g.setColor(Color.BLACK);
-		g.drawRect((Game.WIDTH / 2) - 31, (Game.HEIGHT / 2) + 1, 62, 2);
 
 	}
 
@@ -485,13 +315,6 @@ public class PlayState extends AbstractGameState implements GameState {
 	@Override
 	public void keyReleased(Game game, KeyEvent e) {
 		super.keyReleased(game, e);
-		int nbElem = 10;
-		if (e.isControlDown()) {
-			nbElem += 50;
-		}
-		if (e.isShiftDown()) {
-			nbElem += 100;
-		}
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_PAUSE:
 		case KeyEvent.VK_P:
@@ -512,21 +335,6 @@ public class PlayState extends AbstractGameState implements GameState {
 		case KeyEvent.VK_NUMPAD4:
 		case KeyEvent.VK_4:
 			layers[3].active = !layers[3].active;
-			break;
-		case KeyEvent.VK_PAGE_UP:
-			generateEnemies(nbElem);
-			break;
-		case KeyEvent.VK_PAGE_DOWN:
-			if (score - nbElem >= 0) {
-				removeAllObjectOfClass(Enemy.class, nbElem);
-				removeAllObjectOfClass(Eatable.class, nbElem);
-			}
-			break;
-		case KeyEvent.VK_BACK_SPACE:
-		case KeyEvent.VK_DELETE:
-			removeAllObjectOfClass(Enemy.class);
-			removeAllObjectOfClass(Eatable.class);
-			score = 0;
 			break;
 		case KeyEvent.VK_H:
 			isHelp = !isHelp;
@@ -561,27 +369,6 @@ public class PlayState extends AbstractGameState implements GameState {
 			addObject(entity);
 		}
 
-	}
-
-	/**
-	 * remove a nbObjectoRemove number of object clazz
-	 * 
-	 * @param clazz
-	 * @param nbObjectToRemove
-	 */
-	private void removeAllObjectOfClass(Class<? extends AbstractGameObject> clazz, int nbObjectToRemove) {
-		List<GameObject> toBeDeleted = new ArrayList<>();
-		int idx = nbObjectToRemove;
-		for (GameObject o : objects) {
-			if (o.getClass().equals(clazz)) {
-				toBeDeleted.add(o);
-				idx--;
-			}
-			if (idx <= 0) {
-				break;
-			}
-		}
-		objects.removeAll(toBeDeleted);
 	}
 
 }
