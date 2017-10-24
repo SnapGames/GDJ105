@@ -24,7 +24,6 @@ import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.Actions;
-import com.snapgames.gdj.core.entity.CameraObject;
 import com.snapgames.gdj.core.entity.Direction;
 import com.snapgames.gdj.core.entity.GameObject;
 import com.snapgames.gdj.core.entity.Layer;
@@ -105,9 +104,6 @@ public class PlayState extends AbstractGameState implements GameState {
 		player = new Player("player", Game.WIDTH / 2, Game.HEIGHT / 2, 16, 16, 1, 1, Color.BLUE);
 
 		addObject(player);
-
-		CameraObject camera = new CameraObject("cam1", player, 0.1f);
-		addCamera(camera);
 
 		// NPC
 		generateEnemies(10);
@@ -196,10 +192,6 @@ public class PlayState extends AbstractGameState implements GameState {
 		// entities moving limit to playzone.
 		constrainObjectTo();
 
-		// Update camera
-		if (defaultCamera != null) {
-			defaultCamera.update(game, dt);
-		}
 	}
 
 	/**
