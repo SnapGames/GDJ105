@@ -322,7 +322,7 @@ public class PlayState extends AbstractGameState implements GameState {
 
 	@Override
 	public void keyReleased(Game game, KeyEvent e) {
-
+		super.keyReleased(game, e);
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_PAUSE:
 		case KeyEvent.VK_P:
