@@ -62,22 +62,6 @@ Here are some screenshots from the Title screen from the `TitleState`:
 | **2**	| Display yellow squares and highlight the moving direction with a green line on the direction side, |
 | **3**	| Show full of information in a panel for each active object (default).                              |
 
- 
-### Play State
-
-The `PlayState` is only a capabilities demonstration purpose state.
-
-![PlayState with minimum debug info](src/main/docs/images/screenshot%2081542505497219.jpg "PlayState with minimum debug info") ![PlayState without any debug info](src/main/docs/images/screenshot%2081547820149296.jpg "PlayState without any debug info");
-
-Use the following keys:
-
-- <kbd>D</kbd> / <kbd>F9</kbd> switch between DEBUG modes (see previous table)
-    
-- <kbd>H</kbd> display a help panel to show keyboard shortcuts :)    
-- <kbd>UP</kbd> / <kbd>DOWN</kbd> / <kbd>LEFT</kbd> / <kbd>RIGHT</kbd> to move the blue square which is the `Player` game object,
-- <kbd>SHIFT</kbd> / <kbd>CTRL</kbd> with  cursor key will accelerate move,
-- <kbd>PG-UP</kbd> / <kbd>PG-DOWN</kbd> will increase decrease number of `Enemy` and `Eatable` game objects (to raise-up your energy), 
-- <kbd>SHIFT</kbd> / <kbd>CTRL</kbd> with <kbd>PG-UP</kbd> and <kbd>PG-DOWN</kbd> keys will accelerate increasing.
 
 Have Fun !
 
