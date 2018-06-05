@@ -5,6 +5,28 @@ import java.util.List;
 
 import com.snapgames.gdj.core.Game;
 
+/**
+ * <p>
+ * This interface aims at proposing the default signature for the Game object.
+ * <p>
+ * All the default operation for an object in the game engine.
+ * <ul>
+ * <li><code>update(float)</code> to update status of the object,</li>
+ * <li><code>draw(Graphics2D)</code> to draw this object,</li>
+ * <li><code>getPriority()</code> to get the rendering priority of the
+ * object,</li>
+ * <li><code>getLayer()</code> to find the layer where to render this object (to
+ * manage rendering layers !)</li>
+ * </ul>
+ * 
+ * <p>
+ * And there is more small method to help developers to do there job,
+ * <code>addDebugInfo()</code>, <code>getDebuginfo()</code>,
+ * <code>isInfoDebugDisplayed()</code>, <code>drawSpecialDebugInfo()</code>. :)
+ * 
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
+ *
+ */
 public interface GameObject {
 
 	/**
