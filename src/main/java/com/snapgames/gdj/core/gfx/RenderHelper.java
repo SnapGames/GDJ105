@@ -190,7 +190,7 @@ public class RenderHelper {
 			g.drawRect((int) ago.rectangle.x, (int) ago.rectangle.y, ago.rectangle.width, ago.rectangle.height);
 			g.drawString("" + ago.index, (int) ago.rectangle.x, (int) ago.rectangle.y);
 		}
-		if (debugLevel >= 2) {
+		/*if (debugLevel >= 2) {
 			g.setColor(Color.GREEN);
 			switch (ago.direction) {
 			case UP:
@@ -210,7 +210,7 @@ public class RenderHelper {
 			case NONE:
 				break;
 			}
-		}
+		}*/
 		if (debugLevel >= 3) {
 			g.setColor(new Color(0.5f, .5f, .5f, .6f));
 			g.fillRect(pane_x + link, pane_y + link, pane_width, pane_height);

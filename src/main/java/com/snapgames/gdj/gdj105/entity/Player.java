@@ -11,7 +11,7 @@ package com.snapgames.gdj.gdj105.entity;
 
 import java.awt.Color;
 
-import com.snapgames.gdj.core.entity.AbstractGameObject;
+import com.snapgames.gdj.core.entity.DynamicObject;
 
 /**
  * The Player entity.
@@ -19,7 +19,7 @@ import com.snapgames.gdj.core.entity.AbstractGameObject;
  * @author Frédéric Delorme
  *
  */
-public class Player extends AbstractGameObject {
+public class Player extends DynamicObject {
 
 	/**
 	 * 
@@ -44,7 +44,7 @@ public class Player extends AbstractGameObject {
 		this.vSpeed = 0.05f;
 		this.priority = 1;
 		this.layer = 2;
-		this.showDebuginfo=true;
+		this.showDebuginfo = true;
 		attributes.put("energy", new Integer(100));
 		attributes.put("mana", new Integer(100));
 		attributes.put("level", new Integer(1));

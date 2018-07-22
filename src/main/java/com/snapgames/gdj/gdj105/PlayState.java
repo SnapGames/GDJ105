@@ -28,6 +28,7 @@ import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.Actions;
 import com.snapgames.gdj.core.entity.CameraObject;
 import com.snapgames.gdj.core.entity.Direction;
+import com.snapgames.gdj.core.entity.DynamicObject;
 import com.snapgames.gdj.core.entity.GameObject;
 import com.snapgames.gdj.core.entity.Layer;
 import com.snapgames.gdj.core.gfx.RenderHelper;
@@ -36,7 +37,7 @@ import com.snapgames.gdj.core.state.AbstractGameState;
 import com.snapgames.gdj.core.state.GameState;
 import com.snapgames.gdj.core.state.GameStateManager;
 import com.snapgames.gdj.core.ui.TextObject;
-import com.snapgames.gdj.gdj105.entity.Eatable;
+import com.snapgames.gdj.gdj105.entity.EatBall;
 import com.snapgames.gdj.gdj105.entity.Enemy;
 import com.snapgames.gdj.gdj105.entity.ItemContainerObject;
 import com.snapgames.gdj.gdj105.entity.JaugeObject;
@@ -155,13 +156,13 @@ public class PlayState extends AbstractGameState implements GameState {
 		mana.value = 20;
 		addObject(mana);
 
-		itemContainers = new ItemContainerObject[2];
+		itemContainers = new ItemContainerObject[4];
 		for (int i = 0; i < itemContainers.length; i++) {
-			itemContainers[i] = new ItemContainerObject("itContainer_" + i, marginRight - (6 + (i + 1) * 22),
-					marginBottom - 40, 22, 22);
+			itemContainers[i] = new ItemContainerObject("itContainer_" + i, marginRight - (12 + (i) * 22),
+					marginBottom - 24, 22, 22);
 			itemContainers[i].layer = 1;
 			itemContainers[i].priority = 1;
-			itemContainers[i].attributes.put("items", new Integer((int) Math.random() * 10));
+			itemContainers[i].attributes.put("items", new Integer((int)(Math.random() * 10)+1));
 			itemContainers[i].font = game.getFont().deriveFont(8.0f);
 			addObject(itemContainers[i]);
 		}
@@ -238,15 +239,17 @@ public class PlayState extends AbstractGameState implements GameState {
 		// add all objects to QuadTree
 		updateQuadTree(game, dt);
 
+		float winborder = 4, wl = 4, wr = 4, wt = 4, wb = 4;
 		// compute play zone borders.
-		float winborder = 4;
-		float wl = winborder;
-		float wr = (float) playZone.getWidth() - player.width - winborder;
-		float wt = winborder;
-		float wb = (float) playZone.getHeight() - player.height - winborder;
-
-		// player limit to playzone
-		constrainPlayerTo(wl, wr, wt, wb);
+		winborder = 4;
+		wl = winborder;
+		wt = winborder;
+		if (playZone != null && player != null) {
+			wr = (float) playZone.getWidth() - player.width - winborder;
+			wb = (float) playZone.getHeight() - player.height - winborder;
+			// player limit to playzone
+			constrainPlayerTo(wl, wr, wt, wb);
+		}
 		// entities moving limit to playzone.
 		constrainObjectTo();
 		// compute score
@@ -300,23 +303,25 @@ public class PlayState extends AbstractGameState implements GameState {
 	 */
 	private void constrainObjectTo() {
 		for (AbstractGameObject o : entities) {
-			if (o.x <= 0 ) {
+			if (o.x <= 0) {
 				o.dx = -Math.signum(o.dx) * o.hSpeed;
 				o.x = 1;
 			}
-			if(o.x >= playZone.getWidth()) {
+			if (o.x >= playZone.getWidth()) {
 				o.dx = -Math.signum(o.dx) * o.hSpeed;
-				o.x = (int)playZone.getWidth()-1;				
+				o.x = (int) playZone.getWidth() - 1;
 			}
-			if (o.y <= 0){
+			if (o.y <= 0) {
 				o.dy = -Math.signum(o.dy) * o.vSpeed;
 				o.y = 1;
 			}
-			if(o.y >= playZone.getHeight()) {
+			if (o.y >= playZone.getHeight()) {
 				o.dy = -Math.signum(o.dy) * o.vSpeed;
-				o.y = (int)playZone.getHeight()-1;
+				o.y = (int) playZone.getHeight() - 1;
 			}
-			computeEntityAction(o);
+			if (o instanceof DynamicObject) {
+				computeEntityAction((DynamicObject) o);
+			}
 		}
 	}
 
@@ -354,7 +359,7 @@ public class PlayState extends AbstractGameState implements GameState {
 				AbstractGameObject ago = (AbstractGameObject) s;
 				if (player.rectangle.intersects(ago.rectangle)) {
 					int d = 0;
-					if (ago.getClass().equals(Eatable.class)) {
+					if (ago.getClass().equals(EatBall.class)) {
 						d = (Integer) ago.attributes.get("power");
 						// eat only if energy low.
 						if (addValueToAttribute(player, "energy", d, 0, 100)) {
@@ -395,12 +400,12 @@ public class PlayState extends AbstractGameState implements GameState {
 		return false;
 	}
 
-	private void computeEntityAction(AbstractGameObject o) {
+	private void computeEntityAction(DynamicObject o) {
 		if (o.dx < 0 || o.dx > 0) {
 			o.action = Actions.WALK;
 		}
 		if (o.dy < 0) {
-			o.action = Actions.DOWN;
+			o.action = Actions.UP;
 		}
 		if (o.dy > 0) {
 			o.action = Actions.DOWN;
@@ -429,6 +434,14 @@ public class PlayState extends AbstractGameState implements GameState {
 			drawPause(game, g);
 		}
 
+		if (game.isDebug(3)) {
+			drawPlayZone(game, g);
+		}
+	}
+
+	private void drawPlayZone(Game game, Graphics2D g) {
+		g.setColor(Color.ORANGE);
+		g.drawRect(playZone.x, playZone.y, playZone.width, playZone.height);
 	}
 
 	/**
@@ -451,13 +464,6 @@ public class PlayState extends AbstractGameState implements GameState {
 		g.setColor(Color.BLACK);
 		g.drawRect((Game.WIDTH / 2) - 31, (Game.HEIGHT / 2) + 1, 62, 2);
 
-	}
-
-	/**
-	 * @return the layers
-	 */
-	public Layer[] getLayers() {
-		return layers;
 	}
 
 	/**
@@ -519,13 +525,13 @@ public class PlayState extends AbstractGameState implements GameState {
 		case KeyEvent.VK_PAGE_DOWN:
 			if (score - nbElem >= 0) {
 				removeAllObjectOfClass(Enemy.class, nbElem);
-				removeAllObjectOfClass(Eatable.class, nbElem);
+				removeAllObjectOfClass(EatBall.class, nbElem);
 			}
 			break;
 		case KeyEvent.VK_BACK_SPACE:
 		case KeyEvent.VK_DELETE:
 			removeAllObjectOfClass(Enemy.class);
-			removeAllObjectOfClass(Eatable.class);
+			removeAllObjectOfClass(EatBall.class);
 			score = 0;
 			break;
 		case KeyEvent.VK_H:
@@ -549,7 +555,7 @@ public class PlayState extends AbstractGameState implements GameState {
 				entity.color = Color.RED;
 				entity.layer = 3;
 			} else {
-				entity = new Eatable("eatable_" + i, Game.WIDTH / 2, Game.HEIGHT / 2);
+				entity = new EatBall("eatable_" + i, Game.WIDTH / 2, Game.HEIGHT / 2);
 				entity.x = ((float) Math.random() * Game.WIDTH) + ((Game.WIDTH / 2));
 				entity.y = ((float) Math.random() * Game.HEIGHT) + ((Game.HEIGHT / 2));
 				entity.dx = ((float) Math.random() * 0.05f) - 0.02f;
@@ -582,6 +588,15 @@ public class PlayState extends AbstractGameState implements GameState {
 			}
 		}
 		objects.removeAll(toBeDeleted);
+	}
+
+	/**
+	 * Return the array of Layers for this state.
+	 * 
+	 * @return the layers
+	 */
+	public Layer[] getLayers() {
+		return layers;
 	}
 
 }

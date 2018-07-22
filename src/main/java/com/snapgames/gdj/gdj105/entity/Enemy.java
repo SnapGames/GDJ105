@@ -13,7 +13,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import com.snapgames.gdj.core.Game;
-import com.snapgames.gdj.core.entity.AbstractGameObject;
+import com.snapgames.gdj.core.entity.DynamicObject;
 
 /**
  * A bad enemy !
@@ -21,7 +21,7 @@ import com.snapgames.gdj.core.entity.AbstractGameObject;
  * @author Frédéric Delorme
  *
  */
-public class Enemy extends AbstractGameObject {
+public class Enemy extends DynamicObject {
 
 	/**
 	 * 

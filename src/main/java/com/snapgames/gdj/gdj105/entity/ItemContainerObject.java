@@ -67,9 +67,10 @@ public class ItemContainerObject extends AbstractGameObject {
 		if (!attributes.isEmpty()) {
 			if (attributes.containsKey("items")) {
 				g.setFont(font);
+				String value = attributes.get("items").toString();
 				// g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING,
 				// RenderingHints.VALUE_TEXT_ANTIALIAS_OFF);
-				RenderHelper.drawShadowString(g, attributes.get("items").toString(), (int) x + 17, (int) y + 20,
+				RenderHelper.drawShadowString(g, value, (int) x + 17, (int) y + 20,
 						Color.WHITE, backgroundColor, TextPosition.RIGHT, 2);
 			}
 		}
