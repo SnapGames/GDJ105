@@ -13,25 +13,25 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 
 import com.snapgames.gdj.core.Game;
-import com.snapgames.gdj.core.entity.DynamicObject;
+import com.snapgames.gdj.core.entity.AbstractGameObject;
 
 /**
  * 
  * @author Frédéric Delorme
  *
  */
-public class EatBall extends DynamicObject {
+public class Eatable extends AbstractGameObject {
 
-	public EatBall() {
+	public Eatable() {
 		super();
 	}
 
-	public EatBall(String name, int x, int y) {
+	public Eatable(String name, int x, int y) {
 		super(name, x, y, 8, 8, 1, 2, Color.CYAN);
 		attributes.put("power", 20);
 	}
 
-	public EatBall(String name, int x, int y, int dx, int dy) {
+	public Eatable(String name, int x, int y, int dx, int dy) {
 		super(name, x, y, dx, dy);
 	}
 
