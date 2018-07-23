@@ -126,21 +126,14 @@ public class AbstractGameObject implements GameObject {
 	 * on a <code>layer</code> width a rendering <code>priority</code> and a
 	 * <code>color</code>.
 	 * 
-	 * @param name
-	 *            the name for this object.
-	 * @param x
-	 *            x position in the (x,y) for this object
-	 * @param y
-	 *            y position in the (x,y) for this object
-	 * @param width
-	 *            width of the object
+	 * @param name     the name for this object.
+	 * @param x        x position in the (x,y) for this object
+	 * @param y        y position in the (x,y) for this object
+	 * @param width    width of the object
 	 * 
-	 * @param height
-	 *            height of the object
-	 * @param layer
-	 *            layer where to render this object
-	 * @param priority
-	 *            priority to sort the rendering position of this object.
+	 * @param height   height of the object
+	 * @param layer    layer where to render this object
+	 * @param priority priority to sort the rendering position of this object.
 	 */
 	public AbstractGameObject(String name, int x, int y, int width, int height, int layer, int priority, Color color) {
 		this(name, x, y, 0, 0);
@@ -158,16 +151,11 @@ public class AbstractGameObject implements GameObject {
 	 * (<code>x</code>,<code>y</code>) with a velocity of
 	 * (<code>dx</code>,<code>dy</code>).
 	 * 
-	 * @param name
-	 *            the name for this object.
-	 * @param x
-	 *            x position in the (x,y) for this object
-	 * @param y
-	 *            y position in the (x,y) for this object
-	 * @param dx
-	 *            velocity on x direction
-	 * @param dy
-	 *            velocity on y direction.
+	 * @param name the name for this object.
+	 * @param x    x position in the (x,y) for this object
+	 * @param y    y position in the (x,y) for this object
+	 * @param dx   velocity on x direction
+	 * @param dy   velocity on y direction.
 	 */
 	public AbstractGameObject(String name, int x, int y, int dx, int dy) {
 		this();
@@ -293,6 +281,7 @@ public class AbstractGameObject implements GameObject {
 		debugInfo.add(String.format("lyr,prio(:(%d,%d)", layer, priority));
 		debugInfo.add(String.format("action:(%s)", action));
 		debugInfo.add(String.format("dir:(%s)", direction));
+		debugInfo.add(String.format("dir:(%s)", direction));
 
 	}
 
@@ -305,8 +294,6 @@ public class AbstractGameObject implements GameObject {
 	public List<String> getDebugInfo() {
 		return debugInfo;
 	}
-
-	
 
 	/*
 	 * (non-Javadoc)
@@ -326,5 +313,27 @@ public class AbstractGameObject implements GameObject {
 	@Override
 	public boolean isDebugInfoDisplayed() {
 		return showDebuginfo;
+	}
+
+	/**
+	 * Set position for this object.
+	 * 
+	 * @param x
+	 * @param y
+	 */
+	public void setPosition(float x, float y) {
+		this.x = x;
+		this.y = y;
+	}
+
+	/**
+	 * Set Velocity (speed) for this object.
+	 * 
+	 * @param dx
+	 * @param dy
+	 */
+	public void setVelocity(float dx, float dy) {
+		this.dx = dx;
+		this.dy = dy;
 	}
 }
