@@ -36,11 +36,6 @@ import com.snapgames.gdj.core.ui.Window;
 public class Game extends JPanel {
 
 	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -1159822737613073769L;
-
-	/**
 	 * Internal logger.
 	 */
 	public static final Logger logger = LoggerFactory.getLogger(Game.class);
@@ -52,13 +47,13 @@ public class Game extends JPanel {
 	/**
 	 * Game screen height.
 	 */
-	public final static int HEIGHT = 200;
+	public final static int HEIGHT = 240;
 	/**
 	 * game screen scaling
 	 */
-	public final static float SCALE = 5.0f;
-	
-	public final static float SCREEN_FONT_RATIO = HEIGHT/22;
+	public final static float SCALE = 2.0f;
+
+	public final static float SCREEN_FONT_RATIO = HEIGHT / 22;
 
 	/**
 	 * Number of frame per seconds
@@ -216,7 +211,8 @@ public class Game extends JPanel {
 
 		// copy buffer to window.
 		Graphics g2 = this.getGraphics();
-		g2.drawImage(image, 0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE), 0, 0, WIDTH, HEIGHT, Color.BLACK, null);
+		g2.drawImage(image, 0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE), 0, 0, WIDTH, HEIGHT, Color.BLACK,
+				null);
 		g2.dispose();
 
 		if (screenshot) {
@@ -277,6 +273,14 @@ public class Game extends JPanel {
 		loop();
 		release();
 		System.exit(0);
+	}
+
+	/**
+	 * request for a screen shot.
+	 */
+	public void captureScreenshot() {
+		screenshot = true;
+
 	}
 
 	/**
@@ -373,14 +377,6 @@ public class Game extends JPanel {
 	 */
 	public int getDebug() {
 		return debug;
-	}
-
-	/**
-	 * request for a screen shot.
-	 */
-	public void captureScreenshot() {
-		screenshot = true;
-
 	}
 
 	/**

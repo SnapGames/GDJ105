@@ -26,9 +26,7 @@ import org.slf4j.LoggerFactory;
 
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
-import com.snapgames.gdj.core.collision.QuadTree;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
-import com.snapgames.gdj.core.entity.CameraObject;
 import com.snapgames.gdj.core.entity.GameObject;
 import com.snapgames.gdj.core.entity.Layer;
 import com.snapgames.gdj.core.gfx.RenderHelper;
@@ -41,8 +39,6 @@ public abstract class AbstractGameState implements GameState {
 	private static final Logger logger = LoggerFactory.getLogger(AbstractGameState.class);
 
 	public Map<String, Integer> statistics = new ConcurrentHashMap<>();
-
-	public QuadTree quadTree;
 
 	/**
 	 * Referring GameStateManager
@@ -72,16 +68,6 @@ public abstract class AbstractGameState implements GameState {
 	protected List<GameObject> objects = new CopyOnWriteArrayList<>();
 
 	/**
-	 * List Of camera
-	 */
-	protected List<CameraObject> cameras = new CopyOnWriteArrayList<>();
-
-	/**
-	 * current active camera.
-	 */
-	protected CameraObject defaultCamera = null;;
-
-	/**
 	 * Default constructor for the AbstractGameState
 	 */
 	public AbstractGameState() {
@@ -101,8 +87,6 @@ public abstract class AbstractGameState implements GameState {
 	@Override
 	public void initialize(Game game) {
 		ResourceManager.add("debugFont", game.getRender().getFont().deriveFont(9f));
-		quadTree = new QuadTree(Game.WIDTH, Game.HEIGHT);
-
 		// activate needed layers
 		resetLayers();
 	}
@@ -161,34 +145,6 @@ public abstract class AbstractGameState implements GameState {
 			}
 		}
 		objects.removeAll(toBeDeleted);
-	}
-
-	/**
-	 * add a Camera object.
-	 * 
-	 * @param cameraObject
-	 */
-	public void addCamera(CameraObject cameraObject) {
-		cameras.add(cameraObject);
-		// objects.add(cameraObject);
-		if (defaultCamera == null) {
-			defaultCamera = cameraObject;
-		}
-	}
-
-	/**
-	 * activate one of the camera.
-	 * 
-	 * @param camera
-	 */
-	public void setCamera(String cameraName) {
-		for (CameraObject c : cameras) {
-			if (c.name.equals(cameraName)) {
-				this.defaultCamera = c;
-				return;
-			}
-		}
-		logger.error("Unable to activate the camera, {} does not exist", cameraName);
 	}
 
 	public void dispose(Game game) {
@@ -251,36 +207,26 @@ public abstract class AbstractGameState implements GameState {
 	 */
 	public void render(Game game, Graphics2D g) {
 		int renderedObjectCount = 0;
-		Rectangle view = (defaultCamera != null && defaultCamera.rectangle != null ? defaultCamera.rectangle
-				: Game.bbox);
 		if (!objects.isEmpty()) {
 			for (GameObject o : objects) {
 				Layer layer = layers[o.getLayer() - 1];
 				if (layer.active) {
-					if (defaultCamera != null && layer.moveWithCamera) {
-						g.translate(-defaultCamera.getX(), -defaultCamera.getY());
-					}
-					if (viewContainsObject(o, view) || defaultCamera == null || layer.moveWithCamera == false) {
-						renderedObjectCount++;
-						o.draw(game, g);
-						if (game.isDebug(1) || o.isDebugInfoDisplayed()) {
-							o.drawSpecialDebugInfo(game, g);
+					renderedObjectCount++;
+					o.draw(game, g);
+					if (game.isDebug(1) || o.isDebugInfoDisplayed()) {
+						o.drawSpecialDebugInfo(game, g);
 
-						}
 					}
-					if (defaultCamera != null && layer.moveWithCamera) {
-						g.translate(defaultCamera.getX(), defaultCamera.getY());
-					}
+
 				}
-			}
-			if (defaultCamera != null) {
-				defaultCamera.draw(game, g);
 			}
 			statistics.put("renderedObjCount", renderedObjectCount);
 			statistics.put("staticObjCount", objects.size());
 		}
 
-		if (game.isDebug(1)) {
+		if (game.isDebug(1))
+
+		{
 			RenderHelper.drawShadowString(g,
 					String.format("FPS:%03d, ROC:%04d, SOC:%04d", game.framesPerSecond,
 							statistics.get("renderedObjCount"), statistics.get("staticObjCount")),
@@ -301,18 +247,4 @@ public abstract class AbstractGameState implements GameState {
 		return view.contains(ago.rectangle);
 	}
 
-	/**
-	 * @return the defaultCamera
-	 */
-	public CameraObject getDefaultCamera() {
-		return defaultCamera;
-	}
-
-	/**
-	 * @param defaultCamera
-	 *            the defaultCamera to set
-	 */
-	public void setDefaultCamera(CameraObject defaultCamera) {
-		this.defaultCamera = defaultCamera;
-	}
 }

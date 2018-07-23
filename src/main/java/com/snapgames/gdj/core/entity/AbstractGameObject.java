@@ -306,45 +306,7 @@ public class AbstractGameObject implements GameObject {
 		return debugInfo;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.snapgames.gdj.core.collision.Sizeable#getX()
-	 */
-	@Override
-	public float getX() {
-		return x;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.snapgames.gdj.core.collision.Sizeable#getY()
-	 */
-	@Override
-	public float getY() {
-		return y;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.snapgames.gdj.core.collision.Sizeable#getWidth()
-	 */
-	@Override
-	public float getWidth() {
-		return width;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.snapgames.gdj.core.collision.Sizeable#getHeight()
-	 */
-	@Override
-	public float getHeight() {
-		return height;
-	}
+	
 
 	/*
 	 * (non-Javadoc)

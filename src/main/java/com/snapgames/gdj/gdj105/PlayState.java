@@ -14,7 +14,6 @@ import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -23,10 +22,8 @@ import org.slf4j.LoggerFactory;
 
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
-import com.snapgames.gdj.core.collision.Sizeable;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.Actions;
-import com.snapgames.gdj.core.entity.CameraObject;
 import com.snapgames.gdj.core.entity.Direction;
 import com.snapgames.gdj.core.entity.DynamicObject;
 import com.snapgames.gdj.core.entity.GameObject;
@@ -39,8 +36,6 @@ import com.snapgames.gdj.core.state.GameStateManager;
 import com.snapgames.gdj.core.ui.TextObject;
 import com.snapgames.gdj.gdj105.entity.EatBall;
 import com.snapgames.gdj.gdj105.entity.Enemy;
-import com.snapgames.gdj.gdj105.entity.ItemContainerObject;
-import com.snapgames.gdj.gdj105.entity.JaugeObject;
 import com.snapgames.gdj.gdj105.entity.Player;
 
 /**
@@ -53,6 +48,8 @@ import com.snapgames.gdj.gdj105.entity.Player;
  */
 public class PlayState extends AbstractGameState implements GameState {
 
+	private static final Logger logger = LoggerFactory.getLogger(PlayState.class);
+
 	/**
 	 * objects to be animated on the game display.
 	 */
@@ -60,19 +57,6 @@ public class PlayState extends AbstractGameState implements GameState {
 	private Player player = null;
 	// list of other entities to demonstrate AbstractGameObject usage.
 	private List<AbstractGameObject> entities = new CopyOnWriteArrayList<>();
-
-	// Object moved by player
-	private TextObject scoreTextObject = null;
-
-	int dEnergy = 1;
-	private JaugeObject energy;
-	int dMana = 1;
-	private JaugeObject mana;
-
-	// score
-	private int score = 0;
-
-	private Font scoreFont;
 
 	/**
 	 * internal Font to draw any text on the screen !
@@ -84,9 +68,7 @@ public class PlayState extends AbstractGameState implements GameState {
 	 * Flag to display Help.
 	 */
 	private boolean isHelp = false;
-	private ItemContainerObject[] itemContainers;
 	private Rectangle playZone;
-	private static final Logger logger = LoggerFactory.getLogger(PlayState.class);
 
 	public PlayState() {
 	}
@@ -108,11 +90,9 @@ public class PlayState extends AbstractGameState implements GameState {
 
 		// prepare Fonts
 		font = game.getGraphics().getFont();
-		scoreFont = game.getGraphics().getFont().deriveFont(14.0f);
 		helpFont = font.deriveFont(8f);
 		ResourceManager.add("font", font);
 		ResourceManager.add("helpFont", helpFont);
-		ResourceManager.add("scoreFont", scoreFont);
 
 		this.playZone = new Rectangle(0, 0, 1000, 1000);
 
@@ -126,9 +106,6 @@ public class PlayState extends AbstractGameState implements GameState {
 		player = new Player("player", Game.WIDTH / 2, Game.HEIGHT / 2, 16, 16, 1, 1, Color.BLUE);
 
 		addObject(player);
-
-		CameraObject camera = new CameraObject("cam1", player, 0.1f);
-		addCamera(camera);
 
 		// NPC
 		generateEnemies(10);
@@ -252,17 +229,7 @@ public class PlayState extends AbstractGameState implements GameState {
 		}
 		// entities moving limit to playzone.
 		constrainObjectTo();
-		// compute score
-		updateScore();
-		// manage all collision
-		manageCollision();
-		// update all HUD attributes according to player object attriubtes
-		updateHUDAttributes();
 
-		// Update camera
-		if (defaultCamera != null) {
-			defaultCamera.update(game, dt);
-		}
 	}
 
 	/**
@@ -270,31 +237,8 @@ public class PlayState extends AbstractGameState implements GameState {
 	 * @param dt
 	 */
 	private void updateQuadTree(Game game, long dt) {
-		quadTree.clear();
 		for (GameObject o : objects) {
 			o.update(game, dt);
-			// inert object into QuadTree for collision detection.
-			quadTree.insert(o);
-		}
-	}
-
-	/**
-	 * update HUD attributes according to player attributes.
-	 */
-	private void updateHUDAttributes() {
-		if (energy != null && mana != null && player.attributes != null && !player.attributes.isEmpty()) {
-			energy.value = (Integer) player.attributes.get("energy");
-			mana.value = (Integer) player.attributes.get("mana");
-		}
-	}
-
-	/**
-	 * Update Score object on HUD
-	 */
-	private void updateScore() {
-		if (scoreTextObject != null) {
-			score = objects.size();
-			scoreTextObject.text = String.format("%06d", score);
 		}
 	}
 
@@ -491,13 +435,6 @@ public class PlayState extends AbstractGameState implements GameState {
 	@Override
 	public void keyReleased(Game game, KeyEvent e) {
 		super.keyReleased(game, e);
-		int nbElem = 10;
-		if (e.isControlDown()) {
-			nbElem += 50;
-		}
-		if (e.isShiftDown()) {
-			nbElem += 100;
-		}
 		switch (e.getKeyCode()) {
 		case KeyEvent.VK_PAUSE:
 		case KeyEvent.VK_P:
@@ -598,5 +535,4 @@ public class PlayState extends AbstractGameState implements GameState {
 	public Layer[] getLayers() {
 		return layers;
 	}
-
 }
