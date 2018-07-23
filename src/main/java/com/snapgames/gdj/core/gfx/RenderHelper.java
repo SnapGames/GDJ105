@@ -188,7 +188,7 @@ public class RenderHelper {
 		if (debugLevel >= 1) {
 			g.setColor(Color.YELLOW);
 			g.drawRect((int) ago.rectangle.x, (int) ago.rectangle.y, ago.rectangle.width, ago.rectangle.height);
-			g.drawString("" + ago.index, (int) ago.rectangle.x, (int) ago.rectangle.y);
+			g.drawString("" + ago.id, (int) ago.rectangle.x, (int) ago.rectangle.y);
 		}
 		if (debugLevel >= 2) {
 			g.setColor(Color.GREEN);

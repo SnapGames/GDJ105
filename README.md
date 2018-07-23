@@ -12,7 +12,14 @@ provided by the [SnapGames](http://snapgames.fr) site.
 
 As we have got now some great piece of game code, we need to start buildig a real framework by refactoring the code and adding some new objects.
 Graphical objects to create some new States : 
-- Let's create `TextObject`, `BackgroundObject` to build `TitleState`, 
+
+Let's create :
+
+- `TextObject`, 
+- `ImageObject` 
+- and `MenuObject` 
+
+to build a new game state : the `TitleState`, 
 
 ## Compile
 

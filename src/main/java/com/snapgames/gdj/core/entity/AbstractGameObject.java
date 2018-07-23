@@ -34,7 +34,7 @@ public class AbstractGameObject implements GameObject {
 	 * internal indexCounter to generate the default object name.
 	 */
 	private static int indexCounter = 0;
-	public int index;
+	public int id;
 
 	/**
 	 * default internal constants.
@@ -115,7 +115,7 @@ public class AbstractGameObject implements GameObject {
 	public AbstractGameObject() {
 		super();
 		indexCounter++;
-		index = indexCounter;
+		id = indexCounter;
 		debugFont = ResourceManager.getFont("debugFont");
 
 	}

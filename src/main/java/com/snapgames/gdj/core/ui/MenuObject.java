@@ -23,6 +23,10 @@ import com.snapgames.gdj.core.gfx.RenderHelper;
 import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
 
 /**
+ * The MenuObject class intends to provide a selector UI component between multiple items.
+ * Those items are described by the inner class MenuItem.
+ * 
+ * Its provides navigation operation (previous(), next()) and standard update/draw methods.
  * 
  * @author Frédéric Delorme
  *
