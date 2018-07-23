@@ -131,6 +131,7 @@ public class TitleState extends AbstractGameState {
 				game.getGSM().activate("play");
 				break;
 			case "options":
+				game.getGSM().activate("options");
 				break;
 			case "quit":
 				game.setExit(true);
