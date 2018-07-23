@@ -293,6 +293,8 @@ public class AbstractGameObject implements GameObject {
 		debugInfo.add(String.format("lyr,prio(:(%d,%d)", layer, priority));
 		debugInfo.add(String.format("action:(%s)", action));
 		debugInfo.add(String.format("dir:(%s)", direction));
+		debugInfo.add(String.format("dir:(%s)", direction));
+		
 
 	}
 

@@ -25,10 +25,10 @@ import com.snapgames.gdj.core.entity.Layer;
 import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.AbstractGameState;
-import com.snapgames.gdj.core.ui.ImageObject;
-import com.snapgames.gdj.core.ui.MenuObject;
+import com.snapgames.gdj.core.ui.UIImage;
+import com.snapgames.gdj.core.ui.UIMenu;
 import com.snapgames.gdj.core.ui.Messages;
-import com.snapgames.gdj.core.ui.TextObject;
+import com.snapgames.gdj.core.ui.UIText;
 
 /**
  * This is the Title Screen for the game.
@@ -43,9 +43,9 @@ public class TitleState extends AbstractGameState {
 	private Font titleFont;
 	private Font menuItemFont;
 	private Font copyFont;
-	private ImageObject bgi;
+	private UIImage bgi;
 
-	private MenuObject menu;
+	private UIMenu menu;
 
 	/*
 	 * (non-Javadoc)
@@ -71,16 +71,16 @@ public class TitleState extends AbstractGameState {
 		String copyrightLabel = Messages.getString("TitleState.label.copyright");
 
 		BufferedImage bgImg = ResourceManager.getImage("/res/images/background-large.jpg");
-		bgi = new ImageObject("background", bgImg, 0, (Game.HEIGHT - bgImg.getHeight()) / 2, 2, 1);
+		bgi = new UIImage("background", bgImg, 0, (Game.HEIGHT - bgImg.getHeight()) / 2, 2, 1);
 		bgi.scale = 1.0f;
 		bgi.dx = 0.029f;
 		addObject(bgi);
 
-		TextObject titleText = new TextObject("title", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.10f), titleLabel,
+		UIText titleText = new UIText("title", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.10f), titleLabel,
 				titleFont, 1, 1, Color.WHITE, TextPosition.CENTER);
 		addObject(titleText);
 
-		menu = new MenuObject("menu", (int) (Game.WIDTH * 0.50f), (int) (Game.HEIGHT * 0.50f), 0, menuItemFont,
+		menu = new UIMenu("menu", (int) (Game.WIDTH * 0.50f), (int) (Game.HEIGHT * 0.50f), 0, menuItemFont,
 				Color.WHITE, Color.BLACK, TextPosition.CENTER);
 		menu.layer = 2;
 		menu.priority = 1;
@@ -91,7 +91,7 @@ public class TitleState extends AbstractGameState {
 
 		addObject(menu);
 
-		TextObject cpyText = new TextObject("copyright", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.85f),
+		UIText cpyText = new UIText("copyright", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.85f),
 				copyrightLabel, copyFont, 2, 1, Color.WHITE, TextPosition.CENTER);
 		addObject(cpyText);
 

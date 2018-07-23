@@ -21,7 +21,7 @@ import com.snapgames.gdj.core.entity.AbstractGameObject;
  * @author Frédéric Delorme
  *
  */
-public class ImageObject extends AbstractGameObject {
+public class UIImage extends AbstractGameObject {
 
 	public BufferedImage image;
 
@@ -36,7 +36,7 @@ public class ImageObject extends AbstractGameObject {
 	 * @param priority
 	 * @param color
 	 */
-	public ImageObject(String name, BufferedImage image, int x, int y, int layer, int priority) {
+	public UIImage(String name, BufferedImage image, int x, int y, int layer, int priority) {
 		super(name, x, y, image.getWidth(), image.getHeight(), layer, priority, null);
 		this.image = image;
 		this.width = image.getWidth();
@@ -55,4 +55,11 @@ public class ImageObject extends AbstractGameObject {
 		g.drawImage(image, (int) (x), (int) (y), null);
 		g.drawImage(image, (int) (x) + width, (int) (y), null);
 	}
+
+	@Override
+	public void addDebugInfo() {
+		super.addDebugInfo();
+		debugInfo.add(String.format("class:%s", this.getClass().getSimpleName()));
+	}
+
 }
