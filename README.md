@@ -1,6 +1,6 @@
 # GDJ105
 
-[![TravisCI](https://travis-ci.org/SnapGames/GDJ105.svg?branch=develop)](https://travis-ci.org/SnapGames/GDJ105 "open the TravisCI compilation trend") [![Dependency Status](https://www.versioneye.com/user/projects/59d22ffc0fb24f00420314b1/badge.svg?style=flat-square)](https://www.versioneye.com/user/projects/59d22ffc0fb24f00420314b1 "Open on VersionEye")
+[![TravisCI](https://travis-ci.org/SnapGames/GDJ105.svg?branch=develop)](https://travis-ci.org/SnapGames/GDJ105 "open the TravisCI compilation trend")
 
 ## Game Development Java Basics 105
 
@@ -48,7 +48,7 @@ Import this project as an Existing Maven Project into your prefered IDE,
 
 Here are some screenshots from the Title screen from the `TitleState`:
 
-![TitleState with to much debug information](src/main/docs/images/screenshot%2081534842800074.jpg "TitleState with to much debug information") ![TitleState without debug information](src/main/docs/images/screenshot%2081537552334024.jpg "TitleState without debug information")
+![TitleState with to much debug information](src/main/docs/images/gdj105-screenshot-titlestate.jpg "TitleState with to much debug information") ![TitleState without debug information](src/main/docs/images/gdj105-screenshot-titlestate-debug.jpg "TitleState without debug information")
 
 - Just press the <kbd>SPACE</kbd>/<kbd>ENTER</kbd> to start the demo,
 - <kbd>D</kbd> / <kbd>F9</kbd> switch between DEBUG modes 
