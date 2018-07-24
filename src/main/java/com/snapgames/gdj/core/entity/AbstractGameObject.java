@@ -33,7 +33,7 @@ public class AbstractGameObject implements GameObject {
 	/**
 	 * internal indexCounter to generate the default object name.
 	 */
-	private static int indexCounter = 0;
+	protected static int indexCounter = 0;
 	public int id;
 
 	/**
@@ -48,14 +48,6 @@ public class AbstractGameObject implements GameObject {
 	 */
 	public final static int DEFAULT_HEIGHT = 16;
 	/**
-	 * default horizontal speed for any object
-	 */
-	public final static float DEFAULT_HSPEED = 0.6f;
-	/**
-	 * default vertical speed for any object
-	 */
-	public final static float DEFAULT_VSPEED = 0.2f;
-	/**
 	 * Name of this object.
 	 */
 	public String name;
@@ -65,14 +57,10 @@ public class AbstractGameObject implements GameObject {
 	public float x = 0, y = 0;
 
 	/**
-	 * default speed for this object.
-	 */
-	public float vSpeed, hSpeed;
-
-	/**
 	 * Velocity of this object.
 	 */
 	public float dx = 0, dy = 0;
+
 	/**
 	 * Size of this object.
 	 */
@@ -81,10 +69,6 @@ public class AbstractGameObject implements GameObject {
 	public float scale = 1.0f;
 
 	public Rectangle rectangle;
-
-	public Actions action = Actions.IDLE;
-
-	public Direction direction = Direction.NONE;
 
 	public Map<String, Object> attributes = new ConcurrentHashMap<>();
 
@@ -117,7 +101,17 @@ public class AbstractGameObject implements GameObject {
 		indexCounter++;
 		id = indexCounter;
 		debugFont = ResourceManager.getFont("debugFont");
+	}
 
+	public AbstractGameObject(String name, int x, int y) {
+		super();
+		// if name is null, generate a default name.
+		this.name = (name == null || name.equals("") ? "noname_" + indexCounter : name);
+		this.x = x;
+		this.y = y;
+		this.width = DEFAULT_WIDTH;
+		this.height = DEFAULT_HEIGHT;
+		this.rectangle = new Rectangle(x, y, width, height);
 	}
 
 	/**
@@ -136,39 +130,12 @@ public class AbstractGameObject implements GameObject {
 	 * @param priority priority to sort the rendering position of this object.
 	 */
 	public AbstractGameObject(String name, int x, int y, int width, int height, int layer, int priority, Color color) {
-		this(name, x, y, 0, 0);
+		this(name, x, y);
 		this.width = width;
 		this.height = height;
 		this.layer = layer;
 		this.priority = priority;
 		this.color = color;
-
-		this.rectangle = new Rectangle(x, y, width, height);
-	}
-
-	/**
-	 * Create a AbstractGameObject with <code>name</code>, position
-	 * (<code>x</code>,<code>y</code>) with a velocity of
-	 * (<code>dx</code>,<code>dy</code>).
-	 * 
-	 * @param name the name for this object.
-	 * @param x    x position in the (x,y) for this object
-	 * @param y    y position in the (x,y) for this object
-	 * @param dx   velocity on x direction
-	 * @param dy   velocity on y direction.
-	 */
-	public AbstractGameObject(String name, int x, int y, int dx, int dy) {
-		this();
-		// if name is null, generate a default name.
-		this.name = (name == null || name.equals("") ? "noname_" + indexCounter : name);
-		this.x = x;
-		this.y = y;
-		this.dx = dx;
-		this.dy = dy;
-		this.width = DEFAULT_WIDTH;
-		this.height = DEFAULT_HEIGHT;
-		this.hSpeed = DEFAULT_HSPEED;
-		this.vSpeed = DEFAULT_VSPEED;
 		this.rectangle = new Rectangle(x, y, width, height);
 	}
 
@@ -180,19 +147,7 @@ public class AbstractGameObject implements GameObject {
 	 */
 	@Override
 	public void update(Game game, long dt) {
-		// compute basic physic mechanic
-		x += dx * dt;
-		y += dy * dt;
-
-		// limit speed
-		if (Math.abs(dx) < 0.005) {
-			dx = 0.0f;
-		}
-		if (Math.abs(dy) < 0.005) {
-			dy = 0.0f;
-		}
 		rectangle.setBounds((int) x, (int) y, width, height);
-
 	}
 
 	/*
@@ -205,6 +160,7 @@ public class AbstractGameObject implements GameObject {
 	public void draw(Game game, Graphics2D g) {
 		g.setColor(color);
 		g.fillRect((int) x, (int) y, width, height);
+		
 		// Extended object will use their own draw process.
 
 	}
@@ -230,10 +186,8 @@ public class AbstractGameObject implements GameObject {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("AbstractGameObject [name=").append(name).append(", x=").append(x).append(", y=").append(y)
-				.append(", vSpeed=").append(vSpeed).append(", hSpeed=").append(hSpeed).append(", dx=").append(dx)
-				.append(", dy=").append(dy).append(", width=").append(width).append(", height=").append(height)
-				.append(", layer=").append(layer).append(", priority=").append(priority).append(", color=")
-				.append(color).append("]");
+				.append(", width=").append(width).append(", height=").append(height).append(", layer=").append(layer)
+				.append(", priority=").append(priority).append(", color=").append(color).append("]");
 		return builder.toString();
 	}
 
@@ -277,12 +231,7 @@ public class AbstractGameObject implements GameObject {
 		debugInfo.clear();
 		debugInfo.add(name);
 		debugInfo.add(String.format("pos:(%4.0f,%4.0f)", x, y));
-		debugInfo.add(String.format("spd:(%4.2f,%4.2f)", dx, dy));
 		debugInfo.add(String.format("lyr,prio(:(%d,%d)", layer, priority));
-		debugInfo.add(String.format("action:(%s)", action));
-		debugInfo.add(String.format("dir:(%s)", direction));
-		debugInfo.add(String.format("dir:(%s)", direction));
-
 	}
 
 	/*
@@ -326,14 +275,4 @@ public class AbstractGameObject implements GameObject {
 		this.y = y;
 	}
 
-	/**
-	 * Set Velocity (speed) for this object.
-	 * 
-	 * @param dx
-	 * @param dy
-	 */
-	public void setVelocity(float dx, float dy) {
-		this.dx = dx;
-		this.dy = dy;
-	}
 }

@@ -49,7 +49,6 @@ public class UIGameObject extends AbstractGameObject implements UIComponent {
 	 */
 	public UIGameObject(String name, int x, int y, int width, int height, int layer, int priority, Color color) {
 		super(name, x, y, width, height, layer, priority, color);
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -59,9 +58,8 @@ public class UIGameObject extends AbstractGameObject implements UIComponent {
 	 * @param dx
 	 * @param dy
 	 */
-	public UIGameObject(String name, int x, int y, int dx, int dy) {
-		super(name, x, y, dx, dy);
-		// TODO Auto-generated constructor stub
+	public UIGameObject(String name, int x, int y) {
+		super(name, x, y);
 	}
 
 	/*
@@ -71,7 +69,6 @@ public class UIGameObject extends AbstractGameObject implements UIComponent {
 	 */
 	@Override
 	public int getID() {
-		// TODO Auto-generated method stub
 		return 0;
 	}
 
@@ -82,7 +79,6 @@ public class UIGameObject extends AbstractGameObject implements UIComponent {
 	 */
 	@Override
 	public String getValue() {
-		// TODO Auto-generated method stub
 		return null;
 	}
 
@@ -93,7 +89,6 @@ public class UIGameObject extends AbstractGameObject implements UIComponent {
 	 */
 	@Override
 	public void onFocus() {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -104,7 +99,6 @@ public class UIGameObject extends AbstractGameObject implements UIComponent {
 	 */
 	@Override
 	public void onFocusLost() {
-		// TODO Auto-generated method stub
 
 	}
 

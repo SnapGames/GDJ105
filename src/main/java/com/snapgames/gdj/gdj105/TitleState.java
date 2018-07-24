@@ -57,6 +57,8 @@ public class TitleState extends AbstractGameState {
 	public void initialize(Game game) {
 		super.initialize(game);
 
+
+		
 		// activate needed layers
 		for (int i = 0; i < layers.length; i++) {
 			layers[i] = new Layer(true, false);

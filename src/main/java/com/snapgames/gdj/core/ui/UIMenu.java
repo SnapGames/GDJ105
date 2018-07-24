@@ -58,7 +58,7 @@ public class UIMenu extends UIGameObject {
 	 * @param shadowColor       shadow color to draw as border of label.
 	 */
 	public UIMenu(String name, int x, int y, int defaultActiveItem, Font font, Color foreColor, Color shadowColor) {
-		super(name, x, y, 0, 0);
+		super(name, x, y);
 		this.activeItem = defaultActiveItem;
 		this.color = foreColor;
 		this.shadowColor = shadowColor;
@@ -135,7 +135,7 @@ public class UIMenu extends UIGameObject {
 				item.onFocus();
 			}
 			item.setTextPosition(textPosition);
-			item.setPosition(x,y + i * fm.getHeight());
+			item.setPosition(x, y + i * fm.getHeight());
 			item.draw(game, g);
 			i++;
 			// update rectangle Bounding Box for this object.
