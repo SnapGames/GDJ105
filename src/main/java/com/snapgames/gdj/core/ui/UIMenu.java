@@ -135,7 +135,7 @@ public class UIMenu extends UIGameObject {
 				item.onFocus();
 			}
 			item.setTextPosition(textPosition);
-			item.setPosition(x,y + i * fm.getHeight());
+			item.setPosition(x, y + i * fm.getHeight());
 			item.draw(game, g);
 			i++;
 			// update rectangle Bounding Box for this object.

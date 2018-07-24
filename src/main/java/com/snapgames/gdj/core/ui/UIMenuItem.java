@@ -142,7 +142,6 @@ public class UIMenuItem extends UIGameObject {
 	 */
 	@Override
 	public void draw(Game game, Graphics2D g) {
-		super.draw(game, g);
 		this.rect = RenderHelper.drawShadowString(g, getLabel(), (int) x, (int) y, frontColor, menu.getShadowColor(),
 				(textPosition != null ? textPosition : TextPosition.LEFT), 2);
 	}
