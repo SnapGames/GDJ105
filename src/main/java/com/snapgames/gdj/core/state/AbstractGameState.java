@@ -86,7 +86,6 @@ public abstract class AbstractGameState implements GameState {
 	 */
 	@Override
 	public void initialize(Game game) {
-		ResourceManager.add("debugFont", game.getRender().getFont().deriveFont(9f));
 		// activate needed layers
 		resetLayers();
 	}
@@ -228,8 +227,8 @@ public abstract class AbstractGameState implements GameState {
 
 		{
 			RenderHelper.drawShadowString(g,
-					String.format("FPS:%03d, ROC:%04d, SOC:%04d", game.framesPerSecond,
-							statistics.get("renderedObjCount"), statistics.get("staticObjCount")),
+					String.format("FPS:%03d, ROC:%04d, SOC:%04d, debug:%d", game.framesPerSecond,
+							statistics.get("renderedObjCount"), statistics.get("staticObjCount"),game.getDebug()),
 					4, (int) (Game.HEIGHT * 0.93f), Color.BLUE, Color.BLACK);
 		}
 

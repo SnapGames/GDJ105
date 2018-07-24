@@ -152,6 +152,7 @@ public class Game extends JPanel {
 		g = image.createGraphics();
 		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
 		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+		ResourceManager.add("debugFont", getRender().getFont().deriveFont(8.5f));
 
 		gsm.activateDefaultState();
 	}

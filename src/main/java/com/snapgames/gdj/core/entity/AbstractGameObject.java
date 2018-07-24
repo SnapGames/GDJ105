@@ -89,18 +89,12 @@ public class AbstractGameObject implements GameObject {
 	protected List<String> debugInfo = new ArrayList<>();
 
 	/**
-	 * internal debug font.
-	 */
-	private Font debugFont;
-
-	/**
 	 * Default constructor for this AbstractGameObject.
 	 */
 	public AbstractGameObject() {
 		super();
 		indexCounter++;
 		id = indexCounter;
-		debugFont = ResourceManager.getFont("debugFont");
 	}
 
 	public AbstractGameObject(String name, int x, int y) {
@@ -173,7 +167,7 @@ public class AbstractGameObject implements GameObject {
 	 * gdj.core.Game, java.awt.Graphics2D)
 	 */
 	public void drawSpecialDebugInfo(Game game, Graphics2D g) {
-		RenderHelper.drawDebugInfoObject(g, this, debugFont, game.getDebug());
+		RenderHelper.drawDebugInfoObject(g, this, game.getDebug());
 
 	}
 
@@ -229,9 +223,10 @@ public class AbstractGameObject implements GameObject {
 	@Override
 	public void addDebugInfo() {
 		debugInfo.clear();
-		debugInfo.add(name);
-		debugInfo.add(String.format("pos:(%4.0f,%4.0f)", x, y));
-		debugInfo.add(String.format("lyr,prio(:(%d,%d)", layer, priority));
+		debugInfo.add(String.format("name:(%s)", name));
+		debugInfo.add(String.format("pos :(%4.0f,%4.0f)", x, y));
+		debugInfo.add(String.format("layr:(%d)", layer));
+		debugInfo.add(String.format("prio:(%d)", priority));
 	}
 
 	/*

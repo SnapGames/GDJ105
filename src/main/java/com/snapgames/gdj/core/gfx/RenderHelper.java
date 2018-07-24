@@ -17,6 +17,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.DynamicGameObject;
 import com.snapgames.gdj.core.entity.GameObject;
@@ -152,9 +153,10 @@ public class RenderHelper {
 	 * @param g the graphic interface to use to draw things
 	 * @param o the object to be debugged.
 	 */
-	public static void drawDebugInfoObject(Graphics2D g, GameObject o, Font f, int debugLevel) {
+	public static void drawDebugInfoObject(Graphics2D g, GameObject o, int debugLevel) {
 
 		AbstractGameObject ago = (AbstractGameObject) o;
+		Font f = ResourceManager.getFont("debugFont");
 		g.setFont(f);
 		int fontHeight = g.getFontMetrics().getHeight();
 
