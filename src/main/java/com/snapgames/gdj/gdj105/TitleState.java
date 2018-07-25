@@ -28,6 +28,7 @@ import com.snapgames.gdj.core.state.AbstractGameState;
 import com.snapgames.gdj.core.ui.UIImage;
 import com.snapgames.gdj.core.ui.UIMenu;
 import com.snapgames.gdj.core.ui.Messages;
+import com.snapgames.gdj.core.ui.Repeat;
 import com.snapgames.gdj.core.ui.UIText;
 
 /**
@@ -72,10 +73,11 @@ public class TitleState extends AbstractGameState {
 		String titleLabel = Messages.getString("TitleState.label.title");
 		String copyrightLabel = Messages.getString("TitleState.label.copyright");
 
-		BufferedImage bgImg = ResourceManager.getImage("/res/images/background-large.jpg");
+		BufferedImage bgImg = ResourceManager.getImage("/res/images/background-image.jpg");
 		bgi = new UIImage("background", bgImg, 0, (Game.HEIGHT - bgImg.getHeight()) / 2, 2, 1);
 		bgi.scale = 1.0f;
 		bgi.dx = 0.029f;
+		bgi.repeat = Repeat.HORIZONTAL_INFINITY;
 		addObject(bgi);
 
 		UIText titleText = new UIText("title", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.10f), titleLabel,

@@ -24,6 +24,7 @@ import com.snapgames.gdj.core.entity.AbstractGameObject;
 public class UIImage extends AbstractGameObject {
 
 	public BufferedImage image;
+	public Repeat repeat;
 
 	/**
 	 * 
@@ -41,6 +42,7 @@ public class UIImage extends AbstractGameObject {
 		this.image = image;
 		this.width = image.getWidth();
 		this.height = image.getHeight();
+		this.repeat = Repeat.NONE;
 	}
 
 	/*
@@ -52,10 +54,44 @@ public class UIImage extends AbstractGameObject {
 	 */
 	@Override
 	public void draw(Game game, Graphics2D g) {
-		g.drawImage(image, (int) (x), (int) (y), null);
-		g.drawImage(image, (int) (x) + width, (int) (y), null);
+		switch (repeat) {
+		case NONE:
+			g.drawImage(image, (int) (x), (int) (y), null);
+		case HORIZONTAL_ONE:
+			g.drawImage(image, (int) (x) + width, (int) (y), null);
+			break;
+		case HORIZONTAL_INFINITY:
+			int xmax = ((int) (game.getWidth() / width) + 1);
+			for (int rx = 0; rx < xmax ; rx += 1) {
+				g.drawImage(image, (int) (x) + (rx*width), (int) (y), null);
+			}
+			break;
+		case VERTICAL_ONE:
+			g.drawImage(image, (int) (x), (int) (y) + height, null);
+			break;
+		case VERTICAL_INFINITY:
+			int ymax = ((int) (game.getHeight() / height) + 1);
+			for (int ry = 0; ry < ymax * height; ry += height) {
+				g.drawImage(image, (int) (x), (int) (y) + ry, null);
+			}
+			break;
+
+		}
 	}
 
+	@Override
+	public void update(Game game, long dt) {
+		super.update(game, dt);
+		if (x > width) {
+			x = 0;
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.entity.AbstractGameObject#addDebugInfo()
+	 */
 	@Override
 	public void addDebugInfo() {
 		super.addDebugInfo();
