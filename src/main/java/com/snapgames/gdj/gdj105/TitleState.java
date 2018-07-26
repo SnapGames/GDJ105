@@ -44,7 +44,7 @@ public class TitleState extends AbstractGameState {
 	private Font titleFont;
 	private Font menuItemFont;
 	private Font copyFont;
-	private UIImage bgi;
+	private UIImage bgi, logo;
 
 	private UIMenu menu;
 
@@ -74,7 +74,7 @@ public class TitleState extends AbstractGameState {
 		BufferedImage bgImg = ResourceManager.getImage("/res/images/background-image.jpg");
 		bgi = new UIImage("background", bgImg, 0, (Game.HEIGHT - bgImg.getHeight()) / 2, 2, 1);
 		bgi.scale = 1.0f;
-		bgi.dx = 0.02f;
+		bgi.dx = 0.029f;
 		bgi.x = 1;
 		bgi.repeat = Repeat.HORIZONTAL_INFINITY;
 		addObject(bgi);
@@ -83,8 +83,8 @@ public class TitleState extends AbstractGameState {
 				titleFont, 1, 1, Color.WHITE, TextPosition.CENTER);
 		addObject(titleText);
 
-		menu = new UIMenu("menu", (int) (Game.WIDTH * 0.50f), (int) (Game.HEIGHT * 0.50f), 0, menuItemFont, Color.WHITE,
-				Color.BLACK, TextPosition.CENTER);
+		menu = new UIMenu("menu", (int) (Game.WIDTH * 0.65f), (int) (Game.HEIGHT * 0.50f), 0, menuItemFont, Color.WHITE,
+				Color.BLACK, TextPosition.RIGHT);
 		menu.layer = 2;
 		menu.priority = 1;
 
@@ -97,6 +97,12 @@ public class TitleState extends AbstractGameState {
 		UIText cpyText = new UIText("copyright", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.85f), copyrightLabel,
 				copyFont, 2, 1, Color.WHITE, TextPosition.CENTER);
 		addObject(cpyText);
+
+		BufferedImage imgLogo = ResourceManager.getImage("/res/icons/gdj-app-16x16.png");
+		logo = new UIImage("logo", imgLogo, 4, Game.HEIGHT - (24 + imgLogo.getHeight()), 1, 1);
+		logo.repeat = Repeat.NONE;
+		
+		addObject(logo);
 
 		logger.info("State TitleState initialized");
 	}
