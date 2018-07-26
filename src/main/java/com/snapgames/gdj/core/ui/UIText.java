@@ -16,7 +16,6 @@ import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 import com.snapgames.gdj.core.Game;
-import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.gfx.RenderHelper;
 import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
 
@@ -26,17 +25,11 @@ import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
  * @author Frédéric Delorme
  *
  */
-public class TextObject extends AbstractGameObject {
+public class UIText extends UIGameObject {
 
 	public String text;
-	private Font font;
-	private Color frontColor;
-	private Color shadowColor;
-	private int shadowBold;
-	private Color backgroundColor;
-	private TextPosition textPosition;
 
-	public TextObject() {
+	public UIText() {
 		super();
 		text = "notext";
 		frontColor = Color.WHITE;
@@ -45,28 +38,20 @@ public class TextObject extends AbstractGameObject {
 	}
 
 	/**
-	 * Initialize a new TextObject with a <code>name</code>, for <code>text</code>
-	 * drawn with <code>font</code> at <code>x,y</code>, on <code>layer</code> with
-	 * a <code>priority</code>.
+	 * Initialize a new UIText with a <code>name</code>, for <code>text</code> drawn
+	 * with <code>font</code> at <code>x,y</code>, on <code>layer</code> with a
+	 * <code>priority</code>.
 	 * 
-	 * @param name
-	 *            name of this object.
-	 * @param x
-	 *            horizontal position for this object
-	 * @param y
-	 *            vertical position for this object
-	 * @param text
-	 *            text to be drawn
-	 * @param font
-	 *            font to be used (null will draw text with default font.
-	 * @param layer
-	 *            a default layer to draw this object.
-	 * @param priority
-	 *            a priority for object in the layer
-	 * @param color
-	 *            the color to be used if not default foreground Color.
+	 * @param name     name of this object.
+	 * @param x        horizontal position for this object
+	 * @param y        vertical position for this object
+	 * @param text     text to be drawn
+	 * @param font     font to be used (null will draw text with default font.
+	 * @param layer    a default layer to draw this object.
+	 * @param priority a priority for object in the layer
+	 * @param color    the color to be used if not default foreground Color.
 	 */
-	public TextObject(String name, int x, int y, String text, Font font, int layer, int priority, Color color) {
+	public UIText(String name, int x, int y, String text, Font font, int layer, int priority, Color color) {
 		super(name, x, y, 1, 1, layer, priority, color);
 		this.text = text;
 		this.shadowBold = 1;
@@ -77,7 +62,7 @@ public class TextObject extends AbstractGameObject {
 
 	}
 
-	public TextObject(String name, int x, int y, String text, Font font, int layer, int priority, Color color,
+	public UIText(String name, int x, int y, String text, Font font, int layer, int priority, Color color,
 			TextPosition pos) {
 		super(name, x, y, 1, 1, layer, priority, color);
 		this.text = text;
@@ -119,9 +104,50 @@ public class TextObject extends AbstractGameObject {
 		rectangle.width = width = (fm.stringWidth(text) > width ? fm.stringWidth(text) : width);
 	}
 
-	public void addDebugInfo() {
-		super.addDebugInfo();
+	public void addDebugInfo(Game game) {
+		super.addDebugInfo(game);
 		debugInfo.add(String.format("text:(%s)", text));
+		debugInfo.add(String.format("class:%s", this.getClass().getSimpleName()));
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.entity.UIComponent#getID()
+	 */
+	@Override
+	public int getID() {
+		return id;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.entity.UIComponent#getValue()
+	 */
+	@Override
+	public String getValue() {
+		return text;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.entity.UIComponent#onFocus()
+	 */
+	@Override
+	public void onFocus() {
+
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.snapgames.gdj.core.entity.UIComponent#onFocusLost()
+	 */
+	@Override
+	public void onFocusLost() {
+
 	}
 
 }
