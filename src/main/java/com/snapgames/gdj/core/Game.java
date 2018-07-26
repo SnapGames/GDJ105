@@ -396,7 +396,7 @@ public class Game extends JPanel {
 	 *            list of arguments from command line.
 	 */
 	public static void main(String[] argv) {
-		Game game = new Game("GDJ");
+		Game game = new Game("Kingdom of Asperion");
 		new Window(game);
 		game.run();
 	}

@@ -17,6 +17,7 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.DynamicGameObject;
@@ -153,7 +154,7 @@ public class RenderHelper {
 	 * @param g the graphic interface to use to draw things
 	 * @param o the object to be debugged.
 	 */
-	public static void drawDebugInfoObject(Graphics2D g, GameObject o, int debugLevel) {
+	public static void drawDebugInfoObject(Game game, Graphics2D g, GameObject o) {
 
 		AbstractGameObject ago = (AbstractGameObject) o;
 		Font f = ResourceManager.getFont("debugFont");
@@ -165,7 +166,7 @@ public class RenderHelper {
 		int pane_height = 40;
 
 		List<String> lines = new ArrayList<>();
-		o.addDebugInfo();
+		o.addDebugInfo(game);
 		lines.addAll(o.getDebugInfo());
 		for (int i = 0; i < lines.size(); i++) {
 			pane_width = (g.getFontMetrics().stringWidth(lines.get(i) + pane_padding) > pane_width
@@ -180,20 +181,22 @@ public class RenderHelper {
 			pane_x = (int) ago.offsetInfo.getX();
 			pane_y = (int) ago.offsetInfo.getY();
 		} else {
-			pane_x = (int) (ago.rectangle.x + ago.width + pane_padding);
-			pane_y = (int) (ago.rectangle.y + ago.height + pane_padding);
+			// pane_x = (int) (ago.rectangle.x + ago.width + pane_padding);
+			// pane_y = (int) (ago.rectangle.y + ago.height + pane_padding);
+			pane_x = (int) (ago.rectangle.x);
+			pane_y = (int) (ago.rectangle.y);
 		}
 		if (o.getScale() != 1.0f) {
 			g.scale(o.getScale(), o.getScale());
 		}
-		if (debugLevel >= 1) {
+		if (game.getDebug() >= 1) {
 			g.setColor(Color.YELLOW);
 			g.drawRect((int) ago.rectangle.x, (int) ago.rectangle.y, ago.rectangle.width, ago.rectangle.height);
 			g.drawString("" + ago.id, (int) ago.rectangle.x, (int) ago.rectangle.y);
 		}
 		if (ago instanceof DynamicGameObject) {
 			DynamicGameObject dgo = (DynamicGameObject) ago;
-			if (debugLevel >= 2) {
+			if (game.getDebug() >= 2) {
 				g.setColor(Color.GREEN);
 				switch (dgo.direction) {
 				case UP:
@@ -219,7 +222,7 @@ public class RenderHelper {
 				}
 			}
 		}
-		if (debugLevel >= 3) {
+		if (game.getDebug() >= 3) {
 			g.setColor(new Color(0.5f, .5f, .5f, .6f));
 			g.fillRect(pane_x + link, pane_y + link, pane_width, pane_height);
 
@@ -227,8 +230,13 @@ public class RenderHelper {
 			g.drawRect(pane_x + link, pane_y + link, pane_width, pane_height);
 
 			g.setColor(Color.GREEN);
-			g.drawLine((int) ago.rectangle.x + ago.rectangle.width, (int) ago.rectangle.y + ago.rectangle.height,
-					(int) pane_x + link, pane_y + link);
+			/*
+			g.drawLine(
+			   (int) ago.rectangle.x + ago.rectangle.width, 
+			   (int) ago.rectangle.y + ago.rectangle.height,
+		       (int) pane_x + link, 
+		       pane_y + link);
+			*/
 			for (int i = 0; i < lines.size(); i++) {
 				g.drawString(lines.get(i), pane_x + link + pane_padding, pane_y + link + (i + 1) * fontHeight);
 			}

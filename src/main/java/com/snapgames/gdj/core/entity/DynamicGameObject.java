@@ -59,8 +59,8 @@ public class DynamicGameObject extends AbstractGameObject {
 	 * @see com.snapgames.gdj.core.entity.AbstractGameObject#addDebugInfo()
 	 */
 	@Override
-	public void addDebugInfo() {
-		super.addDebugInfo();
+	public void addDebugInfo(Game game) {
+		super.addDebugInfo(game);
 		debugInfo.add(String.format("spd:(%4.2f,%4.2f)", dx, dy));
 		debugInfo.add(String.format("action:(%s)", action));
 		debugInfo.add(String.format("dir:(%s)", direction));

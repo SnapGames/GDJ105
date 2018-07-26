@@ -10,7 +10,6 @@
 package com.snapgames.gdj.core.entity;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.geom.Point2D;
@@ -20,7 +19,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import com.snapgames.gdj.core.Game;
-import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.gfx.RenderHelper;
 
 /**
@@ -98,7 +96,7 @@ public class AbstractGameObject implements GameObject {
 	}
 
 	public AbstractGameObject(String name, int x, int y) {
-		super();
+		this();
 		// if name is null, generate a default name.
 		this.name = (name == null || name.equals("") ? "noname_" + indexCounter : name);
 		this.x = x;
@@ -154,7 +152,7 @@ public class AbstractGameObject implements GameObject {
 	public void draw(Game game, Graphics2D g) {
 		g.setColor(color);
 		g.fillRect((int) x, (int) y, width, height);
-		
+
 		// Extended object will use their own draw process.
 
 	}
@@ -167,7 +165,7 @@ public class AbstractGameObject implements GameObject {
 	 * gdj.core.Game, java.awt.Graphics2D)
 	 */
 	public void drawSpecialDebugInfo(Game game, Graphics2D g) {
-		RenderHelper.drawDebugInfoObject(g, this, game.getDebug());
+		RenderHelper.drawDebugInfoObject(game, g, this);
 
 	}
 
@@ -221,7 +219,7 @@ public class AbstractGameObject implements GameObject {
 	 * @see com.snapgames.gdj.core.entity.GameObject#addDebugInfo()
 	 */
 	@Override
-	public void addDebugInfo() {
+	public void addDebugInfo(Game game) {
 		debugInfo.clear();
 		debugInfo.add(String.format("name:(%s)", name));
 		debugInfo.add(String.format("pos :(%4.0f,%4.0f)", x, y));

@@ -37,23 +37,27 @@ public class Window {
 	 */
 	public Window(Game game) {
 
-		// game.setSize(game.getDimension());
-
 		frame = new JFrame(game.getTitle());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setContentPane(game);
 		frame.setLayout(new BorderLayout());
+		
+		// set window size
 		frame.setSize(game.getDimension());
 		frame.setPreferredSize(game.getDimension());
 		frame.setMaximumSize(game.getDimension());
 		frame.setResizable(false);
+
+		// set default icon
 		frame.setIconImage(ResourceManager.getImage("/res/icons/gdj-app.png"));
 
 		// add the Game InputHandler as a KeyListener
 		frame.addKeyListener(game.getInputHandler());
 
+		// pack it and display it
 		frame.pack();
 		frame.setVisible(true);
+		
 		game.setWindow(this);
 	}
 

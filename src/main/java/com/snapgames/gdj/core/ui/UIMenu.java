@@ -193,9 +193,11 @@ public class UIMenu extends UIGameObject {
 		return items.get(activeItem);
 	}
 
-	public void addDebugInfo() {
-		super.addDebugInfo();
+	public void addDebugInfo(Game game) {
+		super.addDebugInfo(game);
 		debugInfo.add(String.format("class:%s", this.getClass().getSimpleName()));
+		debugInfo.add(String.format("active:%d", this.activeItem));
+		
 	}
 
 	@Override

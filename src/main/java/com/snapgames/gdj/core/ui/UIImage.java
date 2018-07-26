@@ -25,6 +25,7 @@ public class UIImage extends AbstractGameObject {
 
 	public BufferedImage image;
 	public Repeat repeat;
+	int xmax = 0, ymax = 0;
 
 	/**
 	 * 
@@ -61,29 +62,21 @@ public class UIImage extends AbstractGameObject {
 			g.drawImage(image, (int) (x) + width, (int) (y), null);
 			break;
 		case HORIZONTAL_INFINITY:
-			int xmax = ((int) (game.getWidth() / width) + 1);
-			for (int rx = 0; rx < xmax ; rx += 1) {
-				g.drawImage(image, (int) (x) + (rx*width), (int) (y), null);
+			xmax = ((int) (game.getWidth() / width) + 1);
+			for (int rx = 0; rx < xmax; rx += 1) {
+				g.drawImage(image, (int) (x) + (rx * width), (int) (y), null);
 			}
 			break;
 		case VERTICAL_ONE:
 			g.drawImage(image, (int) (x), (int) (y) + height, null);
 			break;
 		case VERTICAL_INFINITY:
-			int ymax = ((int) (game.getHeight() / height) + 1);
+			ymax = ((int) (game.getHeight() / height) + 1);
 			for (int ry = 0; ry < ymax * height; ry += height) {
 				g.drawImage(image, (int) (x), (int) (y) + ry, null);
 			}
 			break;
 
-		}
-	}
-
-	@Override
-	public void update(Game game, long dt) {
-		super.update(game, dt);
-		if (x > width) {
-			x = 0;
 		}
 	}
 
@@ -93,9 +86,10 @@ public class UIImage extends AbstractGameObject {
 	 * @see com.snapgames.gdj.core.entity.AbstractGameObject#addDebugInfo()
 	 */
 	@Override
-	public void addDebugInfo() {
-		super.addDebugInfo();
+	public void addDebugInfo(Game game) {
+		super.addDebugInfo(game);
 		debugInfo.add(String.format("class:%s", this.getClass().getSimpleName()));
+		debugInfo.add(String.format("floor:(%03d,%03d)=>%03.02f", game.getWidth(), width, Math.abs(x)));
 	}
 
 }

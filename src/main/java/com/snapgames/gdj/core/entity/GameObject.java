@@ -71,7 +71,7 @@ public interface GameObject {
 	 * 
 	 * @return
 	 */
-	public void addDebugInfo();
+	public void addDebugInfo(Game game);
 
 	public List<String> getDebugInfo();
 

@@ -104,8 +104,8 @@ public class UIText extends UIGameObject {
 		rectangle.width = width = (fm.stringWidth(text) > width ? fm.stringWidth(text) : width);
 	}
 
-	public void addDebugInfo() {
-		super.addDebugInfo();
+	public void addDebugInfo(Game game) {
+		super.addDebugInfo(game);
 		debugInfo.add(String.format("text:(%s)", text));
 		debugInfo.add(String.format("class:%s", this.getClass().getSimpleName()));
 	}
