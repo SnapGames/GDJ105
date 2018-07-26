@@ -15,9 +15,9 @@ Graphical objects to create some new States :
 
 Let's create :
 
-- `TextObject`, 
-- `ImageObject` 
-- and `MenuObject` 
+- `UIText`, 
+- `UIImage` 
+- and `UIMenu` 
 
 to build a new game state : the `TitleState`, 
 
@@ -45,7 +45,7 @@ $> java -jar gdj105-0.0.1-SNAPSHOT.jar
 
 ## Edit
 
-Import this project as an Existing Maven Project into your prefered IDE, 
+Import this project as an Existing Maven Project into your preferred IDE, 
 (like [Eclipse](http://www.eclipse.org/downloads "open the eclipse official web download page") ?)
 
 
