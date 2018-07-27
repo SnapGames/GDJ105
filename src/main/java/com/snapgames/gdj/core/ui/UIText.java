@@ -18,6 +18,7 @@ import java.awt.Rectangle;
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.gfx.RenderHelper;
 import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
+import com.snapgames.gdj.core.i18n.Messages;
 
 /**
  * A textObject is a UI element to display Text.

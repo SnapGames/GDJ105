@@ -85,6 +85,16 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 	}
 
 	/**
+	 * Add a new UIMenuItem object to the UIMenu.
+	 * 
+	 * @param item the Menu item to be added.
+	 * @see UIMenuItem
+	 */
+	public void addItem(UIMenuItem item) {
+		items.add(item);
+	}
+
+	/**
 	 * 
 	 * @param value
 	 * @param labelKey

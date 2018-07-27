@@ -21,13 +21,14 @@ import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.entity.Layer;
 import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
+import com.snapgames.gdj.core.i18n.Messages;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.AbstractGameState;
-import com.snapgames.gdj.core.ui.Messages;
 import com.snapgames.gdj.core.ui.Repeat;
 import com.snapgames.gdj.core.ui.UIImage;
 import com.snapgames.gdj.core.ui.UIMenu;
 import com.snapgames.gdj.core.ui.UIText;
+import com.snapgames.gdj.gdj105.i18n.Labels;
 
 /**
  * This is the Title Screen for the game.
@@ -65,8 +66,8 @@ public class TitleState extends AbstractGameState {
 		menuItemFont = game.getGraphics().getFont().deriveFont(1.2f * Game.SCREEN_FONT_RATIO);
 		copyFont = game.getGraphics().getFont().deriveFont(1.0f * Game.SCREEN_FONT_RATIO);
 
-		String titleLabel = Messages.getString("TitleState.label.title");
-		String copyrightLabel = Messages.getString("TitleState.label.copyright");
+		String titleLabel = Messages.getString(Labels.GAME_TITLE.getKey());
+		String copyrightLabel = Messages.getString(Labels.COPYRIGHT.getKey());
 
 		BufferedImage bgImg = ResourceManager.getImage("/res/images/background-image.jpg");
 		bgi = new UIImage("background", bgImg, 0, (Game.HEIGHT - bgImg.getHeight()) / 2, 2, 1);
@@ -78,7 +79,7 @@ public class TitleState extends AbstractGameState {
 
 		UIText titleText = new UIText("title", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.10f), titleLabel,
 				titleFont, 1, 1, Color.WHITE, TextPosition.CENTER);
-		titleText.setLabel("TitleState.label.title");
+		titleText.setLabel(Labels.GAME_TITLE.getKey());
 		addObject(titleText);
 
 		menu = new UIMenu("menu", (int) (Game.WIDTH * 0.65f), (int) (Game.HEIGHT * 0.50f), 0, menuItemFont, Color.WHITE,
@@ -86,27 +87,22 @@ public class TitleState extends AbstractGameState {
 		menu.layer = 2;
 		menu.priority = 1;
 
-		menu.addItem("start", "TitleState.label.start", "Start");
-		menu.addItem("options", "TitleState.label.options", "Options");
-		menu.addItem("quit", "TitleState.label.quit", "Quit");
+		menu.addItem("start", Labels.TITLE_MENU_START.getKey(), "Start");
+		menu.addItem("options", Labels.TITLE_MENU_OPTIONS.getKey(), "Options");
+		menu.addItem("quit", Labels.TITLE_MENU_QUIT.getKey(), "Quit");
 
 		addObject(menu);
 
-		UIText cpyText = new UIText("copyright", 
-				(int) (Game.WIDTH) / 2, 
-				(int) (Game.HEIGHT * 0.85f), copyrightLabel,
+		UIText cpyText = new UIText("copyright", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.85f), copyrightLabel,
 				copyFont, 2, 1, Color.WHITE, TextPosition.CENTER);
-		cpyText.setLabel("TitleState.label.copyright");
+		cpyText.setLabel(Labels.GAME_TITLE.getKey());
 		addObject(cpyText);
 
-		UIText lngText = new UIText("language", 
-				(int) (Game.WIDTH)-10, 
-				(int) (Game.HEIGHT * 0.85f), copyrightLabel,
+		UIText lngText = new UIText("language", (int) (Game.WIDTH) - 10, (int) (Game.HEIGHT * 0.85f), copyrightLabel,
 				copyFont, 2, 1, Color.WHITE, TextPosition.RIGHT);
-		lngText.setLabel("language");
+		lngText.setLabel(Labels.TITLE_LANGUAGE.getKey());
 		addObject(lngText);
 
-		
 		BufferedImage imgLogo = ResourceManager.getImage("/res/icons/gdj-app-16x16.png");
 		logo = new UIImage("logo", imgLogo, 4, Game.HEIGHT - (24 + imgLogo.getHeight()), 1, 1);
 		logo.repeat = Repeat.NONE;
@@ -146,17 +142,33 @@ public class TitleState extends AbstractGameState {
 			break;
 		case KeyEvent.VK_ENTER:
 		case KeyEvent.VK_SPACE:
-			switch (menu.getActiveItem().getValue()) {
-			case "start":
-				game.getGSM().activate("play");
-				break;
-			case "options":
-				game.getGSM().activate("options");
-				break;
-			case "quit":
-				game.setExit(true);
-				break;
-			}
+			manageMenu(game);
+			break;
+		}
+	}
+
+	/**
+	 * <p>
+	 * On Menu selection (ENTER or SPACE release key event) the method start the
+	 * corresponding option.
+	 * <ul>
+	 * <li><code>start</code> start the game (PlayState),</li>
+	 * <li><code>options</code> go to the option screen (OptionsState)</li>
+	 * <li><code>quit</code> exit from the program.</li>
+	 * </ul>
+	 * 
+	 * @param game all the things of the game can be managed from the menu !
+	 */
+	private void manageMenu(Game game) {
+		switch (menu.getActiveItem().getValue()) {
+		case "start":
+			game.getGSM().activate("play");
+			break;
+		case "options":
+			game.getGSM().activate("options");
+			break;
+		case "quit":
+			game.setExit(true);
 			break;
 		}
 	}

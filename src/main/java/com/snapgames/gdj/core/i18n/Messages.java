@@ -7,12 +7,14 @@
  * 
  * @year 2017
  */
-package com.snapgames.gdj.core.ui;
+package com.snapgames.gdj.core.i18n;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+
+import com.snapgames.gdj.core.ui.UIi18nReload;
 
 /**
  * 
@@ -71,12 +73,15 @@ public class Messages {
 		RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME, l);
 	}
 
+	/**
+	 * Switch display language with rotating list.
+	 */
 	public static void switchLanguage() {
 		index++;
 		index = (index < availableLanguages.length ? index : 0);
-		String lang = availableLanguages[index++];
-		Locale l = new Locale(lang.toLowerCase(), lang.toUpperCase());
-		RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME, l);
+		String lang = availableLanguages[index];
+		Locale locale = new Locale(lang.toLowerCase(), lang.toUpperCase());
+		RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME, locale);
 	}
 
 	public static void reloadUIi18n(List<UIi18nReload> uis) {
