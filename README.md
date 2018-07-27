@@ -55,10 +55,18 @@ Import this project as an Existing Maven Project into your preferred IDE,
 
 Here are some screenshots from the Title screen from the `TitleState`:
 
-![TitleState with to much debug information](src/main/docs/images/gdj105-screenshot-titlestate-debug.jpg "TitleState with to much debug information") ![TitleState without debug information](src/main/docs/images/gdj105-screenshot-titlestate.jpg "TitleState without debug information")
+![TitleState without debug information](src/main/docs/images/gdj105-screenshot-titlestate.jpg "TitleState without debug information")
+![TitleState with some debug information](src/main/docs/images/gdj105-screenshot-titlestate-debug-2.jpg "TitleState without debug information")
+![TitleState with to much debug information](src/main/docs/images/gdj105-screenshot-titlestate-debug-3.jpg "TitleState with to much debug information") 
 
 - Just press the <kbd>SPACE</kbd>/<kbd>ENTER</kbd> to start the demo,
 - <kbd>D</kbd> / <kbd>F9</kbd> switch between DEBUG modes 
+- Use the <kbd>L</kbd> key to switch between available languages:
+    - <code>EN</code> for English,
+    - <code>FR</code> for French,
+    - <code>DE</code> for Deutch,
+    - <code>ES</code> for Spanish,
+    - <code>IT</code> for Italian.
 
 
 **Debug display mode**

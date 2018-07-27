@@ -28,7 +28,7 @@ import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.GameObject;
 import com.snapgames.gdj.core.entity.Layer;
 import com.snapgames.gdj.core.gfx.RenderHelper;
-import com.snapgames.gdj.core.ui.Messages;
+import com.snapgames.gdj.core.i18n.Messages;
 import com.snapgames.gdj.core.ui.UIi18nReload;
 
 /**
