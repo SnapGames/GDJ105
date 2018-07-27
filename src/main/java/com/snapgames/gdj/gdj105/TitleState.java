@@ -12,8 +12,6 @@ package com.snapgames.gdj.gdj105;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.KeyEvent;
-import java.awt.font.FontRenderContext;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 import org.slf4j.Logger;
@@ -66,7 +64,6 @@ public class TitleState extends AbstractGameState {
 		titleFont = game.getGraphics().getFont().deriveFont(3.0f * Game.SCREEN_FONT_RATIO);
 		menuItemFont = game.getGraphics().getFont().deriveFont(1.2f * Game.SCREEN_FONT_RATIO);
 		copyFont = game.getGraphics().getFont().deriveFont(1.0f * Game.SCREEN_FONT_RATIO);
-		FontRenderContext frc = new FontRenderContext(new AffineTransform(), true, true);
 
 		String titleLabel = Messages.getString("TitleState.label.title");
 		String copyrightLabel = Messages.getString("TitleState.label.copyright");
@@ -81,6 +78,7 @@ public class TitleState extends AbstractGameState {
 
 		UIText titleText = new UIText("title", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.10f), titleLabel,
 				titleFont, 1, 1, Color.WHITE, TextPosition.CENTER);
+		titleText.setLabel("TitleState.label.title");
 		addObject(titleText);
 
 		menu = new UIMenu("menu", (int) (Game.WIDTH * 0.65f), (int) (Game.HEIGHT * 0.50f), 0, menuItemFont, Color.WHITE,
@@ -94,14 +92,25 @@ public class TitleState extends AbstractGameState {
 
 		addObject(menu);
 
-		UIText cpyText = new UIText("copyright", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.85f), copyrightLabel,
+		UIText cpyText = new UIText("copyright", 
+				(int) (Game.WIDTH) / 2, 
+				(int) (Game.HEIGHT * 0.85f), copyrightLabel,
 				copyFont, 2, 1, Color.WHITE, TextPosition.CENTER);
+		cpyText.setLabel("TitleState.label.copyright");
 		addObject(cpyText);
 
+		UIText lngText = new UIText("language", 
+				(int) (Game.WIDTH)-10, 
+				(int) (Game.HEIGHT * 0.85f), copyrightLabel,
+				copyFont, 2, 1, Color.WHITE, TextPosition.RIGHT);
+		lngText.setLabel("language");
+		addObject(lngText);
+
+		
 		BufferedImage imgLogo = ResourceManager.getImage("/res/icons/gdj-app-16x16.png");
 		logo = new UIImage("logo", imgLogo, 4, Game.HEIGHT - (24 + imgLogo.getHeight()), 1, 1);
 		logo.repeat = Repeat.NONE;
-		
+
 		addObject(logo);
 
 		logger.info("State TitleState initialized");

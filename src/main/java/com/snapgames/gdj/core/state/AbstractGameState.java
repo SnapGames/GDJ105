@@ -12,7 +12,6 @@ package com.snapgames.gdj.core.state;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -25,11 +24,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.snapgames.gdj.core.Game;
-import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.GameObject;
 import com.snapgames.gdj.core.entity.Layer;
 import com.snapgames.gdj.core.gfx.RenderHelper;
+import com.snapgames.gdj.core.ui.Messages;
+import com.snapgames.gdj.core.ui.UIi18nReload;
 
 /**
  * An Abstract Game State to manage all states of the Game !
@@ -66,6 +66,8 @@ public abstract class AbstractGameState implements GameState {
 	 * List of managed objects. Use a list that can put up with concurrent access.
 	 */
 	protected List<GameObject> objects = new CopyOnWriteArrayList<>();
+
+	protected List<UIi18nReload> uis = new CopyOnWriteArrayList<>();
 
 	/**
 	 * Default constructor for the AbstractGameState
@@ -110,6 +112,9 @@ public abstract class AbstractGameState implements GameState {
 	protected void addObject(AbstractGameObject object) {
 		// add object to rendering list
 		objects.add(object);
+		if (object instanceof UIi18nReload) {
+			uis.add((UIi18nReload) object);
+		}
 		objects.sort(new Comparator<GameObject>() {
 			public int compare(GameObject o1, GameObject o2) {
 				AbstractGameObject ago1 = (AbstractGameObject) o1;
@@ -193,9 +198,20 @@ public abstract class AbstractGameState implements GameState {
 		case KeyEvent.VK_S:
 			game.captureScreenshot();
 			break;
+		case KeyEvent.VK_L:
+			Messages.switchLanguage();
+			reloadUI();
+			break;
 		default:
 			break;
 		}
+	}
+
+	/**
+	 * reload all messages for translated UI components.
+	 */
+	private void reloadUI() {
+		Messages.reloadUIi18n(uis);
 	}
 
 	/*
@@ -228,22 +244,10 @@ public abstract class AbstractGameState implements GameState {
 		{
 			RenderHelper.drawShadowString(g,
 					String.format("FPS:%03d, ROC:%04d, SOC:%04d, DBG:%d", game.framesPerSecond,
-							statistics.get("renderedObjCount"), statistics.get("staticObjCount"),game.getDebug()),
+							statistics.get("renderedObjCount"), statistics.get("staticObjCount"), game.getDebug()),
 					4, (int) (Game.HEIGHT * 0.93f), Color.BLUE, Color.BLACK);
 		}
 
-	}
-
-	/**
-	 * Test if object is in screen.
-	 * 
-	 * @param o
-	 * @return
-	 */
-	private boolean viewContainsObject(GameObject o, Rectangle view) {
-		AbstractGameObject ago = (AbstractGameObject) o;
-
-		return view.contains(ago.rectangle);
 	}
 
 }
