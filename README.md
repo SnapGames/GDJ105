@@ -55,21 +55,13 @@ Import this project as an Existing Maven Project into your preferred IDE,
 
 Here are some screenshots from the Title screen from the `TitleState`:
 
-![TitleState without debug information](src/main/docs/images/gdj105-screenshot-titlestate.jpg "TitleState without debug information")
-![TitleState with some debug information](src/main/docs/images/gdj105-screenshot-titlestate-debug-2.jpg "TitleState without debug information")
-![TitleState with to much debug information](src/main/docs/images/gdj105-screenshot-titlestate-debug-3.jpg "TitleState with to much debug information") 
+![TitleState without debug information](src/main/docs/images/gdj105-screenshot-titlestate-english.jpg "TitleState without debug information")
 
-- Just press the <kbd>SPACE</kbd>/<kbd>ENTER</kbd> to start the demo,
+#### Debug mode
+
+Some debug information can be displayed according to the debug level you've chosen:
+
 - <kbd>D</kbd> / <kbd>F9</kbd> switch between DEBUG modes 
-- Use the <kbd>L</kbd> key to switch between available languages:
-    - <code>EN</code> for English,
-    - <code>FR</code> for French,
-    - <code>DE</code> for Deutch,
-    - <code>ES</code> for Spanish,
-    - <code>IT</code> for Italian.
-
-
-**Debug display mode**
 
 | Mode  | Description                                                                                        |
 |:-----:|:---------------------------------------------------------------------------------------------------|
@@ -77,6 +69,34 @@ Here are some screenshots from the Title screen from the `TitleState`:
 | **2**	| Display yellow squares and highlight the moving direction with a green line on the direction side, |
 | **3**	| Show full of information in a panel for each active object (default).                              |
 
+
+##### Debug Level 1
+
+![TitleState with some debug information](src/main/docs/images/gdj105-screenshot-titlestate-debug-1.jpg "TitleState without debug information")
+
+##### Debug level 3
+
+![TitleState with to much debug information](src/main/docs/images/gdj105-screenshot-titlestate-debug-3.jpg "TitleState with to much debug information") 
+
+#### Switch between Languages
+
+- Use the <kbd>L</kbd> key to switch between available languages:
+    - <code>EN</code> for English,
+    - <code>FR</code> for French,
+    - <code>DE</code> for Deutch,
+    - <code>ES</code> for Spanish,
+    - <code>IT</code> for Italian.
+
+![TitleState with some debug information](src/main/docs/images/gdj105-screenshot-titlestate-english.jpg "TitleState without debug information")
+
+![TitleState with some debug information](src/main/docs/images/gdj105-screenshot-titlestate-german.jpg "TitleState without debug information")
+
+![TitleState with some debug information](src/main/docs/images/gdj105-screenshot-titlestate-french.jpg "TitleState without debug information")
+
+#### Take a snapshot
+
+you can at any time push the <kbd>S</kbd> key to take a snapshot.
+This instance jpeg picture of the game window will be saved to the `~/user`directory as a default path.
 
 Have Fun !
 

@@ -95,7 +95,7 @@ public class TitleState extends AbstractGameState {
 
 		UIText cpyText = new UIText("copyright", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.85f), copyrightLabel,
 				copyFont, 2, 1, Color.WHITE, TextPosition.CENTER);
-		cpyText.setLabel(Labels.GAME_TITLE.getKey());
+		cpyText.setLabel(Labels.COPYRIGHT.getKey());
 		addObject(cpyText);
 
 		UIText lngText = new UIText("language", (int) (Game.WIDTH) - 10, (int) (Game.HEIGHT * 0.85f), copyrightLabel,
