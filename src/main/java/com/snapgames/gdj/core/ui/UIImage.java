@@ -58,6 +58,7 @@ public class UIImage extends AbstractGameObject {
 		switch (repeat) {
 		case NONE:
 			g.drawImage(image, (int) (x), (int) (y), null);
+			break;
 		case HORIZONTAL_ONE:
 			g.drawImage(image, (int) (x) + width, (int) (y), null);
 			break;

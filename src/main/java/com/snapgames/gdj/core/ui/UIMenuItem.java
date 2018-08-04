@@ -16,6 +16,7 @@ import java.awt.Rectangle;
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.gfx.RenderHelper;
 import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
+import com.snapgames.gdj.core.i18n.Messages;
 
 /**
  * Menu item element.
@@ -23,7 +24,7 @@ import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
  * @author Frédéric Delorme
  *
  */
-public class UIMenuItem extends UIGameObject {
+public class UIMenuItem extends UIGameObject implements UIi18nReload {
 
 	/**
 	 * Parent Menu which this item is attached to.
@@ -39,6 +40,8 @@ public class UIMenuItem extends UIGameObject {
 	 * Label key from translated message.
 	 */
 	private String labelKey;
+
+	private String translatedKey;
 
 	/**
 	 * item value returned on item selection.
@@ -66,6 +69,7 @@ public class UIMenuItem extends UIGameObject {
 		this.menu = menu;
 		this.labelKey = labelKey;
 		this.value = value;
+		this.translatedKey = labelKey;
 		String translatedLabel = Messages.getString(labelKey);
 		if (translatedLabel.contains(labelKey) && defaultText != null && !defaultText.equals("")) {
 			this.label = defaultText;
@@ -162,6 +166,14 @@ public class UIMenuItem extends UIGameObject {
 	 */
 	public void setTextPosition(TextPosition textPosition) {
 		this.textPosition = textPosition;
+
+	}
+
+	@Override
+	public void reload() {
+		if (translatedKey != null && !translatedKey.equals("")) {
+			label = Messages.getString(translatedKey);
+		}
 
 	}
 }

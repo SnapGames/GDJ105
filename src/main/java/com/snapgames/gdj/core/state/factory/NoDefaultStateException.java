@@ -42,7 +42,6 @@ package com.snapgames.gdj.core.state.factory;
  * @author Frédéric Delorme
  *
  */
-@SuppressWarnings("serial")
 public class NoDefaultStateException extends Exception {
 
 	public NoDefaultStateException() {

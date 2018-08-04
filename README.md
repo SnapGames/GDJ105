@@ -15,9 +15,9 @@ Graphical objects to create some new States :
 
 Let's create :
 
-- `TextObject`, 
-- `ImageObject` 
-- and `MenuObject` 
+- `UIText`, 
+- `UIImage` 
+- and `UIMenu` 
 
 to build a new game state : the `TitleState`, 
 
@@ -45,7 +45,7 @@ $> java -jar gdj105-0.0.1-SNAPSHOT.jar
 
 ## Edit
 
-Import this project as an Existing Maven Project into your prefered IDE, 
+Import this project as an Existing Maven Project into your preferred IDE, 
 (like [Eclipse](http://www.eclipse.org/downloads "open the eclipse official web download page") ?)
 
 
@@ -55,7 +55,9 @@ Import this project as an Existing Maven Project into your prefered IDE,
 
 Here are some screenshots from the Title screen from the `TitleState`:
 
-![TitleState with to much debug information](src/main/docs/images/gdj105-screenshot-titlestate-debug.jpg "TitleState with to much debug information") ![TitleState without debug information](src/main/docs/images/gdj105-screenshot-titlestate.jpg "TitleState without debug information")
+![TitleState without debug information](src/main/docs/images/gdj105-screenshot-titlestate.jpg "TitleState without debug information")
+![TitleState with some debug information](src/main/docs/images/gdj105-screenshot-titlestate-debug-2.jpg "TitleState without debug information")
+![TitleState with to much debug information](src/main/docs/images/gdj105-screenshot-titlestate-debug-3.jpg "TitleState with to much debug information") 
 
 - Just press the <kbd>SPACE</kbd>/<kbd>ENTER</kbd> to start the demo,
 - <kbd>D</kbd> / <kbd>F9</kbd> switch between DEBUG modes 

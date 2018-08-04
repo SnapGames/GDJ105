@@ -30,7 +30,7 @@ import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
  * @author Frédéric Delorme
  *
  */
-public class UIMenu extends UIGameObject {
+public class UIMenu extends UIGameObject implements UIi18nReload {
 
 	private int index = 0;
 
@@ -81,6 +81,16 @@ public class UIMenu extends UIGameObject {
 	 */
 	public void addItem(String value, String labelKey, String defaultText, Object... args) {
 		UIMenuItem item = new UIMenuItem(this, index++, labelKey, value, defaultText, args);
+		items.add(item);
+	}
+
+	/**
+	 * Add a new UIMenuItem object to the UIMenu.
+	 * 
+	 * @param item the Menu item to be added.
+	 * @see UIMenuItem
+	 */
+	public void addItem(UIMenuItem item) {
 		items.add(item);
 	}
 
@@ -197,7 +207,7 @@ public class UIMenu extends UIGameObject {
 		super.addDebugInfo(game);
 		debugInfo.add(String.format("class:%s", this.getClass().getSimpleName()));
 		debugInfo.add(String.format("active:%d", this.activeItem));
-		
+
 	}
 
 	@Override
@@ -225,4 +235,11 @@ public class UIMenu extends UIGameObject {
 		return shadowColor;
 	}
 
+	@Override
+	public void reload() {
+		for (UIMenuItem i : items) {
+			i.reload();
+		}
+
+	}
 }

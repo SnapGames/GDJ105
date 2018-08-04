@@ -97,7 +97,7 @@ public class Game extends JPanel {
 	/**
 	 * Flag to activate debug information display.
 	 */
-	private int debug = 3;
+	private int debug = 0;
 
 	/**
 	 * flag representing the exit request status. true => exit

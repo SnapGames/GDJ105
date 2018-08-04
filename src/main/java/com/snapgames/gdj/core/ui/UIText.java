@@ -18,6 +18,7 @@ import java.awt.Rectangle;
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.gfx.RenderHelper;
 import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
+import com.snapgames.gdj.core.i18n.Messages;
 
 /**
  * A textObject is a UI element to display Text.
@@ -25,9 +26,10 @@ import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
  * @author Frédéric Delorme
  *
  */
-public class UIText extends UIGameObject {
+public class UIText extends UIGameObject implements UIi18nReload {
 
 	public String text;
+	public String label;
 
 	public UIText() {
 		super();
@@ -94,7 +96,6 @@ public class UIText extends UIGameObject {
 			g.setColor(backgroundColor);
 			g.fillRect((int) x - 2, (int) y + 2, width + 4, height + 4);
 		}
-
 		Rectangle rect = RenderHelper.drawShadowString(g, text, (int) x, (int) y + height - 2, frontColor, shadowColor,
 				(textPosition != null ? textPosition : TextPosition.LEFT), shadowBold);
 		rectangle.x = (int) (rect.x < rectangle.x ? rect.x : rectangle.x);
@@ -108,6 +109,13 @@ public class UIText extends UIGameObject {
 		super.addDebugInfo(game);
 		debugInfo.add(String.format("text:(%s)", text));
 		debugInfo.add(String.format("class:%s", this.getClass().getSimpleName()));
+	}
+
+	public void setLabel(String label) {
+		assert (label != null);
+		assert (!label.equals(""));
+		this.label = label;
+		this.text = Messages.getString(label);
 	}
 
 	/*
@@ -147,6 +155,17 @@ public class UIText extends UIGameObject {
 	 */
 	@Override
 	public void onFocusLost() {
+
+	}
+
+	/**
+	 * If i18n sensitive, add he reload behavior.
+	 */
+	@Override
+	public void reload() {
+		if (label != null && !label.equals("")) {
+			text = Messages.getString(label);
+		}
 
 	}
 
