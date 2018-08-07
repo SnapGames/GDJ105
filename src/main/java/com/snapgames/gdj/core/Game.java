@@ -130,8 +130,7 @@ public class Game extends JPanel {
 	 * the default constructor for the {@link Game} panel with a game
 	 * <code>title</code>.
 	 * 
-	 * @param title
-	 *            the title for the game.
+	 * @param title the title for the game.
 	 */
 	private Game(String title) {
 		this.title = title;
@@ -305,8 +304,7 @@ public class Game extends JPanel {
 	/**
 	 * Set the active window for this game.
 	 * 
-	 * @param window
-	 *            the window to set as active window for the game.
+	 * @param window the window to set as active window for the game.
 	 */
 	public void setWindow(Window window) {
 		this.window = window;
@@ -320,8 +318,7 @@ public class Game extends JPanel {
 	}
 
 	/**
-	 * @param exit
-	 *            the exit to set
+	 * @param exit the exit to set
 	 */
 	public void setExit(boolean exit) {
 		this.exit = exit;
@@ -390,10 +387,29 @@ public class Game extends JPanel {
 	}
 
 	/**
+	 * return the current window object f the game.
+	 * 
+	 * @return a Window object.
+	 * @see Window
+	 */
+	public Window getWindow() {
+
+		return window;
+	}
+
+	/**
+	 * Set Game title.
+	 * 
+	 * @param title
+	 */
+	public void setTitle(String title) {
+		this.title = title;
+	}
+
+	/**
 	 * The main entry point to start our GDJ104 game.
 	 * 
-	 * @param argv
-	 *            list of arguments from command line.
+	 * @param argv list of arguments from command line.
 	 */
 	public static void main(String[] argv) {
 		Game game = new Game("Kingdom of Asperion");

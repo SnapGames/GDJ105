@@ -28,20 +28,22 @@ public class Window {
 	 */
 	JFrame frame = null;
 
+	Game game;
+
 	/**
 	 * The default unique constructor to initialize a {@link Window} on the
 	 * <code>game</code>.
 	 * 
-	 * @param game
-	 *            the game to display in.
+	 * @param game the game to display in.
 	 */
 	public Window(Game game) {
 
+		this.game = game;
 		frame = new JFrame(game.getTitle());
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setContentPane(game);
 		frame.setLayout(new BorderLayout());
-		
+
 		// set window size
 		frame.setSize(game.getDimension());
 		frame.setPreferredSize(game.getDimension());
@@ -57,11 +59,26 @@ public class Window {
 		// pack it and display it
 		frame.pack();
 		frame.setVisible(true);
-		
+
 		game.setWindow(this);
 	}
 
+	/**
+	 * return the JFrame object for this wnidow.
+	 * 
+	 * @return
+	 */
 	public JFrame getFrame() {
 		return frame;
+	}
+
+	/**
+	 * Set the Window title.
+	 * 
+	 * @param title
+	 */
+	public void setTitle(String title) {
+		game.setTitle(title);
+		frame.setTitle(title);
 	}
 }
