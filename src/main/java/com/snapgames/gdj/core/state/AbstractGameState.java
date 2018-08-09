@@ -27,6 +27,7 @@ import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.GameObject;
 import com.snapgames.gdj.core.entity.Layer;
+import com.snapgames.gdj.core.gfx.DebugLevel;
 import com.snapgames.gdj.core.gfx.RenderHelper;
 import com.snapgames.gdj.core.i18n.Messages;
 import com.snapgames.gdj.core.ui.UIi18nReload;
@@ -184,16 +185,16 @@ public abstract class AbstractGameState implements GameState {
 	@Override
 	public void keyReleased(Game game, KeyEvent e) {
 		switch (e.getKeyCode()) {
-		case KeyEvent.VK_ESCAPE:
 		case KeyEvent.VK_Q:
 			game.setExit(true);
 			break;
 		case KeyEvent.VK_F9:
 		case KeyEvent.VK_D:
-			int debug = game.getDebug();
-			debug++;
-			debug = (debug > 3 ? 0 : debug);
-			game.setDebug(debug);
+			DebugLevel debug = game.getDebug();
+			int debugLevel = debug.getValue();
+			debugLevel++;
+			debugLevel= (debugLevel> 3 ? 0 : debugLevel);
+			game.setDebug(debug.setValue(debugLevel));
 			break;
 		case KeyEvent.VK_S:
 			game.captureScreenshot();
@@ -228,7 +229,7 @@ public abstract class AbstractGameState implements GameState {
 				if (layer.active) {
 					renderedObjectCount++;
 					o.draw(game, g);
-					if (game.isDebug(1) || o.isDebugInfoDisplayed()) {
+					if (game.isDebug(DebugLevel.DEBUG_FPS) || o.isDebugInfoDisplayed()) {
 						o.drawSpecialDebugInfo(game, g);
 
 					}
@@ -239,12 +240,12 @@ public abstract class AbstractGameState implements GameState {
 			statistics.put("staticObjCount", objects.size());
 		}
 
-		if (game.isDebug(1))
+		if (game.isDebug(DebugLevel.DEBUG_FPS))
 
 		{
 			RenderHelper.drawShadowString(g,
 					String.format("FPS:%03d, ROC:%04d, SOC:%04d, DBG:%d", game.framesPerSecond,
-							statistics.get("renderedObjCount"), statistics.get("staticObjCount"), game.getDebug()),
+							statistics.get("renderedObjCount"), statistics.get("staticObjCount"), game.getDebug().getValue()),
 					4, (int) (Game.HEIGHT * 0.93f), Color.BLUE, Color.BLACK);
 		}
 

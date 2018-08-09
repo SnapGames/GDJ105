@@ -27,7 +27,13 @@ public enum Labels {
 	// TitleState Menu options quit
 	TITLE_MENU_QUIT("TitleState.label.quit", "Quit"),
 	// Language for the game.
-	TITLE_LANGUAGE("language", "Language");
+	TITLE_LANGUAGE("language", "Language"),
+	// Option State title
+	OPTION_TITLE("OptionState.title", "Options"),
+	// Option State title
+	PLAY_TITLE("PlayState.title", "Play !")
+	;
+	
 
 	private Labels(String keyLabel, String defaultText) {
 		this.keyLabel = keyLabel;

@@ -13,7 +13,7 @@ import java.awt.Color;
 import java.awt.Font;
 
 import com.snapgames.gdj.core.entity.AbstractGameObject;
-import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
+import com.snapgames.gdj.core.gfx.RenderHelper.Justification;
 
 /**
  * 
@@ -27,7 +27,7 @@ public class UIGameObject extends AbstractGameObject implements UIComponent {
 	protected Color shadowColor;
 	protected int shadowBold;
 	protected Color backgroundColor;
-	protected TextPosition textPosition;
+	protected Justification justification;
 
 	/**
 	 * 

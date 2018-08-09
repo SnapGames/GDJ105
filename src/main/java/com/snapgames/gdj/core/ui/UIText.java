@@ -17,7 +17,7 @@ import java.awt.Rectangle;
 
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.gfx.RenderHelper;
-import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
+import com.snapgames.gdj.core.gfx.RenderHelper.Justification;
 import com.snapgames.gdj.core.i18n.Messages;
 
 /**
@@ -65,7 +65,7 @@ public class UIText extends UIGameObject implements UIi18nReload {
 	}
 
 	public UIText(String name, int x, int y, String text, Font font, int layer, int priority, Color color,
-			TextPosition pos) {
+			Justification pos) {
 		super(name, x, y, 1, 1, layer, priority, color);
 		this.text = text;
 		this.shadowBold = 1;
@@ -73,7 +73,7 @@ public class UIText extends UIGameObject implements UIi18nReload {
 		this.shadowColor = Color.BLACK;
 		this.frontColor = color;
 		this.shadowBold = 2;
-		this.textPosition = pos;
+		this.justification = pos;
 
 	}
 
@@ -97,7 +97,7 @@ public class UIText extends UIGameObject implements UIi18nReload {
 			g.fillRect((int) x - 2, (int) y + 2, width + 4, height + 4);
 		}
 		Rectangle rect = RenderHelper.drawShadowString(g, text, (int) x, (int) y + height - 2, frontColor, shadowColor,
-				(textPosition != null ? textPosition : TextPosition.LEFT), shadowBold);
+				(justification != null ? justification : Justification.LEFT), shadowBold);
 		rectangle.x = (int) (rect.x < rectangle.x ? rect.x : rectangle.x);
 		rectangle.y = (int) (y);
 		rectangle.width = (int) (rect.width > width ? rect.width : width);
