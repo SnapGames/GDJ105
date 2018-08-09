@@ -99,17 +99,6 @@ public class UIMenuItem extends UIGameObject implements UIi18nReload {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.snapgames.gdj.core.entity.UIComponent#getID()
-	 */
-	@Override
-	public int getID() {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
 	 * @see com.snapgames.gdj.core.entity.UIComponent#getValue()
 	 */
 	@Override

@@ -51,8 +51,6 @@ public class OptionState extends AbstractGameState {
 	 */
 	@Override
 	public void input(Game game, InputHandler input) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/*

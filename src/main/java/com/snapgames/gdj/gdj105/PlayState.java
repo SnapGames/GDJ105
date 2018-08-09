@@ -25,8 +25,6 @@ public class PlayState extends AbstractGameState {
 	 */
 	@Override
 	public void input(Game game, InputHandler input) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -34,8 +32,6 @@ public class PlayState extends AbstractGameState {
 	 */
 	@Override
 	public void update(Game game, long dt) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

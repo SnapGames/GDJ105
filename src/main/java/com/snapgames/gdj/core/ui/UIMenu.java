@@ -122,7 +122,6 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 	 */
 	@Override
 	public void update(Game game, long dt) {
-		// TODO Auto-generated method stub
 		super.update(game, dt);
 	}
 
@@ -211,7 +210,7 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 	}
 
 	@Override
-	public int getID() {
+	public int getId() {
 		return id;
 	}
 
@@ -222,8 +221,7 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 
 	@Override
 	public void onFocus() {
-		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override

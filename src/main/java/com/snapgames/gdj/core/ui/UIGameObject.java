@@ -34,7 +34,6 @@ public class UIGameObject extends AbstractGameObject implements UIComponent {
 	 */
 	public UIGameObject() {
 		super();
-		// TODO Auto-generated constructor stub
 	}
 
 	/**
@@ -68,8 +67,8 @@ public class UIGameObject extends AbstractGameObject implements UIComponent {
 	 * @see com.snapgames.gdj.core.entity.UIComponent#getID()
 	 */
 	@Override
-	public int getID() {
-		return 0;
+	public int getId() {
+		return id;
 	}
 
 	/*

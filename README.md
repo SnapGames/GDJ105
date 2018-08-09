@@ -10,7 +10,7 @@ provided by the [SnapGames](http://snapgames.fr) site.
 
 ### Goal
 
-As we have got now some great piece of game code, we need to start buildig a real framework by refactoring the code and adding some new objects.
+As we have got now some great piece of game code, we need to start building a real framework by refactoring the code and adding some new objects.
 Graphical objects to create some new States : 
 
 Let's create :
@@ -64,8 +64,9 @@ Here are some screenshots from the Title screen from the `TitleState`:
 
 ![TitleState without debug information](src/main/docs/images/gdj105-screenshot-titlestate-english.jpg "TitleState without debug information")
 
+This is the main "welcome" screen of the game, this is where the gamer comes in when he starts the game. 
 
-#### Debug mode
+## Debug mode
 
 Some debug information can be displayed according to the debug level you've chosen:
 
@@ -77,16 +78,15 @@ Some debug information can be displayed according to the debug level you've chos
 | **2**	| Display yellow squares and highlight the moving direction with a green line on the direction side, |
 | **3**	| Show full of information in a panel for each active object (default).                              |
 
-
-##### Debug Level 1
+### Debug Level 1
 
 ![TitleState with some debug information](src/main/docs/images/gdj105-screenshot-titlestate-debug-1.jpg "TitleState without debug information")
 
-##### Debug level 3
+### Debug level 3
 
 ![TitleState with to much debug information](src/main/docs/images/gdj105-screenshot-titlestate-debug-3.jpg "TitleState with to much debug information") 
 
-#### Switch between Languages
+## Switch between Languages
 
 - Use the <kbd>L</kbd> key to switch between available languages:
     - <code>EN</code> for English,
@@ -101,11 +101,11 @@ Some debug information can be displayed according to the debug level you've chos
 
 ![TitleState with some debug information](src/main/docs/images/gdj105-screenshot-titlestate-french.jpg "TitleState without debug information")
 
-#### Take a snapshot
+## Take a snapshot
 
-you can at any time push the <kbd>S</kbd> key to take a snapshot.
+You can at any time push the <kbd>S</kbd> key to take a snapshot.
 This instance jpeg picture of the game window will be saved to the `~/user` directory as a default path.
 
 Have Fun !
 
-Send a mail to [SnapGames](mailto:contact@snapgames.fr?subject=gdj105 "send a mail to your tutor")
+Send a mail to [SnapGames](mailto:contact@snapgames.fr?subject=gdj105 "send a mail to our team")

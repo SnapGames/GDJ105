@@ -12,6 +12,21 @@ package com.snapgames.gdj.core.entity;
 import com.snapgames.gdj.core.Game;
 
 /**
+ * <p>The {@link DynamicGameObject} will be used by any next moving game object, like
+ * enemies, player, bullets, animated parts, etc...
+ * 
+ * <p>It provides speed attributes with some default values for speed, some
+ * specific attributes for animation purpose like {@link Actions},
+ * {@link Direction}. It also proposes some default position computation based
+ * on the Object's speed and elapsed time between each
+ * {@link DynamicGameObject#update(Game, long)} method's call.
+ * 
+ * <p>The main attributes added by this kind of object are :
+ * 
+ * <ul>
+ * <li>vSpeed</li> the default vertital speed for this object,
+ * <li>hSpeed</li> the default horizontal speed for this object.
+ * </ul>
  * 
  * @author Frédéric Delorme
  *
@@ -112,5 +127,4 @@ public class DynamicGameObject extends AbstractGameObject {
 		return builder.toString();
 	}
 
-	
 }

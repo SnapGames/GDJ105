@@ -124,7 +124,7 @@ public class UIText extends UIGameObject implements UIi18nReload {
 	 * @see com.snapgames.gdj.core.entity.UIComponent#getID()
 	 */
 	@Override
-	public int getID() {
+	public int getId() {
 		return id;
 	}
 
