@@ -24,6 +24,7 @@ import com.snapgames.gdj.core.state.AbstractGameState;
 import com.snapgames.gdj.core.ui.UIText;
 import com.snapgames.gdj.gdj105.i18n.Labels;
 
+
 /**
  * 
  * @author Frédéric Delorme
@@ -106,7 +107,7 @@ public class OptionState extends AbstractGameState {
 			break;
 		default:
 			break;
-		}
+
 	}
 
 }

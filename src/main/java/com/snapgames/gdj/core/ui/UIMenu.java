@@ -229,7 +229,6 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 
 	@Override
 	public void onFocus() {
-
 	}
 
 	@Override
