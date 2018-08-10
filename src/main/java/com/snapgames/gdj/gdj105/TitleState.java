@@ -72,8 +72,8 @@ public class TitleState extends AbstractGameState {
 		BufferedImage bgImg = ResourceManager.getImage("/res/images/background-image.jpg");
 		bgi = new UIImage("background", bgImg, 0, (Game.HEIGHT - bgImg.getHeight()) / 2, 2, 1);
 		bgi.scale = 1.0f;
-		bgi.dx = 0.029f;
-		bgi.x = 1;
+		bgi.dx = 0.031f;
+		bgi.x = 0;
 		bgi.repeat = Repeat.HORIZONTAL_INFINITY;
 		addObject(bgi);
 
@@ -118,12 +118,16 @@ public class TitleState extends AbstractGameState {
 
 	@Override
 	public void update(Game game, long dt) {
-		bgi.x = bgi.x - bgi.dx * dt;
-
+		// Compute Background Image
+		bgi.x -= bgi.dx * dt;
+		
 		float ax = Math.abs(bgi.x);
-		if (ax > bgi.width || ax < 1) {
-			bgi.dx = -bgi.dx;
+		if (ax > game.getWidth() - bgi.width) {
+			ax = Math.floorMod((int) ax, bgi.width);
+			bgi.x = -(ax + (bgi.dx * dt));
 		}
+
+		// update menu display
 		menu.update(game, dt);
 	}
 

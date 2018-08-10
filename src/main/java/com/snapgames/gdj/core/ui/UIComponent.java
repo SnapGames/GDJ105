@@ -21,7 +21,7 @@ public interface UIComponent {
 	 * retrieve the unique id of this component.
 	 * @return
 	 */
-	public int getID();
+	public int getId();
 
 	/**
 	 * return the value for this component.
