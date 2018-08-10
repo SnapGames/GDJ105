@@ -107,7 +107,7 @@ public class OptionState extends AbstractGameState {
 			break;
 		default:
 			break;
-
+		}
 	}
 
 }
