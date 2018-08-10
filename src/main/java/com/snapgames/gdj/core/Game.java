@@ -22,6 +22,7 @@ import javax.swing.JPanel;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.snapgames.gdj.core.gfx.DebugLevel;
 import com.snapgames.gdj.core.gfx.ImageUtils;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.GameStateManager;
@@ -97,7 +98,7 @@ public class Game extends JPanel {
 	/**
 	 * Flag to activate debug information display.
 	 */
-	private int debug = 0;
+	private DebugLevel debug = DebugLevel.DEBUG_NONE;
 
 	/**
 	 * flag representing the exit request status. true => exit
@@ -337,8 +338,8 @@ public class Game extends JPanel {
 	 * 
 	 * @return
 	 */
-	public boolean isDebug(int level) {
-		return debug >= level;
+	public boolean isDebug(DebugLevel level) {
+		return debug.isDebugLevel(level);
 	}
 
 	/**
@@ -366,14 +367,14 @@ public class Game extends JPanel {
 	 * 
 	 * @param b
 	 */
-	public void setDebug(int level) {
+	public void setDebug(DebugLevel level) {
 		debug = level;
 	}
 
 	/**
 	 * @return the debug
 	 */
-	public int getDebug() {
+	public DebugLevel getDebug() {
 		return debug;
 	}
 

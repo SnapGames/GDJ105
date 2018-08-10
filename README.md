@@ -89,17 +89,17 @@ Some debug information can be displayed according to the debug level you've chos
 ## Switch between Languages
 
 - Use the <kbd>L</kbd> key to switch between available languages:
+
     - <code>EN</code> for English,
     - <code>FR</code> for French,
     - <code>DE</code> for Deutch,
     - <code>ES</code> for Spanish,
     - <code>IT</code> for Italian.
 
-![TitleState with some debug information](src/main/docs/images/gdj105-screenshot-titlestate-english.jpg "TitleState without debug information")
+### Screenshots
 
-![TitleState with some debug information](src/main/docs/images/gdj105-screenshot-titlestate-german.jpg "TitleState without debug information")
-
-![TitleState with some debug information](src/main/docs/images/gdj105-screenshot-titlestate-french.jpg "TitleState without debug information")
+![TitleState in English](src/main/docs/images/gdj105-screenshot-titlestate-english.jpg "English Version") ![TitleState in German](src/main/docs/images/gdj105-screenshot-titlestate-german.jpg "German version")
+![TitleState in French](src/main/docs/images/gdj105-screenshot-titlestate-spanish.jpg "spanish version") ![TitleState in Spanish](src/main/docs/images/gdj105-screenshot-titlestate-french.jpg "French version")
 
 ## Take a snapshot
 

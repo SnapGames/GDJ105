@@ -20,7 +20,7 @@ import org.slf4j.LoggerFactory;
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.entity.Layer;
-import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
+import com.snapgames.gdj.core.gfx.RenderHelper.Justification;
 import com.snapgames.gdj.core.i18n.Messages;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.AbstractGameState;
@@ -43,7 +43,7 @@ public class TitleState extends AbstractGameState {
 	private Font titleFont;
 	private Font menuItemFont;
 	private Font copyFont;
-	private UIImage bgi, logo;
+	private UIImage bgi, sword, logo;
 
 	private UIMenu menu;
 
@@ -62,14 +62,34 @@ public class TitleState extends AbstractGameState {
 			layers[i] = new Layer(true, false);
 		}
 
-		titleFont = game.getGraphics().getFont().deriveFont(3.0f * Game.SCREEN_FONT_RATIO);
+		// Prepare fonts.
+		titleFont = ResourceManager.getFont("/res/fonts/Prince Valiant.ttf").deriveFont(3.3f * Game.SCREEN_FONT_RATIO);
 		menuItemFont = game.getGraphics().getFont().deriveFont(1.2f * Game.SCREEN_FONT_RATIO);
-		copyFont = game.getGraphics().getFont().deriveFont(1.0f * Game.SCREEN_FONT_RATIO);
+		copyFont = game.getGraphics().getFont().deriveFont(0.9f * Game.SCREEN_FONT_RATIO);
 
+		// read i18n labels
 		String titleLabel = Messages.getString(Labels.GAME_TITLE.getKey());
 		String copyrightLabel = Messages.getString(Labels.COPYRIGHT.getKey());
 
+		// Define the background image object
+		BufferedImage spriteSheet = ResourceManager.getImage("/res/images/sprite-0001.png");
+		BufferedImage swordImg = spriteSheet.getSubimage(6 * 16, 0, 16, 16);
+
+		/*
+		 * AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
+		 * tx.translate(-swordImg.getWidth(null),0); AffineTransformOp op = new
+		 * AffineTransformOp(tx, AffineTransformOp.TYPE_NEAREST_NEIGHBOR); swordImg =
+		 * op.filter(swordImg, null);
+		 */
+
+		// Define the UIMen cursor
+		sword = new UIImage("sword", swordImg, 0, 0, 2, 1);
+		sword.layer = 2;
+		addObject(sword);
+
+		// Define the background image object
 		BufferedImage bgImg = ResourceManager.getImage("/res/images/background-image.jpg");
+
 		bgi = new UIImage("background", bgImg, 0, (Game.HEIGHT - bgImg.getHeight()) / 2, 2, 1);
 		bgi.scale = 1.0f;
 		bgi.dx = 0.031f;
@@ -77,29 +97,33 @@ public class TitleState extends AbstractGameState {
 		bgi.repeat = Repeat.HORIZONTAL_INFINITY;
 		addObject(bgi);
 
+		// Define the main Game title object
 		UIText titleText = new UIText("title", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.10f), titleLabel,
-				titleFont, 1, 1, Color.WHITE, TextPosition.CENTER);
+				titleFont, 1, 1, Color.WHITE, Justification.CENTER);
 		titleText.setLabel(Labels.GAME_TITLE.getKey());
 		addObject(titleText);
 
+		// Define the menu and all its options
 		menu = new UIMenu("menu", (int) (Game.WIDTH * 0.65f), (int) (Game.HEIGHT * 0.50f), 0, menuItemFont, Color.WHITE,
-				Color.BLACK, TextPosition.RIGHT);
+				Color.BLACK, Justification.RIGHT);
 		menu.layer = 2;
 		menu.priority = 1;
 
 		menu.addItem("start", Labels.TITLE_MENU_START.getKey(), "Start");
 		menu.addItem("options", Labels.TITLE_MENU_OPTIONS.getKey(), "Options");
 		menu.addItem("quit", Labels.TITLE_MENU_QUIT.getKey(), "Quit");
-
+		menu.addCursor(sword);
 		addObject(menu);
 
+		// Add the copyroght text
 		UIText cpyText = new UIText("copyright", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.85f), copyrightLabel,
-				copyFont, 2, 1, Color.WHITE, TextPosition.CENTER);
+				copyFont, 2, 1, Color.LIGHT_GRAY, Justification.CENTER);
 		cpyText.setLabel(Labels.COPYRIGHT.getKey());
 		addObject(cpyText);
 
+		// Add the language label.
 		UIText lngText = new UIText("language", (int) (Game.WIDTH) - 10, (int) (Game.HEIGHT * 0.85f), copyrightLabel,
-				copyFont, 2, 1, Color.WHITE, TextPosition.RIGHT);
+				copyFont, 2, 1, Color.LIGHT_GRAY, Justification.RIGHT);
 		lngText.setLabel(Labels.TITLE_LANGUAGE.getKey());
 		addObject(lngText);
 
@@ -112,15 +136,18 @@ public class TitleState extends AbstractGameState {
 		logger.info("State TitleState initialized");
 	}
 
-	@Override
-	public void input(Game game, InputHandler input) {
-	}
-
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.snapgames.gdj.core.state.GameState#update(com.snapgames.gdj.core.Game,
+	 * long)
+	 */
 	@Override
 	public void update(Game game, long dt) {
 		// Compute Background Image
 		bgi.x -= bgi.dx * dt;
-		
+
 		float ax = Math.abs(bgi.x);
 		if (ax > game.getWidth() - bgi.width) {
 			ax = Math.floorMod((int) ax, bgi.width);
@@ -131,22 +158,38 @@ public class TitleState extends AbstractGameState {
 		menu.update(game, dt);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.snapgames.gdj.core.state.AbstractGameState#keyReleased(com.snapgames.gdj.
+	 * core.Game, java.awt.event.KeyEvent)
+	 */
 	@Override
 	public void keyReleased(Game game, KeyEvent e) {
 		super.keyReleased(game, e);
 		switch (e.getKeyCode()) {
-
+		// Move up the cursor on the menu
 		case KeyEvent.VK_UP:
 		case KeyEvent.VK_KP_UP:
 			menu.previous();
 			break;
+		// Move down the cursor on the menu
 		case KeyEvent.VK_DOWN:
 		case KeyEvent.VK_KP_DOWN:
 			menu.next();
 			break;
+		// select item in the menu where cursor is.
 		case KeyEvent.VK_ENTER:
 		case KeyEvent.VK_SPACE:
 			manageMenu(game);
+			break;
+		// Request to exit game.
+		case KeyEvent.VK_ESCAPE:
+			game.setExit(true);
+			break;
+
+		default:
 			break;
 		}
 	}
@@ -175,6 +218,18 @@ public class TitleState extends AbstractGameState {
 			game.setExit(true);
 			break;
 		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.snapgames.gdj.core.state.GameState#input(com.snapgames.gdj.core.Game,
+	 * com.snapgames.gdj.core.io.InputHandler)
+	 */
+	@Override
+	public void input(Game game, InputHandler input) {
+
 	}
 
 }

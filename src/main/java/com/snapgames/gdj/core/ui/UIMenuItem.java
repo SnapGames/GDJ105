@@ -15,7 +15,7 @@ import java.awt.Rectangle;
 
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.gfx.RenderHelper;
-import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
+import com.snapgames.gdj.core.gfx.RenderHelper.Justification;
 import com.snapgames.gdj.core.i18n.Messages;
 
 /**
@@ -136,7 +136,7 @@ public class UIMenuItem extends UIGameObject implements UIi18nReload {
 	@Override
 	public void draw(Game game, Graphics2D g) {
 		this.rect = RenderHelper.drawShadowString(g, getLabel(), (int) x, (int) y, frontColor, menu.getShadowColor(),
-				(textPosition != null ? textPosition : TextPosition.LEFT), 2);
+				(justification != null ? justification : Justification.LEFT), 2);
 	}
 
 	/**
@@ -151,10 +151,10 @@ public class UIMenuItem extends UIGameObject implements UIi18nReload {
 	/**
 	 * Set text position for this menu item.
 	 * 
-	 * @param textPosition
+	 * @param justification
 	 */
-	public void setTextPosition(TextPosition textPosition) {
-		this.textPosition = textPosition;
+	public void setTextPosition(Justification justification) {
+		this.justification = justification;
 
 	}
 

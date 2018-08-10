@@ -14,8 +14,6 @@ import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
@@ -37,7 +35,7 @@ public class RenderHelper {
 	 * @author Frédéric Delorme
 	 *
 	 */
-	public enum TextPosition {
+	public enum Justification {
 	LEFT, RIGHT, CENTER
 	}
 
@@ -60,7 +58,7 @@ public class RenderHelper {
 		int i = 0;
 		for (Object o : objects) {
 			helps[i] = o.toString();
-			drawShadowString(g, helps[i], x + 5, y + i * fm.getHeight(), Color.WHITE, Color.BLACK, TextPosition.LEFT,
+			drawShadowString(g, helps[i], x + 5, y + i * fm.getHeight(), Color.WHITE, Color.BLACK, Justification.LEFT,
 					2);
 			i++;
 		}
@@ -88,12 +86,12 @@ public class RenderHelper {
 	 * @param back
 	 */
 	public static void drawShadowString(Graphics2D g, String text, int x, int y, Color front, Color back) {
-		drawShadowString(g, text, x, y, front, back, TextPosition.LEFT);
+		drawShadowString(g, text, x, y, front, back, Justification.LEFT);
 	}
 
 	/**
 	 * Display String with front and back color at x,y positioning the text
-	 * according to TextPosition.
+	 * according to Justification.
 	 * 
 	 * @param g
 	 * @param text
@@ -104,13 +102,13 @@ public class RenderHelper {
 	 * @param txtPos
 	 */
 	public static void drawShadowString(Graphics2D g, String text, int x, int y, Color front, Color back,
-			TextPosition txtPos) {
+			Justification txtPos) {
 		drawShadowString(g, text, x, y, front, back, txtPos, 1);
 	}
 
 	/**
 	 * Display String with front and back color at x,y positioning the text
-	 * according to TextPosition. The back color will be drawn with a border.
+	 * according to Justification. The back color will be drawn with a border.
 	 * 
 	 * @param g
 	 * @param text
@@ -121,7 +119,7 @@ public class RenderHelper {
 	 * @param border
 	 */
 	public static Rectangle drawShadowString(Graphics2D g, String text, int x, int y, Color front, Color back,
-			TextPosition txtPos, int border) {
+			Justification txtPos, int border) {
 		int textWidth = g.getFontMetrics().stringWidth(text);
 		int textHeight = g.getFontMetrics().getHeight();
 		int dx = 0;
@@ -159,90 +157,118 @@ public class RenderHelper {
 		AbstractGameObject ago = (AbstractGameObject) o;
 		Font f = ResourceManager.getFont("debugFont");
 		g.setFont(f);
+		DebugInfo dbi = new DebugInfo(game, g, o);
 		int fontHeight = g.getFontMetrics().getHeight();
 
-		int pane_padding = 4;
-		int pane_width = 60;
-		int pane_height = 40;
-
-		List<String> lines = new ArrayList<>();
-		o.addDebugInfo(game);
-		lines.addAll(o.getDebugInfo());
-		for (int i = 0; i < lines.size(); i++) {
-			pane_width = (g.getFontMetrics().stringWidth(lines.get(i) + pane_padding) > pane_width
-					? g.getFontMetrics().stringWidth(lines.get(i)) + (pane_padding * 2)
-					: pane_width);
+		for (int i = 0; i < dbi.lines.size(); i++) {
+			dbi.pane_width = (g.getFontMetrics().stringWidth(dbi.lines.get(i) + dbi.pane_padding) > dbi.pane_width
+					? g.getFontMetrics().stringWidth(dbi.lines.get(i)) + (dbi.pane_padding * 2)
+					: dbi.pane_width);
 		}
-		pane_height = lines.size() * fontHeight + fontHeight / 2;
+		dbi.pane_height = dbi.lines.size() * fontHeight + fontHeight / 2;
 
-		int pane_x = 0, pane_y = 0;
-		int link = 2;
 		if (ago.offsetInfo != null) {
-			pane_x = (int) ago.offsetInfo.getX();
-			pane_y = (int) ago.offsetInfo.getY();
+			dbi.pane_x = (int) ago.offsetInfo.getX();
+			dbi.pane_y = (int) ago.offsetInfo.getY();
 		} else {
 			// pane_x = (int) (ago.rectangle.x + ago.width + pane_padding);
 			// pane_y = (int) (ago.rectangle.y + ago.height + pane_padding);
-			pane_x = (int) (ago.rectangle.x);
-			pane_y = (int) (ago.rectangle.y);
+			dbi.pane_x = (int) (ago.rectangle.x);
+			dbi.pane_y = (int) (ago.rectangle.y);
 		}
 		if (o.getScale() != 1.0f) {
 			g.scale(o.getScale(), o.getScale());
 		}
-		if (game.getDebug() >= 1) {
-			g.setColor(Color.YELLOW);
-			g.drawRect((int) ago.rectangle.x, (int) ago.rectangle.y, ago.rectangle.width, ago.rectangle.height);
-			g.drawString("" + ago.id, (int) ago.rectangle.x, (int) ago.rectangle.y);
+		if (game.isDebug(DebugLevel.DEBUG_FPS_BOX)) {
+			drawBoundingBox(g, ago);
 		}
 		if (ago instanceof DynamicGameObject) {
 			DynamicGameObject dgo = (DynamicGameObject) ago;
-			if (game.getDebug() >= 2) {
-				g.setColor(Color.GREEN);
-				switch (dgo.direction) {
-				case UP:
-					g.drawLine((int) dgo.rectangle.x, (int) dgo.rectangle.y,
-							(int) dgo.rectangle.x + dgo.rectangle.width, (int) dgo.rectangle.y);
-					break;
-				case LEFT:
-					g.drawLine((int) dgo.rectangle.x, (int) dgo.rectangle.y + (int) dgo.rectangle.height,
-							(int) dgo.rectangle.x, (int) dgo.rectangle.y);
-					break;
-				case RIGHT:
-					g.drawLine((int) dgo.rectangle.x + (int) dgo.rectangle.width,
-							(int) dgo.rectangle.y + (int) dgo.rectangle.height,
-							(int) dgo.rectangle.x + (int) dgo.rectangle.width, (int) dgo.rectangle.y);
-					break;
-				case DOWN:
-					g.drawLine((int) dgo.rectangle.x, (int) dgo.rectangle.y + (int) dgo.rectangle.height,
-							(int) dgo.rectangle.x + dgo.rectangle.width,
-							(int) dgo.rectangle.y + (int) dgo.rectangle.height);
-					break;
-				case NONE:
-					break;
-				}
-			}
+			drawDirection(game, g, dgo);
 		}
-		if (game.getDebug() >= 3) {
-			g.setColor(new Color(0.5f, .5f, .5f, .6f));
-			g.fillRect(pane_x + link, pane_y + link, pane_width, pane_height);
-
-			g.setColor(new Color(0.8f, .8f, .8f, .8f));
-			g.drawRect(pane_x + link, pane_y + link, pane_width, pane_height);
-
-			g.setColor(Color.GREEN);
-			/*
-			g.drawLine(
-			   (int) ago.rectangle.x + ago.rectangle.width, 
-			   (int) ago.rectangle.y + ago.rectangle.height,
-		       (int) pane_x + link, 
-		       pane_y + link);
-			*/
-			for (int i = 0; i < lines.size(); i++) {
-				g.drawString(lines.get(i), pane_x + link + pane_padding, pane_y + link + (i + 1) * fontHeight);
-			}
+		if (game.isDebug(DebugLevel.DEBUG_FPS_BOX_DIRECTION_ATTRS)) {
+			drawDebugAttributes(g, dbi);
 		}
 		if (o.getScale() != 1.0f) {
 			g.scale(1 / o.getScale(), 1 / o.getScale());
+		}
+	}
+
+	/**
+	 * @param g
+	 * @param ago
+	 */
+	private static void drawBoundingBox(Graphics2D g, AbstractGameObject ago) {
+		g.setColor(Color.YELLOW);
+		g.drawRect((int) ago.rectangle.x, (int) ago.rectangle.y, ago.rectangle.width, ago.rectangle.height);
+		g.drawString("" + ago.id, (int) ago.rectangle.x, (int) ago.rectangle.y);
+	}
+
+	/**
+	 * Draw all debug info attributes contained in <code>lines</code> and their
+	 * values .
+	 * 
+	 * @param g
+	 * @param fontHeight
+	 * @param pane_padding
+	 * @param pane_width
+	 * @param pane_height
+	 * @param lines
+	 * @param pane_x
+	 * @param pane_y
+	 * @param link
+	 */
+	private static void drawDebugAttributes(Graphics2D g, DebugInfo dbi) {
+		g.setColor(new Color(0.5f, .5f, .5f, .6f));
+		g.fillRect(dbi.pane_x + dbi.link, dbi.pane_y + dbi.link, dbi.pane_width, dbi.pane_height);
+
+		g.setColor(new Color(0.8f, .8f, .8f, .8f));
+		g.drawRect(dbi.pane_x + dbi.link, dbi.pane_y + dbi.link, dbi.pane_width, dbi.pane_height);
+
+		g.setColor(Color.GREEN);
+		/*
+		 * g.drawLine( (int) ago.rectangle.x + ago.rectangle.width, (int)
+		 * ago.rectangle.y + ago.rectangle.height, (int) dbi.pane_x + dbi.link,
+		 * dbi.pane_y + dbi.link);
+		 */
+		for (int i = 0; i < dbi.lines.size(); i++) {
+			g.drawString(dbi.lines.get(i), dbi.pane_x + dbi.link + dbi.pane_padding,
+					dbi.pane_y + dbi.link + (i + 1) * dbi.fontHeight);
+		}
+	}
+
+	/**
+	 * Draw the Moving direction for the <code>dgo</code> GameObject.
+	 * 
+	 * @param game
+	 * @param g
+	 * @param dgo
+	 */
+	private static void drawDirection(Game game, Graphics2D g, DynamicGameObject dgo) {
+		if (game.isDebug(DebugLevel.DEBUG_FPS_BOX_DIRECTION)) {
+			g.setColor(Color.GREEN);
+			switch (dgo.direction) {
+			case UP:
+				g.drawLine((int) dgo.rectangle.x, (int) dgo.rectangle.y, (int) dgo.rectangle.x + dgo.rectangle.width,
+						(int) dgo.rectangle.y);
+				break;
+			case LEFT:
+				g.drawLine((int) dgo.rectangle.x, (int) dgo.rectangle.y + (int) dgo.rectangle.height,
+						(int) dgo.rectangle.x, (int) dgo.rectangle.y);
+				break;
+			case RIGHT:
+				g.drawLine((int) dgo.rectangle.x + (int) dgo.rectangle.width,
+						(int) dgo.rectangle.y + (int) dgo.rectangle.height,
+						(int) dgo.rectangle.x + (int) dgo.rectangle.width, (int) dgo.rectangle.y);
+				break;
+			case DOWN:
+				g.drawLine((int) dgo.rectangle.x, (int) dgo.rectangle.y + (int) dgo.rectangle.height,
+						(int) dgo.rectangle.x + dgo.rectangle.width,
+						(int) dgo.rectangle.y + (int) dgo.rectangle.height);
+				break;
+			case NONE:
+				break;
+			}
 		}
 	}
 }

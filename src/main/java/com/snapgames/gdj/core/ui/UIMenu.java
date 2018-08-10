@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.snapgames.gdj.core.Game;
-import com.snapgames.gdj.core.gfx.RenderHelper.TextPosition;
+import com.snapgames.gdj.core.gfx.RenderHelper.Justification;
 
 /**
  * The UIMenu class intends to provide a selector UI component between multiple
@@ -34,6 +34,8 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 
 	private int index = 0;
 
+	private UIImage cursor;
+
 	/**
 	 * active menu item.
 	 */
@@ -42,6 +44,8 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 	 * List of Items for this menu.
 	 */
 	private List<UIMenuItem> items = new ArrayList<>();
+
+	private Justification cursorJustification;
 
 	/**
 	 * Create a new {@link UIMenu} with a <code>name</code>, at position
@@ -66,9 +70,9 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 	}
 
 	public UIMenu(String name, int x, int y, int defaultActiveItem, Font font, Color foreColor, Color shadowColor,
-			TextPosition pos) {
+			Justification pos) {
 		this(name, x, y, defaultActiveItem, font, foreColor, shadowColor);
-		this.textPosition = pos;
+		this.justification = pos;
 	}
 
 	/**
@@ -142,8 +146,12 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 				item.onFocusLost();
 			} else {
 				item.onFocus();
+				if (cursor != null) {
+					cursor.setPosition(x + 10, y + 3+(i-1) * fm.getHeight());
+					cursor.draw(game, g);
+				}
 			}
-			item.setTextPosition(textPosition);
+			item.setTextPosition(justification);
 			item.setPosition(x, y + i * fm.getHeight());
 			item.draw(game, g);
 			i++;
@@ -221,7 +229,6 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 
 	@Override
 	public void onFocus() {
-		
 	}
 
 	@Override
@@ -239,5 +246,15 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 			i.reload();
 		}
 
+	}
+
+	/**
+	 * Add a specific UIImage as a cursor to be displayed near the current selected
+	 * MeuniItem.
+	 * 
+	 * @param cursor
+	 */
+	public void addCursor(UIImage cursor) {
+		this.cursor = cursor;
 	}
 }

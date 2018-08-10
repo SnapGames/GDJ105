@@ -127,13 +127,13 @@ public class GameStateManager {
 	public void activate(String name) {
 		if (!states.containsKey(name)) {
 			loadState(name);
-			if (states.containsKey(name)) {
-				currentState = states.get(name);
-				currentState.initialize(game);
-				logger.info("State '{}' activated with success", name);
-			} else {
-				logger.error("Unable to load state '{}'", name);
-			}
+		}
+		if (states.containsKey(name)) {
+			currentState = states.get(name);
+			currentState.initialize(game);
+			logger.info("State '{}' activated with success", name);
+		} else {
+			logger.error("Unable to load state '{}'", name);
 		}
 	}
 
