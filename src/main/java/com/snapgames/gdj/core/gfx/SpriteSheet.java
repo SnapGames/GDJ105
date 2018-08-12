@@ -52,28 +52,25 @@ public class SpriteSheet {
 	public void generate() {
 		int ix = 0, iy = 0;
 
-
 		/**
 		 * Compute size of the sprites buffer
 		 */
 		bufferHeight = Math.floorDiv(pixels.getHeight(), spHeight);
 		bufferWidth = Math.floorDiv(pixels.getWidth(), spWidth);
 		// Size he Sprite buffer.
-		sprites = new Sprite[bufferHeight*bufferWidth];
+		sprites = new Sprite[bufferHeight * bufferWidth];
 
 		/**
 		 * Extract Pixels from base image to create All {@link Sprites}.
 		 */
-		for (int y = 0; y < pixels.getHeight(); y += spHeight) {
-			for (int x = 0; x < pixels.getWidth(); x += spWidth) {
+		for (int y = 0; y < bufferHeight; y++) {
+			for (int x = 0; x < bufferWidth; x++) {
 
-				Sprite sp = new Sprite(pixels.getSubimage(x, y, spWidth, spHeight), "SP_" + ix + "_" + iy);
+				Sprite sp = new Sprite(pixels.getSubimage(x * spWidth, y * spHeight, spWidth, spHeight),
+						"SP_" + ix + "_" + iy);
 				logger.info("Store sprite from ({},{},{},{}) to (iy={},ix={}) where max size is (width={},height={})",
-						x,y,
-						spWidth,spHeight,
-						iy, ix,
-						bufferHeight, bufferWidth);
-				sprites[(iy*bufferWidth)+ix++] = sp;
+						x, y, spWidth, spHeight, iy, ix, bufferHeight, bufferWidth);
+				sprites[(iy * bufferWidth) + ix++] = sp;
 			}
 			ix = 0;
 			iy++;
@@ -88,7 +85,16 @@ public class SpriteSheet {
 	 * @return
 	 */
 	public Sprite getSprite(int ix, int iy) {
-		return sprites[iy*bufferHeight+ix];
+		return sprites[iy * bufferHeight + ix];
 	}
 
+	/**
+	 * retrieve a sprite on its global index in the sprites buffer.
+	 * 
+	 * @param index
+	 * @return
+	 */
+	public Sprite getSPrite(int index) {
+		return sprites[index];
+	}
 }

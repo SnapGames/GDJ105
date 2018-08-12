@@ -84,7 +84,7 @@ public class TitleState extends AbstractGameState {
 		 */
 
 		// Define the UIMen cursor
-		sword = new UIImage("sword", sheet.getSprite(5, 0).getImage(), 0, 0, 2, 1);
+		sword = new UIImage("sword", sheet.getSprite(6, 0).getImage(), 0, 0, 2, 1);
 		sword.layer = 2;
 		addObject(sword);
 

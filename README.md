@@ -104,7 +104,9 @@ Some debug information can be displayed according to the debug level you've chos
 ## Take a snapshot
 
 You can at any time push the <kbd>S</kbd> key to take a snapshot.
-This instance jpeg picture of the game window will be saved to the `~/user` directory as a default path.
+This JPEG picture screenshot of the game window will be saved to the `~/` directory on linux/ux platform or in the `c:\users\[username]` path on Windows.
+
+
 
 Have Fun !
 
