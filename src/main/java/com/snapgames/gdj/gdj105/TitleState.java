@@ -21,6 +21,7 @@ import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.entity.Layer;
 import com.snapgames.gdj.core.gfx.RenderHelper.Justification;
+import com.snapgames.gdj.core.gfx.SpriteSheet;
 import com.snapgames.gdj.core.i18n.Messages;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.AbstractGameState;
@@ -72,8 +73,8 @@ public class TitleState extends AbstractGameState {
 		String copyrightLabel = Messages.getString(Labels.COPYRIGHT.getKey());
 
 		// Define the background image object
-		BufferedImage spriteSheet = ResourceManager.getImage("/res/images/sprite-0001.png");
-		BufferedImage swordImg = spriteSheet.getSubimage(6 * 16, 0, 16, 16);
+		SpriteSheet sheet = new SpriteSheet("sprite-0001",ResourceManager.getImage("/res/images/sprite-0001.png"), 16, 16);
+		sheet.generate();
 
 		/*
 		 * AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);
@@ -83,7 +84,7 @@ public class TitleState extends AbstractGameState {
 		 */
 
 		// Define the UIMen cursor
-		sword = new UIImage("sword", swordImg, 0, 0, 2, 1);
+		sword = new UIImage("sword", sheet.getSprite(6, 0).getImage(), 0, 0, 2, 1);
 		sword.layer = 2;
 		addObject(sword);
 
