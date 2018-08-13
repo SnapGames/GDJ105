@@ -11,15 +11,20 @@ package com.snapgames.gdj.gdj105;
 
 import java.awt.Color;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
+import com.snapgames.gdj.core.entity.Camera;
 import com.snapgames.gdj.core.gfx.RenderHelper.Justification;
 import com.snapgames.gdj.core.i18n.Messages;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.AbstractGameState;
 import com.snapgames.gdj.core.ui.UIText;
+import com.snapgames.gdj.gdj105.entity.Player;
 import com.snapgames.gdj.gdj105.entity.TileMap;
 import com.snapgames.gdj.gdj105.i18n.Labels;
 
@@ -30,6 +35,20 @@ import com.snapgames.gdj.gdj105.i18n.Labels;
  */
 public class PlayState extends AbstractGameState {
 
+	private Map<String, Camera> cameras = new ConcurrentHashMap<>();
+	private Camera activeCamera;
+
+	TileMap tilemap;
+	Player player;
+	Camera camera;
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.snapgames.gdj.core.state.AbstractGameState#initialize(com.snapgames.gdj.
+	 * core.Game)
+	 */
 	@Override
 	public void initialize(Game game) {
 		// TODO Auto-generated method stub
@@ -51,11 +70,40 @@ public class PlayState extends AbstractGameState {
 		titleText.layer = 1;
 		addObject(titleText);
 
-		TileMap tilemap = new TileMap("tilemap");
+		tilemap = new TileMap("tilemap");
 		tilemap.loadTileFile("/res/maps/level-001.map");
 		tilemap.layer = 2;
 		addObject(tilemap);
 
+		player = new Player("player", game.getWidth() / 2, game.getHeight() / 2);
+		player.layer = 1;
+		player.priority = 1;
+		addObject(player);
+
+		Camera camera = new Camera("cam0", player);
+		addCamera(camera);
+	}
+
+	/**
+	 * Add a camera to the system to track an object and move viewport.
+	 * 
+	 * @param camera
+	 */
+	private void addCamera(Camera camera) {
+		if (activeCamera == null) {
+			activeCamera = camera;
+		}
+		cameras.put(camera.name, camera);
+	}
+
+	/**
+	 * Define the current active camera.
+	 * 
+	 * @param name the name of the camera to be added.
+	 */
+	public void setActiveCamera(String name) {
+		assert (cameras.containsKey(name));
+		this.activeCamera = cameras.get(name);
 	}
 
 	/*
@@ -68,6 +116,25 @@ public class PlayState extends AbstractGameState {
 	 */
 	@Override
 	public void update(Game game, long dt) {
+	}
+
+	@Override
+	public void keyPressed(Game game, KeyEvent e) {
+		super.keyPressed(game, e);
+		switch (e.getKeyCode()) {
+		case KeyEvent.VK_UP:
+			player.dy -= 2;
+			break;
+		case KeyEvent.VK_DOWN:
+			player.dy += 2;
+			break;
+		case KeyEvent.VK_LEFT:
+			player.dx -= 2;
+			break;
+		case KeyEvent.VK_RIGHT:
+			player.dx -= 2;
+			break;
+		}
 	}
 
 	/*
@@ -99,5 +166,16 @@ public class PlayState extends AbstractGameState {
 	@Override
 	public void input(Game game, InputHandler input) {
 
+	}
+
+	@Override
+	public void render(Game game, Graphics2D g) {
+		if (activeCamera != null) {
+			activeCamera.beforeRender(g);
+		}
+		super.render(game, g);
+		if (activeCamera != null) {
+			activeCamera.afterRender(g);
+		}
 	}
 }

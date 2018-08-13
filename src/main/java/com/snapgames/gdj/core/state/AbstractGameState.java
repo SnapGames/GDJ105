@@ -113,9 +113,12 @@ public abstract class AbstractGameState implements GameState {
 	protected void addObject(AbstractGameObject object) {
 		// add object to rendering list
 		objects.add(object);
+		// if this object contains translated text, it must be declared as is.
 		if (object instanceof UIi18nReload) {
 			uis.add((UIi18nReload) object);
 		}
+		// Sort all objects according to their layer and their own priority in the
+		// layer.
 		objects.sort(new Comparator<GameObject>() {
 			public int compare(GameObject o1, GameObject o2) {
 				AbstractGameObject ago1 = (AbstractGameObject) o1;
@@ -125,11 +128,17 @@ public abstract class AbstractGameState implements GameState {
 		});
 		// add object to a specific Layer.
 		addObjectToLayer(object);
-
+		// update internal statistics KPI.
 		statistics.put("objectCount", objects.size());
 		logger.debug("Add {} to the objects list", object.name);
 	}
 
+	/**
+	 * Add an object to its specific layer (see
+	 * {@link AbstractGameObject#getLayer()}).
+	 * 
+	 * @param object the GameObject to be added to its own layer.
+	 */
 	private void addObjectToLayer(AbstractGameObject object) {
 		if (object.layer >= 0 && layers[object.layer] != null) {
 
@@ -142,6 +151,12 @@ public abstract class AbstractGameState implements GameState {
 		}
 	}
 
+	/**
+	 * This is a specific delete method to remove all objects with a particular
+	 * class, to cleanup the object stack.
+	 * 
+	 * @param clazz the object's class to be purged of.
+	 */
 	protected void removeAllObjectOfClass(Class<? extends AbstractGameObject> clazz) {
 		List<GameObject> toBeDeleted = new ArrayList<>();
 		for (GameObject o : objects) {
@@ -152,6 +167,9 @@ public abstract class AbstractGameState implements GameState {
 		objects.removeAll(toBeDeleted);
 	}
 
+	/**
+	 * The internal "free in memory" objects.
+	 */
 	public void dispose(Game game) {
 		objects.clear();
 	}
@@ -193,7 +211,7 @@ public abstract class AbstractGameState implements GameState {
 			DebugLevel debug = game.getDebug();
 			int debugLevel = debug.getValue();
 			debugLevel++;
-			debugLevel= (debugLevel> 3 ? 0 : debugLevel);
+			debugLevel = (debugLevel > 3 ? 0 : debugLevel);
 			game.setDebug(debug.setValue(debugLevel));
 			break;
 		case KeyEvent.VK_S:
@@ -231,7 +249,6 @@ public abstract class AbstractGameState implements GameState {
 					o.draw(game, g);
 					if (game.isDebug(DebugLevel.DEBUG_FPS) || o.isDebugInfoDisplayed()) {
 						o.drawSpecialDebugInfo(game, g);
-
 					}
 
 				}
@@ -243,9 +260,8 @@ public abstract class AbstractGameState implements GameState {
 		if (game.isDebug(DebugLevel.DEBUG_FPS))
 
 		{
-			RenderHelper.drawShadowString(g,
-					String.format("FPS:%03d, ROC:%04d, SOC:%04d, DBG:%d", game.framesPerSecond,
-							statistics.get("renderedObjCount"), statistics.get("staticObjCount"), game.getDebug().getValue()),
+			RenderHelper.drawShadowString(g, String.format("FPS:%03d, ROC:%04d, SOC:%04d, DBG:%d", game.framesPerSecond,
+					statistics.get("renderedObjCount"), statistics.get("staticObjCount"), game.getDebug().getValue()),
 					4, (int) (Game.HEIGHT * 0.93f), Color.BLUE, Color.BLACK);
 		}
 
