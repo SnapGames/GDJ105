@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.snapgames.gdj</groupId>
 	<artifactId>gdj105</artifactId>
-	<version>1.0.0</version>
+	<version>1.0.1-SNAPSHOT</version>
 	<name>GDJ105</name>
 	<description>The basics for the Game development on the java platform. In this sample code, we will add some TextObject, Background image and ButtonObject to create great UI in a new GameState.</description>
 	<url>https://github.com/SnapGames/GDJ105</url>
@@ -31,7 +31,7 @@
 		<url>http://snapgames.github.io</url>
 		<connection>scm:git:https://github.com/SnapGames/GDJ105.git</connection>
 		<developerConnection>scm:git:git@github.com:SnapGames/GDJ105.git</developerConnection>
-		<tag>gdj105-1.0.0</tag>
+		<tag>${project.version}</tag>
 	</scm>
 	<issueManagement>
 		<system>Github issues</system>
