@@ -12,10 +12,13 @@ package com.snapgames.gdj.core;
 import java.awt.Font;
 import java.awt.FontFormatException;
 import java.awt.image.BufferedImage;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 import javax.imageio.ImageIO;
 
@@ -81,11 +84,25 @@ public class ResourceManager {
 				} catch (FontFormatException | IOException e) {
 					logger.error("Unable to read font from {}", name);
 				}
+				break;
+			case ".map":
+					InputStream stream = this.getClass().getResourceAsStream(name);
+					String value = new BufferedReader(
+							new InputStreamReader(stream))
+							.lines().parallel()
+							.collect(Collectors.joining("\n"));
+					resources.put(name, value);
+				break;
 			}
 		}
 		return resources.get(name);
 	}
 
+	/**
+	 * 
+	 * @param name
+	 * @param value
+	 */
 	private void addResource(String name, Object value) {
 		assert (resources != null);
 		assert (name != null);
@@ -146,5 +163,9 @@ public class ResourceManager {
 			instance = new ResourceManager();
 		}
 		return instance;
+	}
+
+	public static String getText(String name) {
+		return (String) getInstance().addResource(name);
 	}
 }

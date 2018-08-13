@@ -94,7 +94,7 @@ public class SpriteSheet {
      * @param index index of the request sprite in the preloaded SpriteSheet buffer.
      * @return the index corresponding Sprite object.
      */
-    public Sprite getSPrite(int index) {
+    public Sprite getSprite(int index) {
         return sprites[index];
     }
 

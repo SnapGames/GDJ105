@@ -9,6 +9,7 @@
  */
 package com.snapgames.gdj.core.gfx;
 
+import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -23,9 +24,9 @@ public class Sprite {
 	private static int index = 0;
 
 	int id;
-	String name;
-	BufferedImage pixels;
-	Map<String, Object> attributes = new ConcurrentHashMap<>(10);
+	private String name;
+	private BufferedImage pixels;
+	private Map<String, Object> attributes = new ConcurrentHashMap<>(10);
 
 	/**
 	 * Initialize the new Sprite with the pixels and name. The id filed will be
@@ -64,8 +65,11 @@ public class Sprite {
 	}
 
 	public BufferedImage getImage() {
-		// TODO Auto-generated method stub
 		return pixels;
+	}
+
+	public void draw(Graphics2D g, int x, int y) {
+		g.drawImage(getImage(), x, y, null);
 	}
 
 }
