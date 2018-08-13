@@ -7,6 +7,7 @@
  * 
  * @year 2017
  */
+
 package com.snapgames.gdj.core.entity;
 
 import java.awt.Color;
@@ -22,7 +23,10 @@ import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.gfx.RenderHelper;
 
 /**
- * AbstractGameObject
+ * AbstractGameObject.
+ * 
+ * This is the Main implementation for the GameObject interface. It provides
+ * basic behavior for such object.
  * 
  * @author Frédéric Delorme
  *
@@ -266,7 +270,7 @@ public class AbstractGameObject implements GameObject {
 	public void setPosition(float x, float y) {
 		this.x = x;
 		this.y = y;
-		if(rectangle!=null) {
+		if (rectangle != null) {
 			rectangle.setBounds((int) x, (int) y, width, height);
 		}
 	}

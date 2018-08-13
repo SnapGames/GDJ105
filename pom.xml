@@ -79,6 +79,7 @@
 					<encoding>utf-8</encoding>
 				</configuration>
 			</plugin>
+			
 			<!-- Build the minimalist JAR without dependencies (Normal Edition) -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -95,6 +96,7 @@
 					<encoding>utf-8</encoding>
 				</configuration>
 			</plugin>
+			
 			<!-- Package a jar with Sources -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -263,6 +265,80 @@
 					</execution>
 				</executions>
 			</plugin>
+
+
+			<!-- Prepare packaging to deploy artifact to repository -->
+			<plugin>
+				<artifactId>maven-deploy-plugin</artifactId>
+				<version>2.8.2</version>
+				<configuration>
+					<altDeploymentRepository>internal.repo::default::file://${project.build.directory}/mvn-repo</altDeploymentRepository>
+				</configuration>
+			</plugin>
+			<!-- Description and configuration of Github repository -->
+			<plugin>
+				<groupId>com.github.github</groupId>
+				<artifactId>site-maven-plugin</artifactId>
+				<version>0.12</version>
+				<configuration>
+					<encoding>utf-8</encoding>
+					<message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
+					<noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
+					<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
+					<branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
+					<includes>
+						<include>**/*</include>
+					</includes>
+					<repositoryName>GDJ105</repositoryName>      <!-- github repo name -->
+					<repositoryOwner>snapgames</repositoryOwner>    <!-- github username -->
+				</configuration>
+				<executions>
+					<!-- run site-maven-plugin's 'site' target as part of the build's normal 
+						'deploy' phase -->
+					<execution>
+						<goals>
+							<goal>site</goal>
+						</goals>
+						<phase>deploy</phase>
+					</execution>
+				</executions>
+			</plugin>
+
+			<!-- License attacher -->
+			<!-- plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.12</version>
+				<configuration>
+					<addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+					<licenseFile>${project.basedir}/src/COPYING</licenseFile>
+					<licenseName>mit</licenseName>
+					<thirdPartyFilename>LICENSE</thirdPartyFilename>
+				</configuration>
+				<executions>
+					<execution>
+						<id>update-file-header</id>
+						<goals>
+							<goal>update-file-header</goal>
+						</goals>
+						<phase>process-sources</phase>
+					</execution>
+					<execution>
+						<id>download-licenses</id>
+						<goals>
+							<goal>download-licenses</goal>
+						</goals>
+						<phase>prepare-package</phase>
+					</execution>
+					<execution>
+						<id>add-third-party</id>
+						<goals>
+							<goal>add-third-party</goal>
+						</goals>
+						<phase>prepare-package</phase>
+					</execution>
+				</executions>
+			</plugin -->
 
 		</plugins>
 	</build>
