@@ -45,7 +45,7 @@ public class TitleState extends AbstractGameState {
 	private Font menuItemFont;
 	private Font copyFont;
 	private UIImage bgi, sword, logo;
-
+	private SpriteSheet sheet;
 	private UIMenu menu;
 
 	/*
@@ -66,15 +66,20 @@ public class TitleState extends AbstractGameState {
 		// Prepare fonts.
 		titleFont = ResourceManager.getFont("/res/fonts/Prince Valiant.ttf").deriveFont(3.3f * Game.SCREEN_FONT_RATIO);
 		menuItemFont = game.getGraphics().getFont().deriveFont(1.2f * Game.SCREEN_FONT_RATIO);
-		copyFont = game.getGraphics().getFont().deriveFont(0.9f * Game.SCREEN_FONT_RATIO);
+		copyFont = ResourceManager.getFont("/res/fonts/lilliput steps.ttf").deriveFont(1.0f * Game.SCREEN_FONT_RATIO);
 
 		// read i18n labels
 		String titleLabel = Messages.getString(Labels.GAME_TITLE.getKey());
 		String copyrightLabel = Messages.getString(Labels.COPYRIGHT.getKey());
 
-		// Define the background image object
-		SpriteSheet sheet = new SpriteSheet("sprite-0001",ResourceManager.getImage("/res/images/sprite-0001.png"), 16, 16);
-		sheet.generate();
+		/**
+		 * Define the background image object.
+		 * Optimization: only generate if not already exist in RAM.
+ 		 */
+		if(sheet==null) {
+			sheet = new SpriteSheet("sprite-0001", ResourceManager.getImage("/res/images/sprite-0001.png"), 16, 16);
+			sheet.generate();
+		}
 
 		/*
 		 * AffineTransform tx = AffineTransform.getScaleInstance(-1, 1);

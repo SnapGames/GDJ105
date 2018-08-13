@@ -52,7 +52,7 @@ public class Game extends JPanel {
 	/**
 	 * game screen scaling
 	 */
-	public final static float SCALE = 2.0f;
+	private final static float SCALE = 2.0f;
 
 	public final static float SCREEN_FONT_RATIO = HEIGHT / 22;
 
@@ -63,7 +63,7 @@ public class Game extends JPanel {
 	/**
 	 * duration of a frame.
 	 */
-	public long fpsTargetTime = 1000 / 60;
+	private long fpsTargetTime = 1000 / 60;
 
 	/**
 	 * Number of frames in a second.

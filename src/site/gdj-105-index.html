@@ -1,0 +1,887 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>gdj-105</title>
+  <style type="text/css">
+      code{white-space: pre-wrap;}
+      span.smallcaps{font-variant: small-caps;}
+      span.underline{text-decoration: underline;}
+      div.column{display: inline-block; vertical-align: top; width: 50%;}
+  </style>
+  <!--[if lt IE 9]>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
+  <![endif]-->
+</head>
+<body>
+<h1 id="h.dena1utqj9jg" class="c30"><span class="c4 c22">GDJ105. Resources, UI et i18n</span></h1>
+<h2 id="h.iuekx1uvtxvk" class="c15"><span class="c5 c4">Introduction</span></h2>
+<p><span class="c2">Maintenant que nous avons la capacité de créer et gérer plusieurs états, ou modes, de jeu, nous pouvons nous concentrer sur les objets que nous allons manipuler.</span></p>
+<p>Aussi, vous allez spécialiser la fameuse interface <span class="c20">GameObjet</span><span class="c13"> </span>en <span class="c20">UIText</span>, <span class="c20">UIMenu</span>, <span class="c20">UIImage</span><span class="c2">pour faire un état de Titre et de menu.</span></p>
+<p>Vous en profiterez pour réorganiser le code principal de l’exemple <span class="c20">gdj105</span>et le framework de jeu, que nous appellerons <span class="c20">core</span><span class="c2">. vous verrez également d’autres concepts au travers de la gestion de collision.</span></p>
+<p><span class="c2"></span></p>
+<p>Oublions un peu notre classe <span class="c20">DemoState</span><span class="c2">, et passons à des choses plus sérieuses.</span></p>
+<p><span class="c2"></span></p>
+<h2 id="h.hahxqxu1mvt9" class="c15"><span class="c5 c4">Organisation du projet</span></h2>
+<p><span class="c2">Comme mentionné en introduction, il est important de bien structurer son projet.</span></p>
+<p><span class="c2">En effet, nous allons devoir commencer à isoler la partie réutilisable de notre projet  des autres classes servant à de de test.</span></p>
+<p>La partie réutilisable sera pompeusement appelée “Core Framework” et ces classes seront regroupées dans <span class="c13">core</span>, et la partie d’implémentation du jeu lui-même sera le package <span class="c20">gdj105</span><span class="c2">.</span></p>
+<p><span class="c2">Ainsi, nous aurons la structure de package suivante:</span></p>
+<p><span class="c2"></span></p>
+<p><span id="t.4d2eaf3e182b2e4b66525d6645696aedd12134a8"></span><span id="t.0"></span></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><span class="c12 c4">Package</span></td>
+<td><span class="c12 c4">Description</span></td>
+</tr>
+<tr class="even">
+<td><span class="c36 c4">com.snapgames.gdj.core</span></td>
+<td><span class="c2">l’ensemble des classes qui seront identique d’un projet à l’autre et donc réutilisable</span></td>
+</tr>
+<tr class="odd">
+<td><span class="c4 c36">com.snapgames.gdj.gdj105</span></td>
+<td><span class="c2">l’implémentation de notre jeu, basée sur le core.</span></td>
+</tr>
+</tbody>
+</table>
+<p><span class="c2"></span></p>
+<p><span class="c2">Le projet est maintenant structuré comme présenté ci-dessous:</span></p>
+<p><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 209.50px; height: 238.38px;"><img src="images/image2.png" /></span></p>
+<p>figure 1: <span class="c23 c13">La nouvelle structure de projet, réorganisée.</span></p>
+<p><span class="c2"></span></p>
+<p>Comme vous pouvez le constater, les packages <span class="c20">entity</span>, <span class="c20">io</span>, <span class="c20">state</span>et <span class="c20">ui</span>sont maintenant dans sous le package <span class="c20">core</span><span class="c2">.</span></p>
+<p><span class="c2"></span></p>
+<p>Toutes les classes spécifiques à notre étape 5 (gdj105), enity et les States du jeu sont dans le package <span class="c13">gdj105</span><span class="c2">.</span></p>
+<p><span class="c2"></span></p>
+<p>Ainsi, dans une prochaine étape, nous pourrons réutiliser l’ensemble des objets et utilitaires proposés sous le package <span class="c13">core</span><span class="c2">.</span></p>
+<p><span class="c12 c4"></span></p>
+<p><span class="c2"></span></p>
+<p><span id="t.5b54dd57e414d7fbca59146e6130ad3fbcb09fc6"></span><span id="t.1"></span></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><span style="o verflow: hidden; display: inline- block; margin: 0.00px 0.00px; bor der: 0.00px solid #000000; transf orm: rotate(0.00rad) translateZ(0 px); -webkit-transform: rotate(0. 00rad) translateZ(0px); width: 51 .91px; height: 51.91px;"><img src="images/image5.png" /></span></td>
+<td><span class="c2">Pour lancer n'importe quelle démo issue de l’un des futurs cours, il suffira d'exécuter la classe Game depuis votre IDE. Comme vous allez le découvrir dans le prochain chapitre, nous allons charger les différents états du jeu depuis un fichier de description, lors de l'instanciation de la classe Game.</span></td>
+</tr>
+</tbody>
+</table>
+<p><span class="c2"></span></p>
+<hr />
+<h2 id="h.v72rqlfjjktg" class="c15 c35"><span class="c4 c5"></span></h2>
+<h2 id="h.3q9p24myqu7e" class="c15"><span class="c5 c4">Fabrique d’état</span></h2>
+<p><span class="c2">Notre souhait pour ce cours de développement de jeu, est de construire un framework réutilisable, et adaptable.</span></p>
+<p><span class="c2">Aussi, nous avons découvert la technique des états et de la machine à état qui permet de switcher facilement de l’un à l’autre. Je vous propose de voir comment ne créer en mémoire (instance) que les états de jeu nécessaires, et de les conserver dans un cache.</span></p>
+<h3 id="h.fpexwr5q4vlw" class="c30"><span class="c27 c4">Chargement dynamique des états.</span></h3>
+<p>Nous avons créé une signature de classe <span class="c13">GameState</span><span class="c2"> pour définir un contrat (une interface), qui décrit un moyen unique de gérer un état de jeu. C’est par cette interface que nous allons créer et gérer nos états.</span></p>
+<p><span class="c2"></span></p>
+<p><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 602.00px; height: 149.00px;"><img src="images/image7.png" /></span></p>
+<p><span class="c23 c13">figure XXX - le schéma des classes du système de gestion des états.</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">De quoi avons nous besoin ?</span></p>
+<p><span class="c2">Il nous faudra:</span></p>
+<ul>
+<li>un fichier de définition des états du jeu à gérer: <span class="c12 c4">game.xml</span></li>
+<li>un service de gestion des états: <span class="c4">GameStateManager</span><span class="c2">,</span></li>
+<li>une factory, un constructeur d’état: <span class="c4">GameStateFactory</span><span class="c2">.</span></li>
+</ul>
+<p><span class="c2"></span></p>
+<h3 id="h.6d3n87dhfzin" class="c30">Le fichier <span class="c4 c42">states.xml</span></h3>
+<p><span class="c2">il contiendra une liste d’état contenant, nom, classe d’instance, et un état par défaut, instancier au démarrage du jeu.</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">la structure sera définie par une feuille de définition de type de donnée (DTD) :</span></p>
+<p><span class="c23 c13">states.dtd</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c1">  &lt;?xml version=&quot;1.0&quot; encoding=&quot;UTF-8&quot;?&gt;<br />
+ &lt;!ELEMENT game (default*, states*)&gt;<br />
+ &lt;!ELEMENT states (state+)&gt;<br />
+ &lt;!ELEMENT default EMPTY&gt;<br />
+ &lt;!ELEMENT state EMPTY&gt;<br />
+ &lt;!ATTLIST state name (CDATA) #REQUIRED class (CDATA) #REQUIRED attributes (CDATA) #IMPLIED &gt;<br />
+ &lt;!ATTLIST default name (CDATA) #REQUIRED &gt;</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">La première ligne déclare le type de fichier, ici XML.</span></p>
+<p>les lignes suivantes définissant des tag <span class="c20">ELEMENT</span><span class="c2">sert à définir la hiérarchie et la structure de notre fichier.</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Il sera constitué comme indiqué ci-dessous:</span></p>
+<p>un élément principal <span class="c20">GAME</span>contient un <span class="c20">DEFAULT</span>ainsi qu’une liste <span class="c20">STATES</span>contenant elle même des éléments <span class="c20">STATE</span><span class="c2">.</span></p>
+<ul>
+<li><span class="c4">game</span><span class="c2">contient la définition de tous les états du jeu et celui par défaut:</span></li>
+<li><span class="c4">default</span><span class="c2"> contient un seul attribut donnant le nom de l’état à lancer par défaut,</span></li>
+<li><span class="c4">states</span> contient un liste de <span class="c4">state</span><span class="c2">.</span></li>
+<li><span class="c4">state</span> ne contient que 2 attributs: le nom (<span class="c4">name</span>) et la classe (<span class="c4">class</span><span class="c2">) d’instanciation de l’état.</span></li>
+</ul>
+<p><span class="c2"></span></p>
+<p><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 395.00px; height: 234.00px;"><img src="images/image3.png" /></span></p>
+<p>figure 2: <span class="c23 c13">la structure du fichier game.xml</span></p>
+<p>Ce fichier sera lu par <span class="c4">GameStateFactory</span>. La gestion des éléments ainsi créés sera confiée à <span class="c4">GameStateManager</span><span class="c2">.</span></p>
+<h2 id="h.1nb92i5lai4z" class="c15 c35"><span class="c5 c4"></span></h2>
+<hr />
+<h2 id="h.acfts0yig2sq" class="c15 c35"><span class="c5 c4"></span></h2>
+<h3 id="h.3pp01f187tpq" class="c30"><span class="c27 c4">GameStateFactory</span></h3>
+<p>La <span class="c16"><a href="https://www.google.com/url?q=https://www.jmdoudoux.fr/java/dej/chap-design-patterns.htm%23design-patterns-1-1&amp;sa=D&amp;ust=1534128392809000" class="c17">factory</a></span><span class="c2"> est un pattern bien connu. il va nous permettre ici de générer depuis un fichier de configuration, les instances des états nécessaires pour notre jeu.</span></p>
+<p>La classe <span class="c4">GameStateFactory</span>va cacher une autre sous-classe du nom de <span class="c4">StateDefinition</span><span class="c2">. Cette classe va comporter tous les attributs correspondants à ceux présents dans l’élément  STATE du fichier xml:</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2"></span></p>
+<p><span id="t.76f179b3fb91357b6347971a1737147fd6ee1a63"></span><span id="t.2"></span></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><span class="c4 c12">Attribut</span></td>
+<td><span class="c12 c4">Définition</span></td>
+</tr>
+<tr class="even">
+<td><span class="c2">name</span></td>
+<td><p><span class="c2">Un simple nom permettant d’identifier autrement que par sa classe d’instance un état du jeu.</span></p>
+<p><span class="c2"></span></p></td>
+</tr>
+<tr class="odd">
+<td><span class="c2">class</span></td>
+<td><p><span class="c2">La classe implémentant l’état de jeu</span></p>
+<p><span class="c2"></span></p></td>
+</tr>
+<tr class="even">
+<td><span class="c2">attributes</span></td>
+<td><p><span class="c2">Une liste d’attributs au format JSON permettant d’ajouter quelques éléments dynamiques de configuration à l’état. ce sera bien pratique quand il s’agira de définir plusieurs niveaux ou types de jeux.</span></p>
+<p><span class="c2"></span></p></td>
+</tr>
+</tbody>
+</table>
+<p><span class="c23 c13">figure XXX -  Les attributs de l’élément STATE</span></p>
+<p><span class="c2"></span></p>
+<p>On retrouvera donc l’équivalent de ces attributs XML dans notre sous classe <span class="c4">StateDefinition</span><span class="c2">:</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">public class StateDefinition {</span></p>
+<p><span class="c1">        public String name;</span></p>
+<p><span class="c1">        public String className;</span></p>
+<p><span class="c1">        public Class&lt;? extends AbstractGameState&gt; classState;</span></p>
+<p><span class="c1">        public String attributes;</span></p>
+<p><span class="c1">        public JSONObject attrJSON;</span></p>
+<p><span class="c1">        public boolean defaultFlag;</span></p>
+<p><span class="c1">        ...</span></p>
+<p><span class="c1">}</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">On trouvera également un simple constructeur :</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">public StateDefinition(</span></p>
+<p><span class="c1">String storyName,</span></p>
+<p><span class="c1">String storyClassName,</span></p>
+<p><span class="c1">Class&lt;?&gt; classState,</span></p>
+<p><span class="c1">String attributesState,</span></p>
+<p><span class="c1">boolean defaultStateFlag) {</span></p>
+<p><span class="c1">        this.name = storyName;</span></p>
+<p><span class="c1">        this.className = storyClassName;</span></p>
+<p><span class="c1">        this.classState = (Class&lt;? extends AbstractGameState&gt;) classState;</span></p>
+<p><span class="c1">        this.attributes = attributesState;</span></p>
+<p><span class="c1">        this.defaultFlag = defaultStateFlag;</span></p>
+<p><span class="c1">}</span></p>
+<p><span class="c1"></span></p>
+<p>Ainsi à la lecture de l’élément dans le fichier XML, on pourra instancier une sous-classe <span class="c4">StateDefintion</span><span class="c2">.</span></p>
+<h3 id="h.3rl2acjy86oy" class="c30"><span class="c27 c4">Lecture du fichier XML</span></h3>
+<p>la lecture et le parcours du fichier XML sera confié au fameux parser <span class="c4">DocumentBuilderFactory</span> de <span class="c20">javax.xml.parsers</span><span class="c2"> .</span></p>
+<p><span class="c2">Le principe est simple, on passe en entrée du builder un entity Resolver permettant de définir le chemin de notre DTD:</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">db.setEntityResolver(new EntityResolver() {</span></p>
+<p><span class="citation" data-cites="Override">[  @Override]</span>{.c1}</p>
+<p><span class="c1">  public InputSource resolveEntity(String publicId, String systemId) throws SAXException, IOException {</span></p>
+<p><span class="c1">    if (systemId.contains(&quot;states.dtd&quot;)) {</span></p>
+<p><span class="c1">      return new InputSource(GameStateFactory.class.getResourceAsStream(&quot;/res/dtd/states.dtd&quot;));</span></p>
+<p><span class="c1">    } else {</span></p>
+<p><span class="c1">      return null;</span></p>
+<p><span class="c1">    }</span></p>
+<p><span class="c1">  }</span></p>
+<p><span class="c1">});</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">L’entity resolver du parser XML reçoit un System ID issu de la lecture du fichier XML. Si celui-ci est présent dans le DOCTYPE du document XML, alors la feuille DTD sera appliquée:</span></p>
+<p><span class="c1">&lt;!DOCTYPE story SYSTEM &quot;states.dtd&quot;&gt;</span></p>
+<p><span class="c2"></span></p>
+<p>Et dès l’appel de la méthode parse sur un InputStream pointant sur votre fichier XML, il est alors possible de parcourir le contenu du fichier. Ce sera le travail de la méthode <span class="c4">readStoryFromXml(InputStream)</span> de la classe <span class="c4">GameStateFactory</span><span class="c2">. Vous pourrez d’ailleurs constater que cette méthode n’est visible que depuis l’intérieur de la classe, car elle est privée.</span></p>
+<p><span class="c2"></span></p>
+<p>En effet, cette méthode est appelée par les méthode <span class="c4">load()</span> et <span class="c4">load(InputStream)</span><span class="c2"> qui elles sont publiques.</span></p>
+<p><span class="c2">- La première propose le chargement des états définis dans un fichier game.xml,</span></p>
+<p><span class="c2">- La deuxième laisse le développeur choisir son InputStream en paramètre.</span></p>
+<p><span class="c2"></span></p>
+<p>Le résultat sera le même dans les deux cas, l’appel de <span class="c13 c4">readStoryFromXml(InputStream)</span><span class="c23 c13">.</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Regardons de plus près le parsing de ce XML:</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">private Map&lt;String, StateDefinition&gt; readStoryFromXml(</span></p>
+<p><span class="c1">InputStream storyXmlInputStream) {</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">On définit quelques variables nécessaires au parcours du fichier</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c1">        DocumentBuilder db = null;</span></p>
+<p><span class="c1">        String stateClass, stateName, attributesState;</span></p>
+<p><span class="c1">        try {</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">On initialise le document parser</span></p>
+<p><span class="c1">        db = DocumentBuilderFactory.newInstance().newDocumentBuilder();</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">on configure la DTD à appliquer pour valider la structure du document</span></p>
+<p><span class="c1">                db = initializeFactory(db);</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Puis on lance le parcours du fichier XML</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">                Document doc = db.parse(storyXmlInputStream);</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Récupération de l’élément par défaut</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">                NodeList defaultName = doc.getElementsByTagName(&quot;default&quot;);</span></p>
+<p><span class="c1">                Node defaultNameItem = defaultName.item(0);</span></p>
+<p><span class="c1">                NamedNodeMap defaultAttMap = defaultNameItem.getAttributes();</span></p>
+<p><span class="c1">                defaultState = defaultAttMap.getNamedItem(&quot;name&quot;).getNodeValue();</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">Récupération de tous les éléments de type State</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">NodeList list = doc.getElementsByTagName(&quot;state&quot;);</span></p>
+<p><span class="c1">listStates = new HashMap&lt;&gt;();</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">On parcourt les éléments trouvés</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">for (int i = 0; i &lt; list.getLength(); i++) {</span></p>
+<p><span class="c1">Node item = list.item(i);</span></p>
+<p><span class="c1">NamedNodeMap attMap = item.getAttributes();</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">Pour chaque élément State, on va récupérer le nom, la classe et les attributs</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">stateName = (attMap.getNamedItem(&quot;name&quot;) != null ? attMap.getNamedItem(&quot;name&quot;).getNodeValue() : &quot;&quot;);</span></p>
+<p><span class="c1">stateClass = (attMap.getNamedItem(&quot;class&quot;) != null ? attMap.getNamedItem(&quot;class&quot;).getNodeValue() : &quot;&quot;);</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c1">attributesState = (attMap.getNamedItem(&quot;attributes&quot;) != null ? attMap.getNamedItem(&quot;attributes&quot;).getNodeValue() : &quot;&quot;);</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c1">Class&lt;?&gt; classState = Class.forName(stateClass);</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">Une fois tous les attributs identifiés, on ajoute à la liste des définitions d’états l’instance créée.</span></p>
+<p><span class="c1">StateDefinition story = new StateDefinition(stateName, stateClass, classState, attributesState, stateName.equals(defaultState));</span></p>
+<p><span class="c1">listStates.put(stateName, story);</span></p>
+<p><span class="c1"></span></p>
+<p>une petite trace sur le log en mode info, cela ne fait pas de mal:</p>
+<p><span class="c1">logger.info(&quot;State {} for class has been loaded from configuration file&quot;, stateName, stateClass);</span></p>
+<p><span class="c1">}</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">Les inévitable catch d’exceptions à tracer en erreur dans le fichier de log.</span></p>
+<p><span class="c1">        } catch (SAXException | IOException | ClassNotFoundException | ParserConfigurationException e) {</span></p>
+<p><span class="c1">                logger.error(&quot;Unable to read the game.xml file to initialize GameState's.&quot;,e);</span></p>
+<p><span class="c1">                System.exit(-1);</span></p>
+<p><span class="c1">        }</span></p>
+<p><span class="c1">        return listStates;</span></p>
+<p><span class="c1">}</span></p>
+<p><span class="c2"></span></p>
+<p>Et voilà, à l’issue de la lecture du fichier nous obtenons une liste de <span class="c4">StateDefinition</span><span class="c2"> qui serviront à l’instanciation au besoin des états durant l’exécution du jeu.</span></p>
+<p>Cette instanciation sera confiée au <span class="c4">GameStateManager</span><span class="c2">.</span></p>
+<p><span class="c2"></span></p>
+<h2 id="h.jmb7u73yrue5" class="c15"><span class="c5 c4">GameStateManager</span></h2>
+<p>Le gestionnaire d’état de jeu, ou <span class="c4">GameStateManager</span>va permettre, de suivant une requête d’activation d’un nom d’état, d’instancier celui-ci, mais aussi de gérer la délégation des traitements de la boucle de jeu aux méthodes de l’état ainsi créé (cf. <span class="c4">GameState</span> et <span class="c4">AbstractGameState</span><span class="c2"> dans le cours GDJ104 pour les détails de la machine à état).</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Les modifications apportées à notre GSM sont très ciblées et concernent l’initialisation du GSM et la méthode d’activation d’un état particulier, d’une part, mais aussi l’ajout d’un nouvel attribut :</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">private GameStateFactory gsf = GameStateFactory.getInstance();</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Ainsi le GSM sera prêt à discuter avec la factory pour l’activation d’un état.</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">public void activate(String name) {</span></p>
+<p><span class="c1">        if (!states.containsKey(name)) {</span></p>
+<p><span class="c1">                loadState(name);</span></p>
+<p><span class="c1">                if (states.containsKey(name)) {</span></p>
+<p><span class="c1">                        currentState = states.get(name);</span></p>
+<p><span class="c1">                        currentState.initialize(game);</span></p>
+<p><span class="c1">                        logger.info(&quot;State '{}' activated with success&quot;, name);</span></p>
+<p><span class="c1">                } else {</span></p>
+<p><span class="c1">                        logger.error(&quot;Unable to load state '{}'&quot;, name);</span></p>
+<p><span class="c1">                }</span></p>
+<p><span class="c1">        }</span></p>
+<p><span class="c1">}</span></p>
+<p>le chargement d’un état si celui ci n’existe pas déjà dans le cache, est confié à la méthode <span class="c13">loadState(String)</span><span class="c2"> :</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">public AbstractGameState loadState(String name) {</span></p>
+<p><span class="c1">        AbstractGameState state = null;</span></p>
+<p><span class="c1">        try {</span></p>
+<p><span class="c2"></span></p>
+<p>On demande à la <span class="c4">GameStateFactory</span> de nous donner le <span class="c4">StateDefinition</span><span class="c2"> correspondant au nom passé:</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">                StateDefinition stateDef = gsf.getStateDefintion(name);</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">On en crée aussitôt une instance</span></p>
+<p><span class="c1">                state = stateDef.classState.newInstance();</span></p>
+<p><span class="c1">                logger.info(&quot;State named '{}' with class '{}' has been instantiated with success&quot;, stateDef.name, stateDef.className);</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">Et si cela ne fonctionne pas, on catch les exceptions pour  logger l’erreur.</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">        } catch (InstantiationException | IllegalAccessException | NoDefaultStateException e) {</span></p>
+<p><span class="c1">                logger.error(&quot;Unable to instantiate the class for state '{}'&quot;, name);</span></p>
+<p><span class="c1">        }</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Si l’état ainsi chargé n’est pas nul, on l’ajoute au cache de états déjà actifs.</span></p>
+<p><span class="c1">        if (null != state) {</span></p>
+<p><span class="c1">                states.put(name, state);</span></p>
+<p><span class="c1">        }</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">Et on retourne la classe ainsi créée.</span></p>
+<p><span class="c1">        return state;</span></p>
+<p><span class="c1">}</span></p>
+<p>Une fois l’état étant chargé dans le cache, on l’initialise en appelant la méthode <span class="c13">GameState#initialize(Game)</span><span class="c2">. comme précédemment, cela n’a pas changé.</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Notre état est alors activé et visible dans l’écran du jeu.</span></p>
+<p><span class="c2"></span></p>
+<p>Intéressons nous au premier état d’un jeu, son écran de titre, puis à son écran de jeu. Il est cependant à noter que l’état de gestion du jeu sera une adaptation de l’exemple de <span class="c13 c4">GDJ104</span><span class="c2">, mais en lui ajoutant des éléments d’UI, comme un score, des jauges d’énergie et de mana, ainsi que 2 emplacements d’inventaire qui serviront pour la suite des cours.</span></p>
+<h1 id="h.h5ycj3ya5xex" class="c30"><span class="c22 c4">States</span></h1>
+<p><span class="c2">Maintenant que nous avons listé les états à créer et que nous sommes capable de les charger depuis un fichier, il est grand temps de coder ces états.</span></p>
+<ul>
+<li><span class="c4">TitleState</span><span class="c2"> sera l’écran de titre</span></li>
+</ul>
+<!-- -->
+<ul>
+<li><span class="c4">PlayState</span><span class="c2"> sera notre première demo</span></li>
+</ul>
+<h2 id="h.db16e4wzkqsy" class="c15"><span class="c5 c4">TitleState</span></h2>
+<p><span class="c2">C’est l’état qui sera activé au démarrage du jeu, où sera affiché le titre et le premier menu de démarrage.</span></p>
+<p><span class="c2">Nous allons partir sur le modèle de design proposé ci-dessous.</span></p>
+<p><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 413.00px; height: 280.00px;"><img src="images/image4.png" /></span></p>
+<p>figure 3: <span class="c23 c13">La page d’affichage du titre du jeu</span></p>
+<p><span class="c12 c4"></span></p>
+<p><span class="c12 c4">Quelques règles de navigation:</span></p>
+<ul>
+<li><span class="c2">l’image de fond défilera en permanence.</span></li>
+<li><span class="c2">un appui sur l’une des touches [UP] ou [DOWN] permet de naviguer dans le menu, et les touches [ESPACE] ou [ENTRER] serviront à sélectionner l’option choisie.</span></li>
+</ul>
+<!-- -->
+<ul>
+<li><span class="c13">‘Press Start to Play’</span> lancera le jeu en instanciant l’état <span class="c13">PlayState</span><span class="c2">,</span></li>
+<li><span class="c13">‘Options’</span><span class="c2">permettra d’accéder à un futur écran de configuration du jeu,</span></li>
+<li><span class="c13">‘Quit’</span><span class="c2"> permet de quitter le jeu.</span></li>
+</ul>
+<p><span class="c2"></span></p>
+<p><span class="c2">En appuyant sur [ECHAPPE] on quitte la demo GDJ105 à tout moment.</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Cet écran va nous permettre d’aborder trois problématiques inhérentes à tout jeu:</span></p>
+<p><span class="c2"></span></p>
+<ol type="1">
+<li><span class="c2">la gestion des ressources dans le jeu, comme les images, pour l’affichage de l’image animée de fond,</span></li>
+<li><span class="c2">la traduction des textes affichés,</span></li>
+<li><span class="c2">La première interface utilisateur d’un jeu, son écran de titre et son menu.</span></li>
+</ol>
+<hr />
+<p><span class="c2"></span></p>
+<h3 id="h.r27c25tawo8k" class="c30"><span class="c27 c4">Chargement de ressources</span></h3>
+<p>Nous l’avons déjà vu, nous allons avoir quelques ressources à gérer dans nos démos et dans notre jeu. Aussi, je vous propose un premier principe de gestion des ressources: le <span class="c13">ResourceManager</span><span class="c2">.</span></p>
+<p><span class="c2">Nous allons établir une règle pour l’ensemble des démos, les ressources seront toutes présente dans l’arborescence sous ‘/res’ dans les projets.</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">GDJ105</span></p>
+<p><span class="c1">|__/src</span></p>
+<p><span class="c1">    |__/main</span></p>
+<p><span class="c1">    |__/resources</span></p>
+<p><span class="c1">         |__/res</span></p>
+<p><span class="c1">             |__/images</span></p>
+<p><span class="c1">             |   |__/icon</span></p>
+<p><span class="c1">             |__/sound</span></p>
+<p><span class="c1">             |__/music</span></p>
+<p><span class="c1">             |__/font</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Ainsi, sous le répertoire `res`,  nous trouverons:</span></p>
+<p><span class="c2"></span></p>
+<p><span id="t.5802c97cfc79995ee3e216e7bf6eebc4cfd812df"></span><span id="t.3"></span></p>
+<table>
+<colgroup>
+<col style="width: 50%" />
+<col style="width: 50%" />
+</colgroup>
+<tbody>
+<tr class="odd">
+<td><span class="c12 c4">Chemins</span></td>
+<td><span class="c12 c4">Description</span></td>
+</tr>
+<tr class="even">
+<td><span class="c2">images, images/icon</span></td>
+<td><span class="c2">Toutes images ou icônes nécessaires au jeu</span></td>
+</tr>
+<tr class="odd">
+<td><span class="c2">sound</span></td>
+<td><span class="c2">Tout son joué durant le jeu</span></td>
+</tr>
+<tr class="even">
+<td><span class="c2">music</span></td>
+<td><span class="c2">Les musiques du jeu</span></td>
+</tr>
+<tr class="odd">
+<td><span class="c2">font</span></td>
+<td><span class="c2">Des polices de caractères (fontes TTF) afin de rendre le jeu plus professionnel.</span></td>
+</tr>
+</tbody>
+</table>
+<p><span class="c2"></span></p>
+<p>Ces ressources seront chargées en tant que InputStream depuis le <span class="c20">getClass().getInputAsStream()</span><span class="c2"> de java.</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Regardons de plus près cette classe:</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">public class ResourceManager {</span></p>
+<p><span class="c1">        private static ResourceManager instance = null;</span></p>
+<p><span class="c1">        private static final Logger logger = LoggerFactory.getLogger(ResourceManager.class);</span></p>
+<p><span class="c1">        private Map&lt;String, Object&gt; resources = new ConcurrentHashMap&lt;&gt;();</span></p>
+<p><span class="c1">        private ResourceManager() {</span></p>
+<p><span class="c1">        }</span></p>
+<p><span class="c1">...</span></p>
+<p><span class="c1">        public static ResourceManager getInstance() {</span></p>
+<p><span class="c1">                if (instance == null) {</span></p>
+<p><span class="c1">                        instance = new ResourceManager();</span></p>
+<p><span class="c1">                }</span></p>
+<p><span class="c1">                return instance;</span></p>
+<p><span class="c1">        }</span></p>
+<p><span class="c1">}</span></p>
+<p>Notre classe de gestion des ressources ne doit exister qu’une seule fois dans notre jeu. Nous utiliserons le pattern de <span class="c16"><a href="https://www.google.com/url?q=https://fr.wikipedia.org/wiki/Singleton_(patron_de_conception)&amp;sa=D&amp;ust=1534128392948000" class="c17">Singleton</a></span><span class="c2"> pour la créer et en garder l’instance unique. Je vous laisse découvrir les subtilité de cela dans wikipédia, mais ici nous en utilisons une version très simple.</span></p>
+<p>l’instance est conservée dans une attribut <span class="c20">instance</span> privé statique, le constructeur du <span class="c4">ResourceManager</span>est lui-aussi privé, et le seul moyen d’obtenir une instance est d’appeler la méthode statique et publique, elle, <span class="c20">getInstance()</span><span class="c2">.</span></p>
+<p>Maintenant que le principe d’instance unique a été appliqué, nous stockerons toutes les références de nos ressources dans la liste <span class="c13">resources</span><span class="c2">.</span></p>
+<p><span class="c2">Chargeons une ressource depuis un fichier.</span></p>
+<p><span class="c2">Nous utiliserons l’extension de fichier pour déterminer le type de ressource. c’est basique mais cela suffira pour nos besoins.</span></p>
+<p><span class="c2"></span></p>
+<h4 id="h.rwad6cprqkfr" class="c33"><span class="c4 c28">Ajout de ressource</span></h4>
+<p><span class="c2"></span></p>
+<p><span class="c2">En se concentrons nous sur le chargement d’image, nous pouvons filtrer les fichier ayant un extensions JPG ou PNG et les considérer comme des ressources de type image.</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c1">private Object addResource(String name) {</span></p>
+<p><span class="c1">        assert (resources != null);</span></p>
+<p><span class="c1">        assert (name != null);</span></p>
+<p><span class="c1">        if (!resources.containsKey(name)) {</span></p>
+<p><span class="c1">                String extension = name.substring(name.lastIndexOf(&quot;.&quot;), name.length());</span></p>
+<p><span class="c1">                switch (extension) {</span></p>
+<p><span class="c1">                case &quot;.jpg&quot;:</span></p>
+<p><span class="c1">                case &quot;.png&quot;:</span></p>
+<p><span class="c1">                        try {</span></p>
+<p><span class="c1">                                BufferedImage image = ImageIO.read(this.getClass().getResourceAsStream(name));</span></p>
+<p><span class="c1">                                resources.put(name, image);</span></p>
+<p><span class="c1">                        } catch (IOException e) {</span></p>
+<p><span class="c1">                                logger.error(&quot;unable to find resource for {}&quot;, name);</span></p>
+<p><span class="c1">                        }</span></p>
+<p><span class="c1">                        break;</span></p>
+<p><span class="c1">                }</span></p>
+<p><span class="c1">        }</span></p>
+<p><span class="c1">        return resources.get(name);</span></p>
+<p><span class="c1">}</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Vous pouvez noter que nous ne filtrons pour le moment que les fichier images, et uniquement sur les extensions qui nous intéresse. mais il sera facile de charger d’autre type de fichier.</span></p>
+<p>Si l’extension de fichier est JPG ou PNG, nous chargeons le fichier en tant qu’<span class="c16"><a href="https://www.google.com/url?q=https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html&amp;sa=D&amp;ust=1534128392951000" class="c17">InputStream</a></span>, via la bibliothèque <span class="c16"><a href="https://www.google.com/url?q=https://docs.oracle.com/javase/8/docs/api/javax/imageio/ImageIO.html&amp;sa=D&amp;ust=1534128392951000" class="c17">ImageIO</a></span><span class="c2"> du JDK.</span></p>
+<h4 id="h.mmehipg7n1qb" class="c33"><span class="c28 c4">Demande de ressource</span></h4>
+<p>Ensuite cette ressource de type image est stockée dans la liste <span class="c13">resources</span><span class="c2">.</span></p>
+<p><span class="c2"></span></p>
+<p>Il nous faut maintenant pouvoir la retrouver dans la liste des ressources chargées : ce sera la méthode <span class="c20">getImage(String name)</span><span class="c2">.</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">En voici le listing :</span></p>
+<p><span class="c1">public static BufferedImage getImage(String name) {</span></p>
+<p><span class="c1">        return (BufferedImage) getInstance().addResource(name);</span></p>
+<p><span class="c1">}</span></p>
+<p><span class="c2"></span></p>
+<p>On appelle donc notre singleton, et lui demandons de fournir la ressource name. Le <span class="c4">ResourceManager</span><span class="c2"> se charge donc le lire le fichier, le mettre en cache et en retourner l’instance.</span></p>
+<p><span class="c2">Si celle-ci existe déjà dans le cache, elle est directement retournée.</span></p>
+<p><span class="c2">Nous verrons plus tard comment gérer d’autres types de ressources, comme des son, des musiques, etc…</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Passons maintenant à l’autre partie intéressante de ce cours, comment créer une UI de base.</span></p>
+<p><span class="c2"></span></p>
+<h2 id="h.ejnqvjqdubm9" class="c15"><span class="c5 c4">Internationalisation du jeu (i18n)</span></h2>
+<p><span class="c2">Je suis sur que vous avez peut-être déjà vu le terme de i18n. c’est une abréviation barbare de ‘InternationalisatioN’ : ‘i’ et ‘n’ sont les première et dernière lettre du mot, et 18 est le nombre de caractères qui composent celui-ci. Le copain de i18n et l10n qui signifie, suivant le même principe ‘localisation’.</span></p>
+<p><span class="c2">Nous allons étudier la mise ne place d’une lecture des messages et label traduits à afficher, depuis un fichier ultra standard du langage Java: le fichier de properties.</span></p>
+<p>Ce type de fichier est habituellement chargé depuis un composant Java du JDK qui s’appelle un <span class="c16 c13"><a href="https://www.google.com/url?q=https://docs.oracle.com/javase/8/docs/api/java/util/ResourceBundle.html&amp;sa=D&amp;ust=1534128392953000" class="c17">ResourceBundle</a></span><span class="c2">.</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Cet objet pour le tout assez simple, permet:</span></p>
+<ol type="1">
+<li>chargement de ressources textuelles depuis un chemin de type package (ex: res.messages permet de charger le fichier <span class="c13">messages.properties</span> depuis le path <span class="c13">/res</span><span class="c2">.</span></li>
+<li><span class="c2">Le fichier chargé sera celui correspondant à la langue et à la locale système. Par exemple:</span></li>
+</ol>
+<!-- -->
+<ol type="1">
+<li>en France, le fichier <span class="c13">messages_FR_fr.properties</span><span class="c2"> sera chargé,</span></li>
+<li>alors qu’en anfgleterre, le fichier <span class="c13">messages_EN_en.properties</span><span class="c2"> sera utilisé.</span></li>
+</ol>
+<p><span class="c2">A cette mécanique fournie par défaut, nous ajouterons quelques méthodes pratiques permettant de fournir des valeurs par défaut, ainsi qu’un système digestion de paramètres.</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">La première méthode offre la possibilité de chercher un message depuis sa clé dans le fichier de propriétés:</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c18">public static String getString(String key) {</span></p>
+<p><span class="c18">        try {</span></p>
+<p><span class="c18">                return RESOURCE_BUNDLE.getString(key);</span></p>
+<p><span class="c18">        } catch (MissingResourceException e) {</span></p>
+<p><span class="c18">                return '!' + key + '!';</span></p>
+<p><span class="c18">        }</span></p>
+<p><span class="c18">}</span></p>
+<p><span class="c18"></span></p>
+<p><span class="c2">La seconde méthode propose une valeur de clé à rechercher, et si celle-ci n’existe pas, une valeur par défaut:</span></p>
+<p><span class="c18"></span></p>
+<p><span class="c18">public static String getString(String key, String defaultValue) {</span></p>
+<p><span class="c18">        if (RESOURCE_BUNDLE.containsKey(key)) {</span></p>
+<p><span class="c18">                return RESOURCE_BUNDLE.getString(key);</span></p>
+<p><span class="c18">        } else {</span></p>
+<p><span class="c18">                return defaultValue;</span></p>
+<p><span class="c18">        }</span></p>
+<p><span class="c18">}</span></p>
+<p><span class="c18"></span></p>
+<h2 id="h.7vlrwjfp2h3x" class="c15"><span class="c5 c4">Objets</span></h2>
+<p><span class="c2">Pour construire ces états, nous allons avoir besoin de nouvelles briques d’interface utilisateur. c’est ce que je vous propose de mettre en place maintenant.</span></p>
+<p><span class="c2"></span></p>
+<p>La base de tous nos objets sera <span class="c13">AbstractGameObject</span><span class="c2">.</span></p>
+<h3 id="h.sqhosxnkb9c8" class="c30"><span class="c27 c4">AbstractGameObject</span></h3>
+<ul>
+<li><span class="c2">rectangle</span></li>
+<li><span class="c2">collision</span></li>
+<li><span class="c2">attributes</span></li>
+<li><span class="c2">…</span></li>
+</ul>
+<p>Cette classe implémente un interface <span class="c13">GameObject</span><span class="c2"> qui va nous permettre de manipuler l’ensemble des objets du jeu de façon transparente, sans se soucier de leur fonction exacte.</span></p>
+<p><span class="c2"></span></p>
+<p>La class <span class="c13">AbtractGameObject</span><span class="c2"> sert à amener les comportements par défaut à l’ensemble des futurs objets, qu’ils soient éléments de l’interface graphique ou bien personnage de jeu, afficheur de score, etc…</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">C’est un moyen d’abstraction très important dans le fonctionnement de notre moteur 2D.</span></p>
+<p><span class="c2"></span></p>
+<p>Mais pour manipuler tous les objet que nous devons créer, il est important de ne pas avoir à se soucier du détail des implémentations de ces objets pour pouvoir les manipuler et les afficher de façon standard. Pour cela, nous allons mettre en oeuvre une interface qui sera implémentée par tous les objets: <span class="c13">GameObjet</span><span class="c2">.</span></p>
+<h3 id="h.3ctdtrv6mv8k" class="c30"><span class="c27 c4">GameObject</span></h3>
+<p>Regardons donc ensemble de plus près ce que l’interface <span class="c13">GameObject</span><span class="c2"> va nous proposer.</span></p>
+<p><span class="c2">Tout objet que l’on devra manipuler dans notre moteur de jeu doit obéir à quelques règles communes, et doit donc proposer un certains nombre de méthodes de base.</span></p>
+<p><span class="c2">Commençons, par regarder ce que nous devons gérer pour ces objets:</span></p>
+<ul>
+<li>calculer sa nouvelle position, ses nouveaux états, nous le ferons à l’aide de la méthode <span class="c13">update(float)</span><span class="c2">,</span></li>
+<li>dessiner cet objet cela sera réalisé via la méthode <span class="c13">draw(Graphics)</span><span class="c2">,</span></li>
+<li>retrouver l’objet par son nom avec un fameux <span class="c13">getName()</span><span class="c2">,</span></li>
+<li>organiser l’objet afin de le dessiner dans un ordre précis (nous verrons cela plus tard) via les méthodes <span class="c13">getPriority()</span> et <span class="c13">getLayer()</span><span class="c2">,</span></li>
+<li><span class="c2">et nous aurons besoin de faire quelques affichages spécifiques afin de débugger (oui, car on a beau être de super développeur, on a besoin de renfort de temps en temps pour débugger).</span></li>
+</ul>
+<!-- -->
+<ul>
+<li><span class="c13">addDebugInfo()</span> pour ajouter une information de debuggage<span class="c13 c23">,</span></li>
+<li><span class="c13">getDebugInfo()</span><span class="c2"> pour obtenir la liste de toutes les informations de débuggage,</span></li>
+<li><span class="c13">isDebugInfoDisplayed()</span><span class="c2"> permettra de condition l’affichage des informations de débuggage</span></li>
+<li><span class="c13">drawSpecialDebugInfo(Game game, Graphics2D g)</span><span class="c2"> donne la possibilité d’implémenter un système de rendu des informations de debug spécifique à une implémentation  d’objet.</span></li>
+</ul>
+<p><span class="c2"></span></p>
+<p><span class="c2">Ce qui donnera l’interface suivante :</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">public interface GameObject {</span></p>
+<p><span class="c1">        public void update(Game game, long dt);</span></p>
+<p><span class="c1">        public void draw(Game game, Graphics2D g);</span></p>
+<p><span class="c1">        public String getName();</span></p>
+<p><span class="c1">        public int getLayer();</span></p>
+<p><span class="c1">        public float getScale();</span></p>
+<p><span class="c1">        public int getPriority();</span></p>
+<p><span class="c1">        public void addDebugInfo();</span></p>
+<p><span class="c1">        public List&lt;String&gt; getDebugInfo();</span></p>
+<p><span class="c1">        public boolean isDebugInfoDisplayed();</span></p>
+<p><span class="c1">        public void drawSpecialDebugInfo(Game game, Graphics2D g);</span></p>
+<p><span class="c1">}</span></p>
+<p><span class="c2"></span></p>
+<p>Donc, dans le système, au lieu de manipuler des <span class="c20">AbstractGameObject</span>, on pourra sans vergogne jouer avec des <span class="c20">GameObject’s</span><span class="c2">, sans se soucier des implémentations réelles.</span></p>
+<p><span class="c2">Et nous allons de ce pas en faire une bonne utilisation en nous occupant des composants d’interface graphique.</span></p>
+<h2 id="h.kqbiszgpf6em" class="c15"><span class="c5 c4">Composants de l’interface utilisateur (UI)</span></h2>
+<p><span class="c2">Comme nous le découvrons sur la maquette de l’écran de titre, nous devons afficher plusieurs choses:</span></p>
+<ul>
+<li>Le titre du jeu/de la démo (<span class="c20">UIText</span><span class="c2">),</span></li>
+<li>un menu contenant plusieurs items (<span class="c20">UIMenu</span><span class="c2">),</span></li>
+<li>un note de copyright (<span class="c20">UIText</span><span class="c2">),</span></li>
+<li>un image de fond animée d’un scrolling horizontal lent (<span class="c20">UIImage</span><span class="c2">).</span></li>
+</ul>
+<p><span class="c2">Commençons par écrire un peu de texte.</span></p>
+<h3 id="h.zash9zl7h64w" class="c30"><span class="c27 c4">UIText</span></h3>
+<p>L’objet ici décrit va nous servir à afficher du texte (sic). Il va donc hériter de notre <span class="c20">AbstractGameObject</span><span class="c2">, auquel nous ajouterons 2 propriétés principales qui sont:</span></p>
+<ul>
+<li><span class="c2">le texte à afficher,</span></li>
+<li><span class="c2">la font utilisée pour le rendu de ce texte.</span></li>
+</ul>
+<p><span class="c2"></span></p>
+<p><span class="c2">Et bien sûr, nous allons redéfinir la méthode dessin de cet objet afin d’en utiliser les nouvelles propriétés.</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">public class UIText extends AbstractGameObject {</span></p>
+<p><span class="c2">Le text à afficher donc :</span></p>
+<p><span class="c1">        public String text;</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">La police de caractères à utiliser pour son rendu graphique</span></p>
+<p><span class="c1">        private Font writeFont;</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">Les quelques couleurs supplémentaires qui vont servir respectivement de couleur principale</span></p>
+<p><span class="c1">        private Color frontColor;</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">De couleur d’ombre</span></p>
+<p><span class="c1">        private Color shadowColor;</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">La largeur de cette ombre</span></p>
+<p><span class="c1">        private int shadowBold;</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">La couleur de fond pour le cas où il doit y en avoir un</span></p>
+<p><span class="c1">        private Color backgroundColor;</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">La position du texte par rapport à la position de l’objet (x,y)</span></p>
+<p><span class="c1">        private TextPosition textPosition;</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">Un joli constructeur par défaut</span></p>
+<p><span class="c1">        public UIText() {</span></p>
+<p><span class="c1">                super();</span></p>
+<p><span class="c1">                initDefaultValues();</span></p>
+<p><span class="c1">        }</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">Le constructeur de la chained API:</span></p>
+<p><span class="c1">        public UIText(String name) {</span></p>
+<p><span class="c1">                super(name, 0, 0, 0, 0);</span></p>
+<p><span class="c1">                initDefaultValues();</span></p>
+<p><span class="c1">        }</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">un peu d’initialisation des valeurs par défaut</span></p>
+<p><span class="c1">        protected void initDefaultValues() {</span></p>
+<p><span class="c1">                text = &quot;notext&quot;;</span></p>
+<p><span class="c1">                frontColor = Color.WHITE;</span></p>
+<p><span class="c1">                backgroundColor = null;</span></p>
+<p><span class="c1">                this.shadowBold = 1;</span></p>
+<p><span class="c1">                shadowColor = Color.BLACK;</span></p>
+<p><span class="c1">        }</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">La redéfinition de la méthode de dessin de cet objet</span></p>
+<p><span class="citation" data-cites="Override">[        @Override]</span>{.c1}</p>
+<p><span class="c1">        public void draw(Game game, Graphics2D g) {</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">si la font est spécifiée, on l’applique</span></p>
+<p><span class="c1">                if (writeFont != null) {</span></p>
+<p><span class="c1">                        g.setFont(writeFont);</span></p>
+<p><span class="c1">                }</span></p>
+<p><span class="c2">on récupère les paramètres de la font en cour d’utilisation</span></p>
+<p><span class="c1">                FontMetrics fm = g.getFontMetrics();</span></p>
+<p><span class="c1">                this.width = fm.stringWidth(this.text);</span></p>
+<p><span class="c1">                this.height = fm.getHeight();</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">Si une couleur de background est spécifiée, on trace le dit fond</span></p>
+<p><span class="c1">                if (backgroundColor != null) {</span></p>
+<p><span class="c1">                        g.setColor(backgroundColor);</span></p>
+<p><span class="c1">                        g.fillRect((int) x - 2, (int) y + 2,</span></p>
+<p><span class="c1">width + 4, height + 4);</span></p>
+<p><span class="c1">                }</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">On affiche enfin le texte en passant par un helper qui trace texte et ombre</span></p>
+<p><span class="c1">                Rectangle rect = RenderHelper.drawShadowString(</span></p>
+<p><span class="c1">g, text,</span></p>
+<p><span class="c1">(int) x, (int) y + height - 2,</span></p>
+<p><span class="c1">frontColor,</span></p>
+<p><span class="c1">shadowColor,</span></p>
+<p><span class="c1">                (textPosition != null ? textPosition : TextPosition.LEFT),</span></p>
+<p><span class="c1">shadowBold);</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">on calcule la position de l’objet</span></p>
+<p><span class="c1">                rectangle.x = (int) (rect.x &lt; rectangle.x ? rect.x : rectangle.x);</span></p>
+<p><span class="c1">                rectangle.y = (int) (y);</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">on calcule sa taille liée à la font</span></p>
+<p><span class="c1">                rectangle.width = (int) (rect.width &gt; width ? rect.width : width);</span></p>
+<p><span class="c1">                rectangle.height = fm.getHeight();</span></p>
+<p><span class="c1">                rectangle.width = width = (fm.stringWidth(text) &gt; width ? fm.stringWidth(text) : width);</span></p>
+<p><span class="c1">        }</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c1">        public void addDebugInfo() {</span></p>
+<p><span class="c1">                super.addDebugInfo();</span></p>
+<p><span class="c1">                debugInfo.add(String.format(&quot;text:(%s)&quot;, text));</span></p>
+<p><span class="c1">        }</span></p>
+<p><span class="c1">        …</span></p>
+<p><span class="c2">On fera abstraction de tous les setters liés à l’API de type chainée.</span></p>
+<p><span class="c1">}</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Nous avons ajouté un peu de piment à cet objet en proposant une fonction de centrage du texte par rapport à la position de celui-ci:</span></p>
+<ul>
+<li><span class="c2">centré,</span></li>
+<li><span class="c2">centré à gauche</span></li>
+<li><span class="c2">centré à droite,</span></li>
+</ul>
+<p>c’est ce que nous appellerons la <span class="c13">TextPosition</span><span class="c2">. cette dernière est une énumération:</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">        public enum TextPosition {</span></p>
+<p><span class="c1">                LEFT,</span></p>
+<p><span class="c1">RIGHT,</span></p>
+<p><span class="c1">CENTER</span></p>
+<p><span class="c1">        }</span></p>
+<p><span class="c2"></span></p>
+<p>Cet énumération est déclaré dans la classe <span class="c13">RenderHelper</span> car elle n’est pas spécifique au  UI<span class="c13">Text</span><span class="c2">.</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Un exemple d’utilisation issu du TitleState:</span></p>
+<p><span class="c2">Nous  choisissons une police de caractères pour le rendu</span></p>
+<p><span class="c1">Font titleFont = game.getGraphics()</span></p>
+<p><span class="c1">.getFont()</span></p>
+<p><span class="c1">.deriveFont(3.0f * Game.SCREEN_FONT_RATIO);</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Nous récupérons le texte traduit à afficher</span></p>
+<p><span class="c1">String titleLabel = Messages.getString(&quot;TitleState.label.title&quot;);</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">UIText titleText = (UIText) new UIText(&quot;title&quot;)</span></p>
+<p><span class="c1">        .setText(titleLabel)</span></p>
+<p><span class="c1">        .setFont(titleFont)</span></p>
+<p><span class="c1">        .setTextAlign(TextPosition.CENTER)</span></p>
+<p><span class="c1">        .setPosition((int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.10f))</span></p>
+<p><span class="c1">        .setLayer(1)</span></p>
+<p><span class="c1">        .setPriority(1)</span></p>
+<p><span class="c1">        .setColor(Color.WHITE);</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Ce qui va nous donner le rendu suivant :</span></p>
+<p><span class="c2"></span></p>
+<p><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 602.00px; height: 81.33px;"><img src="images/image6.png" /></span></p>
+<p>figure 4: <span class="c23 c13">UIText servant au rendu du titre dans l’état TitleState.</span></p>
+<h3 id="h.ytz2k434wmcp" class="c30"><span class="c4 c27">UIMenu</span></h3>
+<p>Le <span class="c20">UIMenu</span>peut-être considéré comme une extension du <span class="c20">UIText</span><span class="c2">. Celui-ci va permettre d’afficher une liste de textes sur des lignes différentes, et pas une mécanique de surbrillance la possibilité de choisir la ligne à sélectionner, permettre le choix par l’utilisateur d’une des propositions.</span></p>
+<p><span class="c2">L’objet retourne une valeur numérique correspondante à la ligne sélectionnée.</span></p>
+<p><span class="c2"></span></p>
+<p>Chaque ligne sera en fait un sous objet appelé <span class="c20">UIMenuItem</span><span class="c2">, cet objet contenant</span></p>
+<ul>
+<li><span class="c2">un id unique,</span></li>
+<li><span class="c2">une clé de texte traduit,</span></li>
+<li><span class="c2">le texte à afficher,</span></li>
+<li><span class="c2">la valeur de sélection.</span></li>
+</ul>
+<p><span class="c2"></span></p>
+<p><span class="c20">UIMenuItem</span>est une sous-classe de <span class="c20">UIMenu</span><span class="c2">.</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">        public class UIMenuItem {</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">Un ID unique pour cet Item</span></p>
+<p><span class="c1">                private int id;</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">un label à afficher</span></p>
+<p><span class="c1">                private String label;</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">une clé de traduction pour ce label</span></p>
+<p><span class="c1">                private String labelKey;</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">la valeur sélectionnée</span></p>
+<p><span class="c1">                private String value;</span></p>
+<p><span class="c1"></span></p>
+<p>le constructeur paramétré pour initialiser en une seule fois tous les attributs de l’objet</p>
+<p><span class="c1">                public UIMenuItem(int id, String labelKey, String value, String defaultText) {</span></p>
+<p><span class="c1">                        this(id, labelKey, value, defaultText, (Object[]) null);</span></p>
+<p><span class="c1">                }</span></p>
+<p><span class="c2">LE constructeur qui initialize les attributs en récupérant l'éventuelle clé de traduction et sa traduction dans le fichier messages.properties, dans la langue active bien sûr.</span></p>
+<p><span class="c1">                public UIMenuItem(int id, String labelKey, String value, String defaultText, Object... args) {</span></p>
+<p><span class="c1">                        this.labelKey = labelKey;</span></p>
+<p><span class="c1">                        this.value = value;</span></p>
+<p><span class="c1">                        String translatedLabel = Messages.getString(labelKey);</span></p>
+<p><span class="c1">                        if (translatedLabel.contains(labelKey) &amp;&amp; defaultText != null &amp;&amp; !defaultText.equals(&quot;&quot;)) {</span></p>
+<p><span class="c1">                                this.label = defaultText;</span></p>
+<p><span class="c1">                        } else {</span></p>
+<p><span class="c1">                                this.label = String.format(translatedLabel, args);</span></p>
+<p><span class="c1">                        }</span></p>
+<p><span class="c1">                        this.id = index++;</span></p>
+<p><span class="c1">                }</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">On finit par une succession de setters et getters qui ne sera pas intéressante à décrire ici.</span></p>
+<p><span class="c2">                ...</span></p>
+<p><span class="c1">        }</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Maintenant que nous avons les items de notre menu, passons à sa gestion.</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">public class UIMenu extends AbstractGameObject {</span></p>
+<p><span class="c2"></span></p>
+<p>Outre les attributs de couleur et de font qui sont relativement similaires à ceux du <span class="c20">UIText</span><span class="c2">, intéressons nous aux particularités.</span></p>
+<p><span class="c1">...</span></p>
+<p><span class="c2">Tout d’abord, un attribut indiquant l’item actif.</span></p>
+<p><span class="c1">        private int activeItem = 0;</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">La liste des items pour ce menu</span></p>
+<p><span class="c1">        private List&lt;UIMenuItem&gt; items = new ArrayList&lt;&gt;();</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">Un concepteur qui permet de passer des argument au text du label traduisible</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c1">public UIMenuItem addItem(String value, String labelKey, String defaultText, Object... args) {</span></p>
+<p><span class="c1">        UIMenuItem item = new UIMenuItem(index++, labelKey, value, defaultText, args);</span></p>
+<p><span class="c1">        items.add(item);</span></p>
+<p><span class="c1">        return item;</span></p>
+<p><span class="c1">}</span></p>
+<p><span class="c1"></span></p>
+<p>La méthode de rendu est quelque peu différente de celle du <span class="c20">UIText</span><span class="c2">car elle va parcourir la liste des items et mettre en surbrillance celui qui est actif:</span></p>
+<p><span class="c1"></span></p>
+<p><span class="citation" data-cites="Override">[@Override]</span>{.c1}</p>
+<p><span class="c1">public void draw(Game game, Graphics2D g) {</span></p>
+<p><span class="c1">        g.setFont(menuFont);</span></p>
+<p><span class="c1">        FontMetrics fm = g.getFontMetrics();</span></p>
+<p><span class="c1">        height = 0;</span></p>
+<p><span class="c1">        int i = 0;</span></p>
+<p><span class="c1">        Color drawColor = color;</span></p>
+<p><span class="c1">        for (UIMenuItem item : items) {</span></p>
+<p><span class="c1">                if (i != activeItem) {</span></p>
+<p><span class="c1">                        drawColor = Color.GRAY;</span></p>
+<p><span class="c1">                } else {</span></p>
+<p><span class="c1">                        drawColor = color;</span></p>
+<p><span class="c1">                }</span></p>
+<p><span class="c1">                Rectangle rect = RenderHelper.drawShadowString(g,</span></p>
+<p><span class="c1">item.getLabel(),</span></p>
+<p><span class="c1">(int) x, (int) y + (i * fm.getHeight()),</span></p>
+<p><span class="c1">                        drawColor, shadowColor,</span></p>
+<p><span class="c1">(textPosition != null ? textPosition : TextPosition.LEFT), 2);</span></p>
+<p><span class="c1">                i++;</span></p>
+<p><span class="c1">                // update rectangle Bounding Box for this object.</span></p>
+<p><span class="c1">                rectangle.x = (int) (rect.x &lt; rectangle.x ? rect.x</span></p>
+<p><span class="c1">: rectangle.x);</span></p>
+<p><span class="c1">                rectangle.y = (int) (y - fm.getHeight());</span></p>
+<p><span class="c1">                rectangle.width = (int) (rect.width &gt; width ? rect.width</span></p>
+<p><span class="c1">: width);</span></p>
+<p><span class="c1">                rectangle.height = i * fm.getHeight();</span></p>
+<p><span class="c1">                rectangle.width = width =</span></p>
+<p><span class="c1">(fm.stringWidth(item.getLabel()) &gt; width</span></p>
+<p><span class="c1">? fm.stringWidth(item.getLabel())</span></p>
+<p><span class="c1">                                        : width);</span></p>
+<p><span class="c1">        }</span></p>
+<p><span class="c1">}</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">Enfin, quelques méthodes qui vont permettre d’activer et naviguer dans la liste des items de ce menu:</span></p>
+<p><span class="c1">        public void activate(int itemId) {</span></p>
+<p><span class="c1">                assert (activeItem &lt; 0);</span></p>
+<p><span class="c1">                assert (activeItem &gt;= items.size());</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c1">                this.activeItem = itemId;</span></p>
+<p><span class="c1">        }</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">Revenir à l'item précédent ou au dernier si nous sommes au début de la liste</span></p>
+<p><span class="c1">        public void previous() {</span></p>
+<p><span class="c1">                activeItem--;</span></p>
+<p><span class="c1">                if (activeItem &lt; 0) {</span></p>
+<p><span class="c1">                        activeItem = items.size() - 1;</span></p>
+<p><span class="c1">                }</span></p>
+<p><span class="c1">        }</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">Passer à l’item suivant ou au premier si l’on arrive en fin de liste</span></p>
+<p><span class="c1">        public void next() {</span></p>
+<p><span class="c1">                activeItem++;</span></p>
+<p><span class="c1">                if (activeItem &gt;= items.size()) {</span></p>
+<p><span class="c1">                        activeItem = 0;</span></p>
+<p><span class="c1">                }</span></p>
+<p><span class="c1">        }</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Et pour invoquer cet objet, l’exemple suivant donne une idée d’instanciation.</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">On initialise l'objet menu, conteneur des items</span></p>
+<p><span class="c1">menu = (UIMenu) new UIMenu(&quot;menu&quot;)</span></p>
+<p><span class="c1">        .setActiveItem(0)</span></p>
+<p><span class="c1">        .setShadowColor(Color.BLACK)</span></p>
+<p><span class="c1">        .setAlignText(TextPosition.CENTER)</span></p>
+<p><span class="c1">        .setFont(menuItemFont)                                </span></p>
+<p><span class="c1">        .setPosition((int) (Game.WIDTH * 0.50f), (int) (Game.HEIGHT * 0.50f))</span></p>
+<p><span class="c1">        .setLayer(2)</span></p>
+<p><span class="c1">        .setPriority(1)</span></p>
+<p><span class="c1">.setColor(Color.WHITE);</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">On ajoute les items</span></p>
+<p><span class="c1">menu.addItem(&quot;start&quot;, &quot;TitleState.label.start&quot;, &quot;Start&quot;);</span></p>
+<p><span class="c1">menu.addItem(&quot;options&quot;, &quot;TitleState.label.options&quot;, &quot;Options&quot;);</span></p>
+<p><span class="c1">menu.addItem(&quot;quit&quot;, &quot;TitleState.label.quit&quot;, &quot;Quit&quot;);</span></p>
+<p><span class="c1"></span></p>
+<p><span class="c2">Le rendu visuel sera le suivant :</span></p>
+<p><span class="c2"></span></p>
+<p><span style="overflow: hidden; display: inline-block; margin: 0.00px 0.00px; border: 0.00px solid #000000; transform: rotate(0.00rad) translateZ(0px); -webkit-transform: rotate(0.00rad) translateZ(0px); width: 273.00px; height: 122.00px;"><img src="images/image1.png" /></span></p>
+<p>figure 5: <span class="c23 c13">Rendu de l’objet UIMenu avec le premier item du menu en surbrillance</span></p>
+<p><span class="c2"></span></p>
+<p><span class="c2">Passons à un affichage d’image en fond d’écran.</span></p>
+<p><span class="c2"></span></p>
+<h3 id="h.8eyjbfubndm7" class="c30"><span class="c27 c4">UIImage</span></h3>
+<p><span class="c2">TODO</span></p>
+<p><span class="c2"></span></p>
+</body>
+</html>

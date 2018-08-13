@@ -55,13 +55,12 @@ public class OptionState extends AbstractGameState {
 
 		// Prepare fonts.
 		Font titleFont = ResourceManager.getFont("/res/fonts/Prince Valiant.ttf")
-				.deriveFont(3.3f * Game.SCREEN_FONT_RATIO);
-		Font menuItemFont = game.getGraphics().getFont().deriveFont(1.2f * Game.SCREEN_FONT_RATIO);
+				.deriveFont(2.5f * Game.SCREEN_FONT_RATIO);
 
 		game.getWindow().setTitle("OptionState");
 
 		// Define the main Game title object
-		UIText titleText = new UIText("title", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.10f), titleLabel,
+		UIText titleText = new UIText("title", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.05f), titleLabel,
 				titleFont, 1, 1, Color.WHITE, Justification.CENTER);
 		titleText.setLabel(Labels.OPTION_TITLE.getKey());
 
