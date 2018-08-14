@@ -46,7 +46,9 @@ public class Player extends AbstractGameObject {
 	 * @param s
 	 */
 	public void setSprite(Sprite s) {
-		this.sprite = sprite;
+		this.sprite = s;
+		this.width=sprite.getImage().getWidth();
+		this.height=sprite.getImage().getHeight();
 	}
 
 }

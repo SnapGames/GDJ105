@@ -24,6 +24,7 @@ public class Camera extends AbstractGameObject {
 	private AbstractGameObject target;
 
 	public Camera(String name, AbstractGameObject target) {
+		super(name,0,0);
 		this.target = target;
 	}
 
@@ -42,8 +43,8 @@ public class Camera extends AbstractGameObject {
 
 	@Override
 	public void update(Game game, long dt) {
-		x = target.x * tweenFactor * dt;
-		y = target.y * tweenFactor * dt;
+		x = target.x + tweenFactor * dt;
+		y = target.y + tweenFactor * dt;
 	}
 
 }

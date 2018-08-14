@@ -20,6 +20,7 @@ import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.entity.Camera;
 import com.snapgames.gdj.core.gfx.RenderHelper.Justification;
+import com.snapgames.gdj.core.gfx.Sprite;
 import com.snapgames.gdj.core.i18n.Messages;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.AbstractGameState;
@@ -38,9 +39,9 @@ public class PlayState extends AbstractGameState {
 	private Map<String, Camera> cameras = new ConcurrentHashMap<>();
 	private Camera activeCamera;
 
-	TileMap tilemap;
-	Player player;
-	Camera camera;
+	private TileMap tilemap;
+	private Player player;
+	private Camera camera;
 
 	/*
 	 * (non-Javadoc)
@@ -68,6 +69,7 @@ public class PlayState extends AbstractGameState {
 				titleFont, 1, 1, Color.WHITE, Justification.CENTER);
 		titleText.setLabel(Labels.PLAY_TITLE.getKey());
 		titleText.layer = 1;
+		titleText.priority = 2;
 		addObject(titleText);
 
 		tilemap = new TileMap("tilemap");
@@ -75,7 +77,13 @@ public class PlayState extends AbstractGameState {
 		tilemap.layer = 2;
 		addObject(tilemap);
 
+		Sprite sps = new Sprite(
+				ResourceManager
+					.getImage("/res/images/Sprite-0001.png")
+						.getSubimage(32, 48, 32, 32),
+				"player");
 		player = new Player("player", game.getWidth() / 2, game.getHeight() / 2);
+		player.setSprite(sps);
 		player.layer = 1;
 		player.priority = 1;
 		addObject(player);
