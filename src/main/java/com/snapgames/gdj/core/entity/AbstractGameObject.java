@@ -10,17 +10,15 @@
 
 package com.snapgames.gdj.core.entity;
 
-import java.awt.Color;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
+import com.snapgames.gdj.core.Game;
+import com.snapgames.gdj.core.gfx.RenderHelper;
+
+import java.awt.*;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.snapgames.gdj.core.Game;
-import com.snapgames.gdj.core.gfx.RenderHelper;
 
 /**
  * AbstractGameObject.
@@ -35,7 +33,7 @@ public class AbstractGameObject implements GameObject {
 	/**
 	 * internal indexCounter to generate the default object name.
 	 */
-	protected static int indexCounter = 0;
+	private static int indexCounter = 0;
 	public int id;
 
 	/**
@@ -99,7 +97,7 @@ public class AbstractGameObject implements GameObject {
 		id = indexCounter;
 	}
 
-	public AbstractGameObject(String name, int x, int y) {
+	public AbstractGameObject(String name, float x, float y) {
 		this();
 		// if name is null, generate a default name.
 		this.name = (name == null || name.equals("") ? "noname_" + indexCounter : name);
@@ -107,7 +105,7 @@ public class AbstractGameObject implements GameObject {
 		this.y = y;
 		this.width = DEFAULT_WIDTH;
 		this.height = DEFAULT_HEIGHT;
-		this.rectangle = new Rectangle(x, y, width, height);
+		this.rectangle = new Rectangle((int) x, (int) y, width, height);
 	}
 
 	/**
@@ -180,11 +178,10 @@ public class AbstractGameObject implements GameObject {
 	 */
 	@Override
 	public String toString() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("AbstractGameObject [name=").append(name).append(", x=").append(x).append(", y=").append(y)
-				.append(", width=").append(width).append(", height=").append(height).append(", layer=").append(layer)
-				.append(", priority=").append(priority).append(", color=").append(color).append("]");
-		return builder.toString();
+		String builder = "AbstractGameObject [name=" + name + ", x=" + x + ", y=" + y +
+				", width=" + width + ", height=" + height + ", layer=" + layer +
+				", priority=" + priority + ", color=" + color + "]";
+		return builder;
 	}
 
 	/*
@@ -263,9 +260,9 @@ public class AbstractGameObject implements GameObject {
 
 	/**
 	 * Set position for this object.
-	 * 
-	 * @param x
-	 * @param y
+	 *
+	 * @param x horizontal position for this object
+	 * @param y vertical position for this object
 	 */
 	public void setPosition(float x, float y) {
 		this.x = x;

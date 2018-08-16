@@ -71,7 +71,7 @@ public class PlayState extends AbstractGameState {
         addObject(tilemap);
 
         // Define the main Game title object
-        UIText titleText = new UIText("title", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.05f), titleLabel,
+        UIText titleText = new UIText("title", (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.05f), titleLabel,
                 titleFont, 1, 1, Color.WHITE, Justification.CENTER);
         titleText.setLabel(Labels.PLAY_TITLE.getKey());
         titleText.layer = 1;
@@ -85,6 +85,7 @@ public class PlayState extends AbstractGameState {
                         .getSubimage(32, 48, 32, 32),
                 "player");
         player = new Player("player", 32, 32);
+        tilemap.setPlayerPosition(player);
         player.setSprite(sps);
         player.dx = 0;
         player.dy = 0;
@@ -101,7 +102,7 @@ public class PlayState extends AbstractGameState {
      * Add a camera to the system to track an object and move viewport.
      * If there is no already active camera, this new camera is defined as the active one.
      *
-     * @param camera
+     * @param camera the Camera object to be added to the Camera list
      */
     private void addCamera(Camera camera) {
         if (activeCamera == null) {

@@ -33,8 +33,7 @@ public class TileMap extends AbstractGameObject {
 
 	public final Logger logger = LoggerFactory.getLogger(TileMap.class);
 
-	public SpriteSheet tiles;
-	public int tileMapWidth = 0, tileMapHeight = 0;
+	private SpriteSheet tiles;
 	private int mapWidth = 0;
 	private int mapHeight = 0;
 	private int tileWidth = 0;
@@ -42,14 +41,13 @@ public class TileMap extends AbstractGameObject {
 	private int[] tileMap;
 	private Map<String, Integer> mappedTiles = new HashMap<>();
 	private BufferedImage bgi;
+	private float playerX;
+	private float playerY;
 
 	/**
 	 * TileMap constructor.
 	 * 
 	 * @param name
-	 * @param spritesBufferImage
-	 * @param tilemapWidth
-	 * @param tilemapHeight
 	 */
 	public TileMap(String name) {
 		super(name, 0, 0);
@@ -139,13 +137,17 @@ public class TileMap extends AbstractGameObject {
 		while (!line.equals("end")) {
 			for (int x = 0; x < mapWidth; x++) {
 				tileMap[(y * mapWidth) + x] = mappedTiles.get("" + line.charAt(x));
+				if (tileMap[(y * mapWidth) + x] == 999) {
+					this.playerX = x * tileWidth;
+					this.playerY = y * tileHeight;
+				}
 			}
 			y++;
 			index++;
 			line = lines[index];
 		}
 		// Compute BoundingBox.
-		this.rectangle = new Rectangle((int) (tileWidth * x), (int) (tileHeight * y));
+		this.rectangle = new Rectangle((int) (tileWidth * x), (tileHeight * y));
 		// update debug info
 		debugInfo.add((String.format("tile:%dx%d", tileWidth, tileHeight)));
 		debugInfo.add((String.format("map:%dx%d", mapWidth, mapHeight)));
@@ -169,15 +171,24 @@ public class TileMap extends AbstractGameObject {
 		for (int y = 0; y < mapHeight; y++) {
 
 			for (int x = 0; x < mapWidth; x++) {
-
-				Sprite tile = tiles.getSprite(tileMap[x + (y * mapWidth)]);
-
-				tile.draw(g, x * tileWidth, y * tileHeight);
-
+				int index = tileMap[x + (y * mapWidth)];
+				if (index != 999) {
+					Sprite tile = tiles.getSprite(index);
+					tile.draw(g, x * tileWidth, y * tileHeight);
+				}
 			}
 
 		}
 
 	}
 
+	/**
+	 * Capture player position ('P' character) from the map and initialize the AbstractGameObject with.
+	 *
+	 * @param player the AbstractGameObject which is the Game player character.
+	 */
+	public void setPlayerPosition(AbstractGameObject player) {
+		player.setPosition(this.playerX, this.playerY);
+		logger.info("Move player {} to position ({},{})", player.getName(), playerX, playerY);
+	}
 }

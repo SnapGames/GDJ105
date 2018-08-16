@@ -24,7 +24,7 @@ public class Camera extends AbstractGameObject {
 	private AbstractGameObject target;
 
 	public Camera(String name, AbstractGameObject target) {
-		super(name,0,0);
+        super(name, target.y, target.x);
 		this.target = target;
 	}
 
