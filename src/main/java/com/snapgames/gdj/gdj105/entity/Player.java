@@ -9,11 +9,11 @@
  */
 package com.snapgames.gdj.gdj105.entity;
 
-import java.awt.Graphics2D;
-
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.gfx.Sprite;
+
+import java.awt.*;
 
 /**
  * 
@@ -51,4 +51,11 @@ public class Player extends AbstractGameObject {
 		this.height=sprite.getImage().getHeight();
 	}
 
+
+    @Override
+    public void update(Game game, long dt) {
+        super.update(game, dt);
+        this.x = this.x + (this.dx * dt);
+        this.y = this.y + (this.dy * dt);
+    }
 }

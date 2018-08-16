@@ -9,19 +9,19 @@ package com.snapgames.gdj.gdj105.entity;
  * 
  * @year 2017
  */
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.gfx.Sprite;
 import com.snapgames.gdj.core.gfx.SpriteSheet;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * The TileMap object.
@@ -144,6 +144,12 @@ public class TileMap extends AbstractGameObject {
 			index++;
 			line = lines[index];
 		}
+		// Compute BoundingBox.
+		this.rectangle = new Rectangle((int) (tileWidth * x), (int) (tileHeight * y));
+		// update debug info
+		debugInfo.add((String.format("tile:%dx%d", tileWidth, tileHeight)));
+		debugInfo.add((String.format("map:%dx%d", mapWidth, mapHeight)));
+
 		return index;
 	}
 
