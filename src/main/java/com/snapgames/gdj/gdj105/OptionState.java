@@ -9,11 +9,6 @@
  */
 package com.snapgames.gdj.gdj105;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
-
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.entity.Layer;
@@ -23,6 +18,9 @@ import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.AbstractGameState;
 import com.snapgames.gdj.core.ui.UIText;
 import com.snapgames.gdj.gdj105.i18n.Labels;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
 
 
 /**
@@ -42,8 +40,8 @@ public class OptionState extends AbstractGameState {
 	 * core.Game)
 	 */
 	@Override
-	public void initialize(Game game) {
-		super.initialize(game);
+	public void initialize(Game game, boolean forcedReload) {
+		super.initialize(game, forcedReload);
 
 		// activate needed layers
 		for (int i = 0; i < layers.length; i++) {

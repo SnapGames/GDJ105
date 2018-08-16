@@ -9,8 +9,11 @@
  */
 package com.snapgames.gdj.core;
 
-import java.awt.Font;
-import java.awt.FontFormatException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.imageio.ImageIO;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,11 +22,6 @@ import java.io.InputStreamReader;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
-
-import javax.imageio.ImageIO;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * The resourceManager is an internal cache to manage resources like images,
@@ -48,14 +46,35 @@ public class ResourceManager {
 	private Map<String, Object> resources = new ConcurrentHashMap<>();
 
 	/**
+	 * retrieve from cache if exists or load the text file resource named <code>name</code>.
+	 *
+	 * @param name the name of the text resource to load.
+	 * @return
+	 */
+	public static String getText(String name) {
+		return (String) getInstance().addResource(name);
+	}
+
+	/**
+	 * retrieve a text file.
+	 *
+	 * @param name         the name of the resource to load.
+	 * @param forcedReload flag to request a cache passthrough
+	 * @return
+	 */
+	public static String getText(String name, boolean forcedReload) {
+		return (String) getInstance().loadResource(name, forcedReload);
+	}
+
+	/**
 	 * the private constructor to instantiate the {@link ResourceManager} only from
 	 * the getInstance(when needed). private ResourceManager() {
-	 * 
+	 *
 	 * }
-	 * 
+	 *
 	 * /** This main method is able to read some type of data (now Images and Font)
 	 * and store them in the resource cache.
-	 * 
+	 *
 	 * @param name the name (file name) of the resource to be loaded.
 	 * @return
 	 */
@@ -63,37 +82,7 @@ public class ResourceManager {
 		assert (resources != null);
 		assert (name != null);
 		if (!resources.containsKey(name)) {
-			String extension = name.substring(name.lastIndexOf("."), name.length());
-			switch (extension) {
-			// load an image resource?
-			case ".jpg":
-			case ".png":
-				try {
-					BufferedImage image = ImageIO.read(this.getClass().getResourceAsStream(name));
-					resources.put(name, image);
-				} catch (IOException e) {
-					logger.error("unable to find resource for {}", name);
-				}
-				break;
-			// load a Font resource
-			case ".ttf":
-				try {
-					InputStream stream = this.getClass().getResourceAsStream(name);
-					Font font = Font.createFont(Font.TRUETYPE_FONT, stream);
-					resources.put(name, font);
-				} catch (FontFormatException | IOException e) {
-					logger.error("Unable to read font from {}", name);
-				}
-				break;
-			case ".map":
-					InputStream stream = this.getClass().getResourceAsStream(name);
-					String value = new BufferedReader(
-							new InputStreamReader(stream))
-							.lines().parallel()
-							.collect(Collectors.joining("\n"));
-					resources.put(name, value);
-				break;
-			}
+			putResource(name);
 		}
 		return resources.get(name);
 	}
@@ -165,7 +154,54 @@ public class ResourceManager {
 		return instance;
 	}
 
-	public static String getText(String name) {
-		return (String) getInstance().addResource(name);
+	/**
+	 * Force cache to load resource again.
+	 *
+	 * @param name name of the resource to reload.
+	 * @return
+	 */
+	private Object loadResource(String name, boolean forcedReload) {
+		assert (resources != null);
+		assert (name != null);
+		if (forcedReload) {
+			putResource(name);
+		} else {
+			addResource(name);
+		}
+		return resources.get(name);
+	}
+
+	private void putResource(String name) {
+		String extension = name.substring(name.lastIndexOf("."), name.length());
+		switch (extension) {
+			// load an image resource?
+			case ".jpg":
+			case ".png":
+				try {
+					BufferedImage image = ImageIO.read(this.getClass().getResourceAsStream(name));
+					resources.put(name, image);
+				} catch (IOException e) {
+					logger.error("unable to find resource for {}", name);
+				}
+				break;
+			// load a Font resource
+			case ".ttf":
+				try {
+					InputStream stream = this.getClass().getResourceAsStream(name);
+					Font font = Font.createFont(Font.TRUETYPE_FONT, stream);
+					resources.put(name, font);
+				} catch (FontFormatException | IOException e) {
+					logger.error("Unable to read font from {}", name);
+				}
+				break;
+			case ".map":
+				InputStream stream = this.getClass().getResourceAsStream(name);
+				String value = new BufferedReader(
+						new InputStreamReader(stream))
+						.lines().parallel()
+						.collect(Collectors.joining("\n"));
+				resources.put(name, value);
+			break;
+		}
 	}
 }

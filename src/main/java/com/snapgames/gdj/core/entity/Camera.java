@@ -74,4 +74,11 @@ public class Camera extends AbstractGameObject {
         debugInfo.add(String.format("twn:%03f", tweenFactor));
         debugInfo.add(String.format("tgt:%s", target.getName()));
     }
+
+
+    public void setTarget(AbstractGameObject ago) {
+        this.target = target;
+        this.x = this.target.x;
+        this.x = this.target.y;
+    }
 }

@@ -9,14 +9,6 @@
  */
 package com.snapgames.gdj.gdj105;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.entity.Layer;
@@ -30,6 +22,12 @@ import com.snapgames.gdj.core.ui.UIImage;
 import com.snapgames.gdj.core.ui.UIMenu;
 import com.snapgames.gdj.core.ui.UIText;
 import com.snapgames.gdj.gdj105.i18n.Labels;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.image.BufferedImage;
 
 /**
  * This is the Title Screen for the game.
@@ -55,8 +53,8 @@ public class TitleState extends AbstractGameState {
 	 * snapgames.gdj.gdj105.core.Game)
 	 */
 	@Override
-	public void initialize(Game game) {
-		super.initialize(game);
+	public void initialize(Game game, boolean forcedReload) {
+		super.initialize(game, forcedReload);
 
 		// activate needed layers
 		for (int i = 0; i < layers.length; i++) {

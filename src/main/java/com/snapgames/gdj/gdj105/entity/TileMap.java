@@ -1,5 +1,3 @@
-package com.snapgames.gdj.gdj105.entity;
-
 /**
  * SnapGames
  * 
@@ -9,10 +7,12 @@ package com.snapgames.gdj.gdj105.entity;
  * 
  * @year 2017
  */
+package com.snapgames.gdj.gdj105.entity;
 
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
+import com.snapgames.gdj.core.entity.Actions;
 import com.snapgames.gdj.core.entity.DynamicGameObject;
 import com.snapgames.gdj.core.gfx.Sprite;
 import com.snapgames.gdj.core.gfx.SpriteSheet;
@@ -208,9 +208,14 @@ public class TileMap extends AbstractGameObject {
 	 * @return
 	 */
 	public int getTile(float gx, float gy) {
-		int x = (int) gx / tileWidth;
-		int y = (int) gy / tileHeight;
-		return this.tileMap[x + (y * mapWidth)];
+		if ((gx > 0 && gx < mapWidth * tileWidth) &&
+				(gy > 0 && gy < mapHeight * tileHeight)) {
+			int x = (int) gx / tileWidth;
+			int y = (int) gy / tileHeight;
+			return this.tileMap[x + (y * mapWidth)];
+		} else {
+			return 0;
+		}
 	}
 
 
@@ -226,37 +231,48 @@ public class TileMap extends AbstractGameObject {
 			float tlX = o.x;
 			float trX = o.x + o.width;
 			float blX = o.x;
+			float brY = o.y + o.height;
 
 			// Y coordinates
 			float tlY = o.y;
 			float blY = o.y;
-			float brY = o.y + o.height;
 
 			// Test on horizontal movement
 			if (o.dx < 0) {
 				int i = getTile(tlX, tlY);
 				if (i != 0 && i != 999) {
 					o.x = (((int) (tlX / tileWidth) + 1) * tileWidth);
+					o.ax = -o.ax * o.elasticity;
 				}
 			}
 			if (o.dx > 0) {
 				int i = getTile(trX, tlY);
 				if (i != 0 && i != 999) {
 					o.x = (((int) ((trX / tileWidth)) * tileWidth) - o.width);
+					o.ax = -o.ax * o.elasticity;
 				}
 
 			}
 			// Test on vertical movement
 			if (o.dy < 0) {
 				int i = getTile(blX, blY);
+				o.action = Actions.JUMP;
 				if (i != 0 && i != 999) {
 					o.y = (((int) (blY / tileHeight) + 1) * tileHeight);
+					o.ay = -o.ay * o.elasticity;
+					o.action = Actions.FALL;
 				}
 			}
 			if (o.dy > 0) {
 				int i = getTile(blX, brY);
 				if (i != 0 && i != 999) {
 					o.y = (((int) ((brY / tileHeight)) * tileHeight) - o.height);
+					o.ay = -o.ay * o.elasticity;
+					if (!o.previousAction.equals(Actions.WALK)) {
+						o.action = Actions.IDLE;
+					}
+				} else {
+					o.action = Actions.FALL;
 				}
 
 			}

@@ -27,7 +27,7 @@ public interface GameState {
 	 *            the game parent of this state.
 	 *
 	 */
-	public void initialize(Game game);
+	public void initialize(Game game, boolean forcedReload);
 
 	/**
 	 * manage input in this State.

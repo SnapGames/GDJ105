@@ -15,6 +15,7 @@ import com.snapgames.gdj.core.entity.Actions;
 import com.snapgames.gdj.core.entity.Camera;
 import com.snapgames.gdj.core.entity.Direction;
 import com.snapgames.gdj.core.entity.GameObject;
+import com.snapgames.gdj.core.gfx.DebugLevel;
 import com.snapgames.gdj.core.gfx.RenderHelper.Justification;
 import com.snapgames.gdj.core.gfx.Sprite;
 import com.snapgames.gdj.core.i18n.Messages;
@@ -27,10 +28,13 @@ import com.snapgames.gdj.gdj105.i18n.Labels;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
+import java.awt.geom.Point2D;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
+ * This state is an attempt to build a playable level for an hypothetic game.
+ *
  * @author Frédéric Delorme
  */
 public class PlayState extends AbstractGameState {
@@ -42,6 +46,8 @@ public class PlayState extends AbstractGameState {
     private Player player;
     private Camera camera;
 
+    private Point2D playerInitialPos;
+
     /*
      * (non-Javadoc)
      *
@@ -50,8 +56,9 @@ public class PlayState extends AbstractGameState {
      * core.Game)
      */
     @Override
-    public void initialize(Game game) {
-        super.initialize(game);
+    public void initialize(Game game, boolean forcedReload) {
+        super.initialize(game, forcedReload);
+        cameras.clear();
 
         // read i18n labels
         String titleLabel = Messages.getString(Labels.PLAY_TITLE.getKey());
@@ -91,6 +98,7 @@ public class PlayState extends AbstractGameState {
         player.priority = 1;
         player.showDebuginfo = true;
         addObject(player);
+        playerInitialPos = new Point2D.Float(player.x, player.y);
 
         Camera camera = new Camera("cam0", player);
         camera.setTweenFactor(0.004f);
@@ -142,10 +150,18 @@ public class PlayState extends AbstractGameState {
         }
     }
 
-
+    /*
+     * (non-Javadoc)
+     *
+     * @see
+     * com.snapgames.gdj.core.state.AbstractGameState#keyPressed(com.snapgames.gdj.
+     * core.Game, java.awt.event.KeyEvent)
+     */
     @Override
     public void keyPressed(Game game, KeyEvent e) {
         super.keyPressed(game, e);
+        switch (e.getKeyCode()) {
+        }
 
     }
 
@@ -160,8 +176,18 @@ public class PlayState extends AbstractGameState {
     public void keyReleased(Game game, KeyEvent e) {
         super.keyReleased(game, e);
         switch (e.getKeyCode()) {
+            // Escape reload the Title Screen.
             case KeyEvent.VK_ESCAPE:
                 game.getGSM().activate("title");
+                break;
+            // Add the T interaction to move the Player object at its first position
+            // only activated if debug mode on.
+            case KeyEvent.VK_T:
+                if (game.isDebug(DebugLevel.DEBUG_FPS)) {
+                    player.x = (float) playerInitialPos.getX();
+                    player.y = (float) playerInitialPos.getY();
+                    activeCamera.setTarget(player);
+                }
                 break;
             default:
                 break;
@@ -181,32 +207,41 @@ public class PlayState extends AbstractGameState {
             player.dx = 0f;
             player.dy = 0f;
             player.action = Actions.IDLE;
-            if (input.getKeyPressed(KeyEvent.VK_UP)) {
-                player.dy = -0.2f;
-                //player.direction = Direction.UP;
-                player.action = Actions.WALK;
+
+            if (input.getKeyPressed(KeyEvent.VK_UP)
+                    && !player.previousAction.equals(Actions.JUMP)
+                    && !player.previousAction.equals(Actions.FALL)) {
+                player.ay = -0.024f;
+                player.action = Actions.JUMP;
             }
 
-            if (input.getKeyPressed(KeyEvent.VK_DOWN)) {
-                player.dy = 0.2f;
-                //player.direction = Direction.DOWN;
-                player.action = Actions.WALK;
+            if (input.getKeyPressed(KeyEvent.VK_DOWN)
+                    && !player.action.equals(Actions.JUMP)) {
+                player.ay = 0.005f;
+                player.action = Actions.IDLE;
             }
 
             if (input.getKeyPressed(KeyEvent.VK_LEFT)) {
-                player.dx = -0.2f;
+                player.ax = -0.005f;
                 player.direction = Direction.LEFT;
                 player.action = Actions.WALK;
             }
 
             if (input.getKeyPressed(KeyEvent.VK_RIGHT)) {
-                player.dx = 0.2f;
+                player.ax = 0.005f;
                 player.direction = Direction.RIGHT;
                 player.action = Actions.WALK;
             }
+            player.previousAction = player.action;
         }
     }
 
+    /**
+     * Render the PlayState's objects
+     *
+     * @param game
+     * @param g
+     */
     @Override
     public void render(Game game, Graphics2D g) {
         // Process the before Camera rendering
@@ -219,6 +254,7 @@ public class PlayState extends AbstractGameState {
         // Process the after Camera rendering
         if (activeCamera != null) {
             activeCamera.afterRender(g);
+            // add some camera info to the debug rendering display.
             activeCamera.addDebugInfo(game);
             activeCamera.drawSpecialDebugInfo(game, g);
             activeCamera.getDebugInfo().clear();

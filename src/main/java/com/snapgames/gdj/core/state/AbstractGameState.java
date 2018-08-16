@@ -85,7 +85,7 @@ public abstract class AbstractGameState implements GameState {
 	 * gdj105.core.Game)
 	 */
 	@Override
-	public void initialize(Game game) {
+    public void initialize(Game game, boolean forcedReload) {
 		// activate needed layers
 		resetLayers();
 	}
@@ -99,6 +99,7 @@ public abstract class AbstractGameState implements GameState {
 		}
 		layersWith.clear();
 		layersWithoutCamera.clear();
+		objects.clear();
 	}
 
 	/**

@@ -17,9 +17,9 @@ import com.snapgames.gdj.core.gfx.Sprite;
 import java.awt.*;
 
 /**
+ * This is the Player Object. The main character for this sample game.
  *
  * @author Frédéric Delorme
- *
  */
 public class Player extends DynamicGameObject {
 
@@ -68,4 +68,16 @@ public class Player extends DynamicGameObject {
         this.width = sprite.getImage().getWidth();
         this.height = sprite.getImage().getHeight();
     }
+
+    /*
+     * Add specific Player information for debug purpose.
+     * @param game
+     */
+    @Override
+    public void addDebugInfo(Game game) {
+        super.addDebugInfo(game);
+        debugInfo.add(String.format("nrj:%d", attributes.get("energy")));
+        debugInfo.add(String.format("mana:%d", attributes.get("mana")));
+    }
+
 }
