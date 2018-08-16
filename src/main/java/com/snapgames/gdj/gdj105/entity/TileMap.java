@@ -13,6 +13,7 @@ package com.snapgames.gdj.gdj105.entity;
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
+import com.snapgames.gdj.core.entity.DynamicGameObject;
 import com.snapgames.gdj.core.gfx.Sprite;
 import com.snapgames.gdj.core.gfx.SpriteSheet;
 import org.slf4j.Logger;
@@ -61,6 +62,9 @@ public class TileMap extends AbstractGameObject {
 	public void loadTileFile(String path) {
 		String mapStr = ResourceManager.getText("/res/maps/level-001.map");
 		parseMapFromText(mapStr);
+		// Compute BoundingBox.
+		this.width = tileWidth * mapWidth;
+		this.height = tileHeight * mapHeight;
 
 	}
 
@@ -95,12 +99,18 @@ public class TileMap extends AbstractGameObject {
 				mapWidth = Integer.parseInt(tileMapValue[0]);
 				mapHeight = Integer.parseInt(tileMapValue[1]);
 				tileMap = new int[mapWidth * mapHeight];
+				this.boundingBox.setBounds(0, 0, mapWidth * tileWidth, mapHeight * tileHeight);
+				this.width = tileWidth * mapWidth;
+				this.height = tileHeight * mapHeight;
 				break;
 
 			case "tileSize":
 				String[] tileSizeValue = attribute[1].split("x");
 				tileWidth = Integer.parseInt(tileSizeValue[0]);
 				tileHeight = Integer.parseInt(tileSizeValue[1]);
+				this.boundingBox.setBounds(0, 0, mapWidth * tileWidth, mapHeight * tileHeight);
+				this.width = tileWidth * mapWidth;
+				this.height = tileHeight * mapHeight;
 				break;
 
 			case "tile":
@@ -146,8 +156,6 @@ public class TileMap extends AbstractGameObject {
 			index++;
 			line = lines[index];
 		}
-		// Compute BoundingBox.
-		this.rectangle = new Rectangle((int) (tileWidth * x), (tileHeight * y));
 		// update debug info
 		debugInfo.add((String.format("tile:%dx%d", tileWidth, tileHeight)));
 		debugInfo.add((String.format("map:%dx%d", mapWidth, mapHeight)));
@@ -172,7 +180,7 @@ public class TileMap extends AbstractGameObject {
 
 			for (int x = 0; x < mapWidth; x++) {
 				int index = tileMap[x + (y * mapWidth)];
-				if (index != 999) {
+				if (index != 999 && index != 0) {
 					Sprite tile = tiles.getSprite(index);
 					tile.draw(g, x * tileWidth, y * tileHeight);
 				}
@@ -191,4 +199,87 @@ public class TileMap extends AbstractGameObject {
 		player.setPosition(this.playerX, this.playerY);
 		logger.info("Move player {} to position ({},{})", player.getName(), playerX, playerY);
 	}
+
+	/**
+	 * retrieve Tile id unde the <code>(gx,gy)</code> position.
+	 *
+	 * @param gx the horizontal graphic position
+	 * @param gy the vertical graphic position
+	 * @return
+	 */
+	public int getTile(float gx, float gy) {
+		int x = (int) gx / tileWidth;
+		int y = (int) gy / tileHeight;
+		return this.tileMap[x + (y * mapWidth)];
+	}
+
+
+	/**
+	 * resolve DynamicGameObject o position accordingto the list of Colliding points.
+	 *
+	 * @param o the DynamicGameObject to solve new position according to detected colliding points
+	 * @return
+	 */
+	public DynamicGameObject resolve(DynamicGameObject o) {
+		if (o.collisionBox != null) {
+			// X coordinates
+			float tlX = o.x;
+			float trX = o.x + o.width;
+			float blX = o.x;
+			float brX = o.x + o.width;
+			float offsetX = o.x - o.x;
+
+			// Y coordinates
+			float tlY = o.y;
+			float trY = o.y + o.height;
+			float blY = o.y;
+			float brY = o.y + o.height;
+			float offsetY = o.y - o.y;
+
+			// Test on horizontal movement
+			if (o.dx < 0) {
+				int i = getTile(tlX, tlY);
+				if (i != 0 && i != 999) {
+					o.x = (((int) (tlX / tileWidth) + 1) * tileWidth);
+				}
+			}
+			if (o.dx > 0) {
+				int i = getTile(trX, tlY);
+				if (i != 0 && i != 999) {
+					o.x = (((int) ((trX / tileWidth)) * tileWidth) - o.width);
+				}
+
+			}
+			// Test on vertical movement
+			if (o.dy < 0) {
+				int i = getTile(blX, blY);
+				if (i != 0 && i != 999) {
+					o.y = (((int) (blY / tileHeight) + 1) * tileHeight);
+				}
+			}
+			if (o.dy > 0) {
+				int i = getTile(blX, brY);
+				if (i != 0 && i != 999) {
+					o.y = (((int) ((brY / tileHeight)) * tileHeight) - o.height);
+				}
+
+			}
+			constrains(o);
+		}
+		return o;
+	}
+
+	/**
+	 * Constrains the DynamicGameObject to the Game view (mainly the TileMap area size).
+	 *
+	 * @param o the object to be constrained to the game area.
+	 */
+	private void constrains(DynamicGameObject o) {
+		if (o.x < 0) o.x = 0;
+		if (o.y < 0) o.y = 0;
+		if (o.x > this.boundingBox.width) o.x = this.boundingBox.width;
+		if (o.y > this.boundingBox.height) o.y = this.boundingBox.height;
+
+	}
+
 }

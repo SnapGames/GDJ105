@@ -1,421 +1,419 @@
 /**
  * SnapGames
- * 
+ * <p>
  * Game Development Java
- * 
+ * <p>
  * GDJ105
- * 
+ *
  * @year 2017
  */
 package com.snapgames.gdj.core;
-
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.awt.RenderingHints;
-import java.awt.image.BufferedImage;
-
-import javax.swing.JPanel;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import com.snapgames.gdj.core.gfx.DebugLevel;
 import com.snapgames.gdj.core.gfx.ImageUtils;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.GameStateManager;
 import com.snapgames.gdj.core.ui.Window;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 /**
  * the basic Game container is a JPanel child.
- * 
+ *
  * @author Frédéric Delorme
  *
  */
 public class Game extends JPanel {
 
-	/**
-	 * Internal logger.
-	 */
-	public static final Logger logger = LoggerFactory.getLogger(Game.class);
+    /**
+     * Internal logger.
+     */
+    public static final Logger logger = LoggerFactory.getLogger(Game.class);
 
-	/**
-	 * Game screen width.
-	 */
-	public final static int WIDTH = 360;
-	/**
-	 * Game screen height.
-	 */
-	public final static int HEIGHT = 240;
-	/**
-	 * game screen scaling
-	 */
-	private final static float SCALE = 2.0f;
+    /**
+     * Game screen width.
+     */
+    public final static int WIDTH = 360;
+    /**
+     * Game screen height.
+     */
+    public final static int HEIGHT = 240;
+    public final static float SCREEN_FONT_RATIO = HEIGHT / 22;
+    /**
+     * The boundingBox containing the Game screen.
+     */
+    public final static Rectangle bbox = new Rectangle(0, 0, WIDTH, HEIGHT);
+    /**
+     * game screen scaling
+     */
+    private final static float SCALE = 2.0f;
+    /**
+     * Number of update per seconds
+     */
+    public long UPS = 60;
+    public long updatePerSecond = 0;
+    /**
+     * Number of frame per seconds
+     */
+    public long FPS = 30;
+    public long framesPerSecond = 0;
+    private long upsTargetTime = 1000 / UPS;
+    private long fpsTargetTime = 1000 / FPS;
+    /**
+     * The title for the game instance.
+     */
+    private String title = "game";
 
-	public final static float SCREEN_FONT_RATIO = HEIGHT / 22;
+    /**
+     * Game display space dimension
+     */
+    private Dimension dimension = null;
 
-	/**
-	 * Number of frame per seconds
-	 */
-	public long FPS = 60;
-	/**
-	 * duration of a frame.
-	 */
-	private long fpsTargetTime = 1000 / 60;
+    /**
+     * Active window for this Game.
+     */
+    private Window window;
 
-	/**
-	 * Number of frames in a second.
-	 */
-	public long framesPerSecond = 0;
+    /**
+     * internal rendering buffer
+     */
+    private BufferedImage image;
 
-	/**
-	 * The rectangle containing the Game screen.
-	 */
-	public final static Rectangle bbox = new Rectangle(0, 0, WIDTH, HEIGHT);
+    /**
+     * Flag to activate debug information display.
+     */
+    private DebugLevel debug = DebugLevel.DEBUG_NONE;
 
-	/**
-	 * The title for the game instance.
-	 */
-	private String title = "game";
+    /**
+     * flag representing the exit request status. true => exit
+     */
+    private boolean exit = false;
 
-	/**
-	 * Game display space dimension
-	 */
-	private Dimension dimension = null;
+    /**
+     * Flag to track pause request.
+     */
+    private boolean isPause = false;
 
-	/**
-	 * Active window for this Game.
-	 */
-	private Window window;
+    /**
+     * Flag to activate screenshot recording.
+     */
+    private boolean screenshot = false;
 
-	/**
-	 * internal rendering buffer
-	 */
-	private BufferedImage image;
+    /**
+     * Rendering interface.
+     */
+    private Graphics2D g;
 
-	/**
-	 * Flag to activate debug information display.
-	 */
-	private DebugLevel debug = DebugLevel.DEBUG_NONE;
+    /**
+     * Input manager
+     */
+    private InputHandler inputHandler;
 
-	/**
-	 * flag representing the exit request status. true => exit
-	 */
-	private boolean exit = false;
+    private GameStateManager gsm;
 
-	/**
-	 * Flag to track pause request.
-	 */
-	private boolean isPause = false;
+    /**
+     * the default constructor for the {@link Game} panel with a game
+     * <code>title</code>.
+     *
+     * @param title the title for the game.
+     */
+    private Game(String title) {
+        this.title = title;
+        this.dimension = new Dimension((int) (WIDTH * SCALE), (int) (HEIGHT * SCALE));
+        exit = false;
+        gsm = new GameStateManager(this);
+        inputHandler = new InputHandler(gsm);
+    }
 
-	/**
-	 * Flag to activate screenshot recording.
-	 */
-	private boolean screenshot = false;
+    /**
+     * The main entry point to start our GDJ104 game.
+     *
+     * @param argv list of arguments from command line.
+     */
+    public static void main(String[] argv) {
+        Game game = new Game("Kingdom of Asperion");
+        new Window(game);
+        game.run();
+    }
 
-	/**
-	 * Rendering interface.
-	 */
-	private Graphics2D g;
+    /**
+     * Initialize the Game object with <code>g</code>, the Graphics2D interface to
+     * render things.
+     */
+    private void initialize() {
 
-	/**
-	 * Input manager
-	 */
-	private InputHandler inputHandler;
+        // Internal display buffer
+        image = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
+        g = image.createGraphics();
+        g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        ResourceManager.add("debugFont", getRender().getFont().deriveFont(8.5f));
 
-	private GameStateManager gsm;
+        gsm.activateDefaultState();
+    }
 
-	/**
-	 * the default constructor for the {@link Game} panel with a game
-	 * <code>title</code>.
-	 * 
-	 * @param title the title for the game.
-	 */
-	private Game(String title) {
-		this.title = title;
-		this.dimension = new Dimension((int) (WIDTH * SCALE), (int) (HEIGHT * SCALE));
-		exit = false;
-		gsm = new GameStateManager(this);
-		inputHandler = new InputHandler(gsm);
-	}
+    /**
+     * The main Loop !
+     */
+    private void loop() {
+        long currentTime = System.currentTimeMillis();
+        long lastTime = currentTime;
+        long second = 0;
+        long framesCounter = 0, updateCounter = 0;
+        while (!exit) {
+            currentTime = System.currentTimeMillis();
+            long dt = currentTime - lastTime;
 
-	/**
-	 * Initialize the Game object with <code>g</code>, the Graphics2D interface to
-	 * render things.
-	 */
-	private void initialize() {
+            // manage input
+            input();
+            if (!isPause) {
+                if (second % upsTargetTime > 0) {
+                    // update all game's objects
+                    update(dt);
+                    updateCounter += 1;
+                }
+            }
 
-		// Internal display buffer
-		image = new BufferedImage(this.getWidth(), this.getHeight(), BufferedImage.TYPE_INT_RGB);
-		g = image.createGraphics();
-		g.setRenderingHint(RenderingHints.KEY_TEXT_ANTIALIASING, RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
-		g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-		ResourceManager.add("debugFont", getRender().getFont().deriveFont(8.5f));
+            // copy buffer
+            drawToScreen();
 
-		gsm.activateDefaultState();
-	}
+            // manage wait time
+            long laps = System.currentTimeMillis() - lastTime;
+            second += laps;
+            if (second % fpsTargetTime > 0) {
+                // render all Game's objects
+                render(g);
+                // compute number of frame per seconds
+                framesCounter += 1;
+                if (second >= 1000) {
+                    second = 0;
+                    framesPerSecond = framesCounter;
+                    updatePerSecond = updateCounter;
+                    framesCounter = 0;
+                    updateCounter = 0;
+                }
+            }
+            long wait = upsTargetTime - laps;
 
-	/**
-	 * The main Loop !
-	 */
-	private void loop() {
-		long currentTime = System.currentTimeMillis();
-		long lastTime = currentTime;
-		long second = 0;
-		long framesCounter = 0;
-		while (!exit) {
-			currentTime = System.currentTimeMillis();
-			long dt = currentTime - lastTime;
+            logger.debug("FPS: {} (laps:{}, wait:{})", framesPerSecond, laps, wait);
 
-			// manage input
-			input();
-			if (!isPause) {
-				// update all game's objects
-				update(dt);
-			}
-			// render all Game's objects
-			render(g);
-			// copy buffer
-			drawToScreen();
+            if (wait > 0) {
+                try {
+                    Thread.sleep(wait);
+                } catch (InterruptedException e) {
+                    logger.error("unable to wait 1 ms");
+                }
+            }
+            lastTime = currentTime;
 
-			// manage wait time
-			long laps = System.currentTimeMillis() - lastTime;
-			second += laps;
-			framesCounter += 1;
-			if (second >= 1000) {
-				second = 0;
-				framesPerSecond = framesCounter;
-				framesCounter = 0;
-			}
-			long wait = fpsTargetTime - laps;
+        }
+    }
 
-			logger.debug("FPS: {} (laps:{}, wait:{})", framesPerSecond, laps, wait);
+    /**
+     * Copy buffer to window.
+     */
+    private void drawToScreen() {
 
-			if (wait > 0) {
-				try {
-					Thread.sleep(wait);
-				} catch (InterruptedException e) {
-					logger.error("unable to wait 1 ms");
-				}
-			}
-			lastTime = currentTime;
+        // copy buffer to window.
+        Graphics g2 = this.getGraphics();
+        g2.drawImage(image, 0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE), 0, 0, WIDTH, HEIGHT, Color.BLACK,
+                null);
+        g2.dispose();
 
-		}
-	}
+        if (screenshot) {
+            ImageUtils.screenshot(image);
+            screenshot = false;
+        }
+    }
 
-	/**
-	 * Copy buffer to window.
-	 */
-	private void drawToScreen() {
+    /**
+     * Manage Game input.
+     */
+    private void input() {
+        gsm.input(inputHandler);
+    }
 
-		// copy buffer to window.
-		Graphics g2 = this.getGraphics();
-		g2.drawImage(image, 0, 0, (int) (WIDTH * SCALE), (int) (HEIGHT * SCALE), 0, 0, WIDTH, HEIGHT, Color.BLACK,
-				null);
-		g2.dispose();
+    /**
+     * Update game internals
+     *
+     * @param dt
+     */
+    private void update(long dt) {
+        gsm.update(dt);
+    }
 
-		if (screenshot) {
-			ImageUtils.screenshot(image);
-			screenshot = false;
-		}
-	}
+    /**
+     * render all the beautiful things.
+     *
+     * @param g
+     */
+    private void render(Graphics2D g) {
+        // clear display
+        clearBuffer(g);
+        g.translate(0, 0);
+        gsm.render(g);
+    }
 
-	/**
-	 * Manage Game input.
-	 */
-	private void input() {
-		gsm.input(inputHandler);
-	}
+    /**
+     * @param g
+     */
+    private void clearBuffer(Graphics2D g) {
+        g.setColor(Color.BLACK);
+        g.fillRect(0, 0, image.getWidth(), image.getHeight());
+    }
 
-	/**
-	 * Update game internals
-	 * 
-	 * @param dt
-	 */
-	private void update(long dt) {
-		gsm.update(dt);
-	}
+    /**
+     * free all resources used by the Game.
+     */
+    private void release() {
+        gsm.dispose();
+        window.getFrame().dispose();
+    }
 
-	/**
-	 * render all the beautiful things.
-	 * 
-	 * @param g
-	 */
-	private void render(Graphics2D g) {
-		// clear display
-		clearBuffer(g);
+    /**
+     * the only public method to start game.
+     */
+    public void run() {
+        initialize();
+        loop();
+        release();
+        System.exit(0);
+    }
 
-		gsm.render(g);
-	}
+    /**
+     * request for a screen shot.
+     */
+    public void captureScreenshot() {
+        screenshot = true;
 
-	/**
-	 * @param g
-	 */
-	private void clearBuffer(Graphics2D g) {
-		g.setColor(Color.BLACK);
-		g.fillRect(0, 0, getWidth(), getHeight());
-	}
+    }
 
-	/**
-	 * free all resources used by the Game.
-	 */
-	private void release() {
-		gsm.dispose();
-		window.getFrame().dispose();
-	}
+    /**
+     * return the title of the game.
+     *
+     * @return
+     */
+    public String getTitle() {
+        return this.title;
+    }
 
-	/**
-	 * the only public method to start game.
-	 */
-	public void run() {
-		initialize();
-		loop();
-		release();
-		System.exit(0);
-	}
+    /**
+     * Set Game title.
+     *
+     * @param title
+     */
+    public void setTitle(String title) {
+        this.title = title;
+    }
 
-	/**
-	 * request for a screen shot.
-	 */
-	public void captureScreenshot() {
-		screenshot = true;
+    /**
+     * return the dimension of the Game display.
+     *
+     * @return
+     */
+    public Dimension getDimension() {
+        return dimension;
+    }
 
-	}
+    /**
+     * @return the exit
+     */
+    public boolean isExit() {
+        return exit;
+    }
 
-	/**
-	 * return the title of the game.
-	 * 
-	 * @return
-	 */
-	public String getTitle() {
-		return this.title;
-	}
+    /**
+     * @param exit the exit to set
+     */
+    public void setExit(boolean exit) {
+        this.exit = exit;
+    }
 
-	/**
-	 * return the dimension of the Game display.
-	 * 
-	 * @return
-	 */
-	public Dimension getDimension() {
-		return dimension;
-	}
+    /**
+     * @return the inputHandler
+     */
+    public InputHandler getInputHandler() {
+        return inputHandler;
+    }
 
-	/**
-	 * Set the active window for this game.
-	 * 
-	 * @param window the window to set as active window for the game.
-	 */
-	public void setWindow(Window window) {
-		this.window = window;
-	}
+    /**
+     * return debug activation flag. true, visual debug is activated, false, normal
+     * rendering.
+     *
+     * @return
+     */
+    public boolean isDebug(DebugLevel level) {
+        return debug.isDebugLevel(level);
+    }
 
-	/**
-	 * @return the exit
-	 */
-	public boolean isExit() {
-		return exit;
-	}
+    /**
+     * @return the pause
+     */
+    public boolean isPause() {
+        return isPause;
+    }
 
-	/**
-	 * @param exit the exit to set
-	 */
-	public void setExit(boolean exit) {
-		this.exit = exit;
-	}
+    public Graphics2D getRender() {
+        return g;
+    }
 
-	/**
-	 * @return the inputHandler
-	 */
-	public InputHandler getInputHandler() {
-		return inputHandler;
-	}
+    public float getScale() {
+        return SCALE;
+    }
 
-	/**
-	 * return debug activation flag. true, visual debug is activated, false, normal
-	 * rendering.
-	 * 
-	 * @return
-	 */
-	public boolean isDebug(DebugLevel level) {
-		return debug.isDebugLevel(level);
-	}
+    public void requestPause() {
+        isPause = !isPause;
 
-	/**
-	 * @return the pause
-	 */
-	public boolean isPause() {
-		return isPause;
-	}
+    }
 
-	public Graphics2D getRender() {
-		return g;
-	}
+    /**
+     * @return the debug
+     */
+    public DebugLevel getDebug() {
+        return debug;
+    }
 
-	public float getScale() {
-		return SCALE;
-	}
+    /**
+     * Activate the debug mode.
+     *
+     * @param level the debug level to be activated
+     * @see DebugLevel
+     */
+    public void setDebug(DebugLevel level) {
+        debug = level;
+    }
 
-	public void requestPause() {
-		isPause = !isPause;
+    /**
+     * return the GameStateManager for this game.
+     *
+     * @return
+     */
+    public GameStateManager getGSM() {
+        return gsm;
+    }
 
-	}
+    /**
+     * return the current window object f the game.
+     *
+     * @return a Window object.
+     * @see Window
+     */
+    public Window getWindow() {
 
-	/**
-	 * Activate the debug mode.
-	 * 
-	 * @param b
-	 */
-	public void setDebug(DebugLevel level) {
-		debug = level;
-	}
+        return window;
+    }
 
-	/**
-	 * @return the debug
-	 */
-	public DebugLevel getDebug() {
-		return debug;
-	}
-
-	/**
-	 * return the GameStateManager for this game.
-	 * 
-	 * @return
-	 */
-	public GameStateManager getGSM() {
-		return gsm;
-	}
-
-	/**
-	 * return the current window object f the game.
-	 * 
-	 * @return a Window object.
-	 * @see Window
-	 */
-	public Window getWindow() {
-
-		return window;
-	}
-
-	/**
-	 * Set Game title.
-	 * 
-	 * @param title
-	 */
-	public void setTitle(String title) {
-		this.title = title;
-	}
-
-	/**
-	 * The main entry point to start our GDJ104 game.
-	 * 
-	 * @param argv list of arguments from command line.
-	 */
-	public static void main(String[] argv) {
-		Game game = new Game("Kingdom of Asperion");
-		new Window(game);
-		game.run();
-	}
+    /**
+     * Set the active window for this game.
+     *
+     * @param window the window to set as active window for the game.
+     */
+    public void setWindow(Window window) {
+        this.window = window;
+    }
 
 }

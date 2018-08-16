@@ -255,13 +255,19 @@ public abstract class AbstractGameState implements GameState {
 			statistics.put("renderedObjCount", renderedObjectCount);
 			statistics.put("staticObjCount", objects.size());
 		}
+	}
 
+	public void renderFrontDebugInfo(Game game, Graphics2D g) {
 		if (game.isDebug(DebugLevel.DEBUG_FPS))
 
 		{
-			RenderHelper.drawShadowString(g, String.format("FPS:%03d, ROC:%04d, SOC:%04d, DBG:%d", game.framesPerSecond,
-					statistics.get("renderedObjCount"), statistics.get("staticObjCount"), game.getDebug().getValue()),
-					4, (int) (Game.HEIGHT * 0.93f), Color.BLUE, Color.BLACK);
+			RenderHelper.drawShadowString(g, String.format("FPS:%03d, UPS:%03d, ROC:%04d, SOC:%04d, DBG:%d",
+					game.framesPerSecond,
+					game.updatePerSecond,
+					statistics.get("renderedObjCount"),
+					statistics.get("staticObjCount"),
+					game.getDebug().getValue()),
+					4, (int) (Game.HEIGHT * 0.85f), Color.ORANGE, Color.BLACK);
 		}
 
 	}

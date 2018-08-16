@@ -9,11 +9,11 @@
  */
 package com.snapgames.gdj.core.state;
 
-import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
-
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.io.InputHandler;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
 
 /**
  * An interface to design all states
@@ -88,4 +88,11 @@ public interface GameState {
 	 */
 	public void keyReleased(Game game, KeyEvent e);
 
+	/**
+	 * Offer the opportunity to add front debug information.
+	 *
+	 * @param game
+	 * @param g
+	 */
+	void renderFrontDebugInfo(Game game, Graphics2D g);
 }

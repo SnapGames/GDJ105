@@ -4,7 +4,7 @@ spriteSheet:/res/images/Sprite-0001.png
 background:/res/images/background-large.jpg
 mapSize:40x19
 tileSize:16x16
-tile:0=7
+tile:0=0
 tile:1=116
 tile:2=12
 tile:3=35

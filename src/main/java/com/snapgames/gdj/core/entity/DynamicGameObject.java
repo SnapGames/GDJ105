@@ -100,7 +100,7 @@ public class DynamicGameObject extends AbstractGameObject {
 		if (Math.abs(dy) < 0.005) {
 			dy = 0.0f;
 		}
-		rectangle.setBounds((int) x, (int) y, width, height);
+		boundingBox.setBounds((int) x, (int) y, width, height);
 
 	}
 

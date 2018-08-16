@@ -68,7 +68,9 @@ public class AbstractGameObject implements GameObject {
 
 	public float scale = 1.0f;
 
-	public Rectangle rectangle;
+    public Rectangle boundingBox;
+
+    public Rectangle collisionBox;
 
 	public Map<String, Object> attributes = new ConcurrentHashMap<>();
 
@@ -105,7 +107,7 @@ public class AbstractGameObject implements GameObject {
 		this.y = y;
 		this.width = DEFAULT_WIDTH;
 		this.height = DEFAULT_HEIGHT;
-		this.rectangle = new Rectangle((int) x, (int) y, width, height);
+        this.boundingBox = new Rectangle((int) x, (int) y, width, height);
 	}
 
 	/**
@@ -130,7 +132,7 @@ public class AbstractGameObject implements GameObject {
 		this.layer = layer;
 		this.priority = priority;
 		this.color = color;
-		this.rectangle = new Rectangle(x, y, width, height);
+        this.boundingBox = new Rectangle(x, y, width, height);
 	}
 
 	/*
@@ -141,7 +143,7 @@ public class AbstractGameObject implements GameObject {
 	 */
 	@Override
 	public void update(Game game, long dt) {
-		rectangle.setBounds((int) x, (int) y, width, height);
+        boundingBox.setBounds((int) x, (int) y, width, height);
 	}
 
 	/*
@@ -170,6 +172,10 @@ public class AbstractGameObject implements GameObject {
 		RenderHelper.drawDebugInfoObject(game, g, this);
 
 	}
+
+    public void computeCollisionBox() {
+
+    }
 
 	/*
 	 * (non-Javadoc)
@@ -267,8 +273,8 @@ public class AbstractGameObject implements GameObject {
 	public void setPosition(float x, float y) {
 		this.x = x;
 		this.y = y;
-		if (rectangle != null) {
-			rectangle.setBounds((int) x, (int) y, width, height);
+        if (boundingBox != null) {
+            boundingBox.setBounds((int) x, (int) y, width, height);
 		}
 	}
 

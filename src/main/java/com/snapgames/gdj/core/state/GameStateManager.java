@@ -9,21 +9,20 @@
  */
 package com.snapgames.gdj.core.state;
 
-import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.factory.GameStateFactory;
 import com.snapgames.gdj.core.state.factory.GameStateFactory.StateDefinition;
 import com.snapgames.gdj.core.state.factory.NoDefaultStateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * The Game State Manager is the state machine to manage all the states of the
@@ -167,6 +166,7 @@ public class GameStateManager {
 	 */
 	public void render(Graphics2D g) {
 		currentState.render(game, g);
+		currentState.renderFrontDebugInfo(game, g);
 	}
 
 	public void dispose() {

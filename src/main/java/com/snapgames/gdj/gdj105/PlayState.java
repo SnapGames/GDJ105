@@ -95,6 +95,7 @@ public class PlayState extends AbstractGameState {
         addObject(player);
 
         Camera camera = new Camera("cam0", player);
+        camera.setTweenFactor(0.008f);
         addCamera(camera);
     }
 
@@ -134,6 +135,13 @@ public class PlayState extends AbstractGameState {
         for (GameObject o : objects) {
             o.update(game, dt);
         }
+        if (player != null) {
+            player = (Player) tilemap.resolve(player);
+            player.computeCollisionBox();
+        }
+        if (activeCamera != null) {
+            activeCamera.update(game, dt);
+        }
     }
 
     @Override
@@ -143,13 +151,13 @@ public class PlayState extends AbstractGameState {
 
             case KeyEvent.VK_UP:
                 player.dy = -0.2f;
-                player.direction = Direction.UP;
+                //player.direction = Direction.UP;
                 player.action = Actions.WALK;
                 break;
 
             case KeyEvent.VK_DOWN:
                 player.dy = 0.2f;
-                player.direction = Direction.DOWN;
+                //player.direction = Direction.DOWN;
                 player.action = Actions.WALK;
                 break;
 
@@ -235,6 +243,8 @@ public class PlayState extends AbstractGameState {
         // Process the after Camera rendering
         if (activeCamera != null) {
             activeCamera.afterRender(g);
+            activeCamera.drawSpecialDebugInfo(game, g);
         }
     }
+
 }
