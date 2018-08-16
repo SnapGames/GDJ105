@@ -9,20 +9,6 @@
  */
 package com.snapgames.gdj.core.state;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.GameObject;
@@ -31,6 +17,17 @@ import com.snapgames.gdj.core.gfx.DebugLevel;
 import com.snapgames.gdj.core.gfx.RenderHelper;
 import com.snapgames.gdj.core.i18n.Messages;
 import com.snapgames.gdj.core.ui.UIi18nReload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * An Abstract Game State to manage all states of the Game !
@@ -211,7 +208,7 @@ public abstract class AbstractGameState implements GameState {
 			DebugLevel debug = game.getDebug();
 			int debugLevel = debug.getValue();
 			debugLevel++;
-			debugLevel = (debugLevel > 3 ? 0 : debugLevel);
+			debugLevel = (debugLevel > DebugLevel.DEBUG_FPS_BOX_DIRECTION_ATTRS.getValue() ? 0 : debugLevel);
 			game.setDebug(debug.setValue(debugLevel));
 			break;
 		case KeyEvent.VK_S:
@@ -248,7 +245,9 @@ public abstract class AbstractGameState implements GameState {
 					renderedObjectCount++;
 					o.draw(game, g);
 					if (game.isDebug(DebugLevel.DEBUG_FPS) || o.isDebugInfoDisplayed()) {
+						o.addDebugInfo(game);
 						o.drawSpecialDebugInfo(game, g);
+						o.getDebugInfo().clear();
 					}
 
 				}

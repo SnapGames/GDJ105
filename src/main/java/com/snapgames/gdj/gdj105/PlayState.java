@@ -11,7 +11,9 @@ package com.snapgames.gdj.gdj105;
 
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
+import com.snapgames.gdj.core.entity.Actions;
 import com.snapgames.gdj.core.entity.Camera;
+import com.snapgames.gdj.core.entity.Direction;
 import com.snapgames.gdj.core.entity.GameObject;
 import com.snapgames.gdj.core.gfx.RenderHelper.Justification;
 import com.snapgames.gdj.core.gfx.Sprite;
@@ -82,7 +84,7 @@ public class PlayState extends AbstractGameState {
                         .getImage("/res/images/Sprite-0001.png")
                         .getSubimage(32, 48, 32, 32),
                 "player");
-        player = new Player("player", game.getWidth() / 2, game.getHeight() / 2);
+        player = new Player("player", 32, 32);
         player.setSprite(sps);
         player.dx = 0;
         player.dy = 0;
@@ -139,24 +141,28 @@ public class PlayState extends AbstractGameState {
         switch (e.getKeyCode()) {
 
             case KeyEvent.VK_UP:
-                player.dy = 1.2f;
+                player.dy = -0.2f;
+                player.direction = Direction.UP;
+                player.action = Actions.WALK;
                 break;
 
             case KeyEvent.VK_DOWN:
-                player.dy = 1.2f;
+                player.dy = 0.2f;
+                player.direction = Direction.DOWN;
+                player.action = Actions.WALK;
                 break;
 
             case KeyEvent.VK_LEFT:
-                player.dx = 1.2f;
+                player.dx = -0.2f;
+                player.direction = Direction.LEFT;
+                player.action = Actions.WALK;
                 break;
 
             case KeyEvent.VK_RIGHT:
-                player.dx = 1.2f;
+                player.dx = 0.2f;
+                player.direction = Direction.RIGHT;
+                player.action = Actions.WALK;
                 break;
-
-            default:
-                player.dx = 0;
-                player.dy = 0;
         }
     }
 
@@ -174,6 +180,31 @@ public class PlayState extends AbstractGameState {
             case KeyEvent.VK_ESCAPE:
                 game.getGSM().activate("title");
                 break;
+
+            case KeyEvent.VK_UP:
+                player.dy = 0f;
+                player.direction = Direction.UP;
+                player.action = Actions.IDLE;
+                break;
+
+            case KeyEvent.VK_DOWN:
+                player.dy = 0f;
+                player.direction = Direction.DOWN;
+                player.action = Actions.IDLE;
+                break;
+
+            case KeyEvent.VK_LEFT:
+                player.dx = 0f;
+                player.direction = Direction.LEFT;
+                player.action = Actions.IDLE;
+                break;
+
+            case KeyEvent.VK_RIGHT:
+                player.dx = 0f;
+                player.direction = Direction.RIGHT;
+                player.action = Actions.IDLE;
+                break;
+
             default:
                 break;
         }

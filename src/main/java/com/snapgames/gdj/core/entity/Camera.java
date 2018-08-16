@@ -9,9 +9,9 @@
  */
 package com.snapgames.gdj.core.entity;
 
-import java.awt.Graphics2D;
-
 import com.snapgames.gdj.core.Game;
+
+import java.awt.*;
 
 /**
  * 
@@ -43,8 +43,10 @@ public class Camera extends AbstractGameObject {
 
 	@Override
 	public void update(Game game, long dt) {
-		x = target.x + tweenFactor * dt;
-		y = target.y + tweenFactor * dt;
+        if (target != null) {
+            this.x += ((target.x) - (Game.WIDTH / 2) - x) * tweenFactor * dt;
+            this.y += ((target.y) - (Game.HEIGHT / 2) - y) * tweenFactor * dt;
+        }
 	}
 
 }
