@@ -92,6 +92,8 @@ public class DynamicGameObject extends AbstractGameObject {
 		// compute basic physic mechanic
 		x += dx * dt;
 		y += dy * dt;
+		// gravity
+
 
 		// limit speed
 		if (Math.abs(dx) < 0.005) {

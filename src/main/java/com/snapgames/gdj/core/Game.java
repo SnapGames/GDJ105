@@ -162,8 +162,10 @@ public class Game extends JPanel {
     private void loop() {
         long currentTime = System.currentTimeMillis();
         long lastTime = currentTime;
+        long ulastTime = lastTime;
         long second = 0;
         long framesCounter = 0, updateCounter = 0;
+        int i = 0;
         while (!exit) {
             currentTime = System.currentTimeMillis();
             long dt = currentTime - lastTime;
@@ -171,11 +173,15 @@ public class Game extends JPanel {
             // manage input
             input();
             if (!isPause) {
-                if (second % upsTargetTime > 0) {
+                while (i <= 5) {
+                    dt = currentTime - ulastTime;
                     // update all game's objects
                     update(dt);
                     updateCounter += 1;
+                    i++;
+                    ulastTime = currentTime;
                 }
+                i = 0;
             }
 
             // copy buffer
@@ -184,22 +190,18 @@ public class Game extends JPanel {
             // manage wait time
             long laps = System.currentTimeMillis() - lastTime;
             second += laps;
-            if (second % fpsTargetTime > 0) {
-                // render all Game's objects
-                render(g);
-                // compute number of frame per seconds
-                framesCounter += 1;
-                if (second >= 1000) {
-                    second = 0;
-                    framesPerSecond = framesCounter;
-                    updatePerSecond = updateCounter;
-                    framesCounter = 0;
-                    updateCounter = 0;
-                }
+            // render all Game's objects
+            render(g);
+            // compute number of frame per seconds
+            framesCounter += 1;
+            if (second >= 1000) {
+                second = 0;
+                framesPerSecond = framesCounter;
+                updatePerSecond = updateCounter;
+                framesCounter = 0;
+                updateCounter = 0;
             }
-            long wait = upsTargetTime - laps;
-
-            logger.debug("FPS: {} (laps:{}, wait:{})", framesPerSecond, laps, wait);
+            long wait = fpsTargetTime - laps;
 
             if (wait > 0) {
                 try {

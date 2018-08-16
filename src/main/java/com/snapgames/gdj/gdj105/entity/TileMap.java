@@ -226,15 +226,11 @@ public class TileMap extends AbstractGameObject {
 			float tlX = o.x;
 			float trX = o.x + o.width;
 			float blX = o.x;
-			float brX = o.x + o.width;
-			float offsetX = o.x - o.x;
 
 			// Y coordinates
 			float tlY = o.y;
-			float trY = o.y + o.height;
 			float blY = o.y;
 			float brY = o.y + o.height;
-			float offsetY = o.y - o.y;
 
 			// Test on horizontal movement
 			if (o.dx < 0) {

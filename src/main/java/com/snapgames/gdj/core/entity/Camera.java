@@ -27,6 +27,8 @@ public class Camera extends AbstractGameObject {
         super(name, target.y, target.x);
 		this.target = target;
         this.boundingBox.setBounds(16, 16, Game.WIDTH - 32, Game.HEIGHT - 32);
+        this.layer = 1;
+        this.priority = 1;
 	}
 
 	@Override
@@ -64,5 +66,12 @@ public class Camera extends AbstractGameObject {
      */
     public void setTweenFactor(float tweenFactor) {
         this.tweenFactor = tweenFactor;
+    }
+
+    @Override
+    public void addDebugInfo(Game game) {
+        super.addDebugInfo(game);
+        debugInfo.add(String.format("twn:%03f", tweenFactor));
+        debugInfo.add(String.format("tgt:%s", target.getName()));
     }
 }

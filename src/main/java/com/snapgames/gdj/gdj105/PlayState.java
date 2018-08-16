@@ -31,9 +31,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- *
  * @author Frédéric Delorme
- *
  */
 public class PlayState extends AbstractGameState {
 
@@ -95,7 +93,7 @@ public class PlayState extends AbstractGameState {
         addObject(player);
 
         Camera camera = new Camera("cam0", player);
-        camera.setTweenFactor(0.008f);
+        camera.setTweenFactor(0.004f);
         addCamera(camera);
     }
 
@@ -144,35 +142,11 @@ public class PlayState extends AbstractGameState {
         }
     }
 
+
     @Override
     public void keyPressed(Game game, KeyEvent e) {
         super.keyPressed(game, e);
-        switch (e.getKeyCode()) {
 
-            case KeyEvent.VK_UP:
-                player.dy = -0.2f;
-                //player.direction = Direction.UP;
-                player.action = Actions.WALK;
-                break;
-
-            case KeyEvent.VK_DOWN:
-                player.dy = 0.2f;
-                //player.direction = Direction.DOWN;
-                player.action = Actions.WALK;
-                break;
-
-            case KeyEvent.VK_LEFT:
-                player.dx = -0.2f;
-                player.direction = Direction.LEFT;
-                player.action = Actions.WALK;
-                break;
-
-            case KeyEvent.VK_RIGHT:
-                player.dx = 0.2f;
-                player.direction = Direction.RIGHT;
-                player.action = Actions.WALK;
-                break;
-        }
     }
 
     /*
@@ -189,31 +163,6 @@ public class PlayState extends AbstractGameState {
             case KeyEvent.VK_ESCAPE:
                 game.getGSM().activate("title");
                 break;
-
-            case KeyEvent.VK_UP:
-                player.dy = 0f;
-                player.direction = Direction.UP;
-                player.action = Actions.IDLE;
-                break;
-
-            case KeyEvent.VK_DOWN:
-                player.dy = 0f;
-                player.direction = Direction.DOWN;
-                player.action = Actions.IDLE;
-                break;
-
-            case KeyEvent.VK_LEFT:
-                player.dx = 0f;
-                player.direction = Direction.LEFT;
-                player.action = Actions.IDLE;
-                break;
-
-            case KeyEvent.VK_RIGHT:
-                player.dx = 0f;
-                player.direction = Direction.RIGHT;
-                player.action = Actions.IDLE;
-                break;
-
             default:
                 break;
         }
@@ -228,7 +177,34 @@ public class PlayState extends AbstractGameState {
      */
     @Override
     public void input(Game game, InputHandler input) {
+        if (player != null) {
+            player.dx = 0f;
+            player.dy = 0f;
+            player.action = Actions.IDLE;
+            if (input.getKeyPressed(KeyEvent.VK_UP)) {
+                player.dy = -0.2f;
+                //player.direction = Direction.UP;
+                player.action = Actions.WALK;
+            }
 
+            if (input.getKeyPressed(KeyEvent.VK_DOWN)) {
+                player.dy = 0.2f;
+                //player.direction = Direction.DOWN;
+                player.action = Actions.WALK;
+            }
+
+            if (input.getKeyPressed(KeyEvent.VK_LEFT)) {
+                player.dx = -0.2f;
+                player.direction = Direction.LEFT;
+                player.action = Actions.WALK;
+            }
+
+            if (input.getKeyPressed(KeyEvent.VK_RIGHT)) {
+                player.dx = 0.2f;
+                player.direction = Direction.RIGHT;
+                player.action = Actions.WALK;
+            }
+        }
     }
 
     @Override
@@ -243,7 +219,9 @@ public class PlayState extends AbstractGameState {
         // Process the after Camera rendering
         if (activeCamera != null) {
             activeCamera.afterRender(g);
+            activeCamera.addDebugInfo(game);
             activeCamera.drawSpecialDebugInfo(game, g);
+            activeCamera.getDebugInfo().clear();
         }
     }
 

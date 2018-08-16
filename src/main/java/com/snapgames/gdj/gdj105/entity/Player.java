@@ -55,7 +55,7 @@ public class Player extends DynamicGameObject {
         if (collisionBox == null) {
             collisionBox = new Rectangle();
         }
-        collisionBox.setBounds((int) x + 4, (int) y + 4, 24, 24);
+        collisionBox.setBounds((int) x + 4, (int) y + 8, 24, 24);
     }
 
     /**
