@@ -22,6 +22,8 @@ public enum Labels {
 	COPYRIGHT("TitleState.label.copyright", "copyright 2018"),
 	// TitleState Menu Start item
 	TITLE_MENU_START("TitleState.label.start", "Start"),
+    // ScoreState Menu Score item
+    TITLE_MENU_SCORE("TitleState.label.score", "Scores"),
 	// TitleState Menu options item
 	TITLE_MENU_OPTIONS("TitleState.label.options", "Options"),
 	// TitleState Menu options quit
@@ -31,11 +33,12 @@ public enum Labels {
 	// Option State title
 	OPTION_TITLE("OptionState.title", "Options"),
 	// Option State title
-	PLAY_TITLE("PlayState.title", "Play !")
-	;
-	
+    PLAY_TITLE("PlayState.title", "Play !"),
+    // Score State title
+    SCORE_TITLE("ScoreState.title", "Scores");
 
-	private Labels(String keyLabel, String defaultText) {
+
+    private Labels(String keyLabel, String defaultText) {
 		this.keyLabel = keyLabel;
 		this.defaultText = defaultText;
 	}
