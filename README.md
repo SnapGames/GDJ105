@@ -112,3 +112,7 @@ This JPEG picture screenshot of the game window will be saved to the `~/` direct
 Have Fun !
 
 Send a mail to [SnapGames](mailto:contact@snapgames.fr?subject=gdj105 "send a mail to our team")
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FSnapGames%2FGDJ105.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FSnapGames%2FGDJ105?ref=badge_large)
