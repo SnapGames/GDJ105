@@ -42,8 +42,24 @@
 		<system>Travis-CI</system>
 	</ciManagement>
 
+	<!-- Distribution to OSSRH -->
+	<distributionManagement>
+		<snapshotRepository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+			<id>ossrh</id>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+		</repository>
+	</distributionManagement>
+
+
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>com.snapgames.gdj.core.Game</mainClass>
+		<github.global.server>github</github.global.server>
+		<jinput.version>2.0.6</jinput.version>
 	</properties>
 
 	<!-- Project Dependencies -->
@@ -63,6 +79,40 @@
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<version>1.7.25</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.java.jinput/jinput -->
+		<dependency>
+			<groupId>net.java.jinput</groupId>
+			<artifactId>jinput</artifactId>
+			<version>${jinput.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.java.jutils</groupId>
+			<artifactId>jutils</artifactId>
+			<version>1.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.java.jinput</groupId>
+			<artifactId>jinput-platform</artifactId>
+			<version>${jinput.version}</version>
+			<classifier>natives-linux</classifier>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.java.jinput</groupId>
+			<artifactId>jinput-platform</artifactId>
+			<version>${jinput.version}</version>
+			<classifier>natives-windows</classifier>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.java.jinput</groupId>
+			<artifactId>jinput-platform</artifactId>
+			<version>${jinput.version}</version>
+			<classifier>natives-osx</classifier>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
@@ -128,7 +178,7 @@
 					<docletArtifact>
 						<groupId>ch.raffael.pegdown-doclet</groupId>
 						<artifactId>pegdown-doclet</artifactId>
-						<version>1.1</version>
+						<version>1.3</version>
 					</docletArtifact>
 					<useStandardDocletOptions>true</useStandardDocletOptions>
 				</configuration>
@@ -139,6 +189,34 @@
 						<goals>
 							<goal>jar</goal>
 						</goals>
+					</execution>
+				</executions>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>2.8</version>
+				<executions>
+					<execution>
+						<id>unpack</id>
+						<phase>compile</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>net.java.jinput</groupId>
+									<artifactId>jinput-platform</artifactId>
+									<version>${jinput.version}</version>
+									<classifier>natives-windows</classifier>
+									<type>jar</type>
+									<overWrite>true</overWrite>
+									<outputDirectory>${project.build.directory}/lib</outputDirectory>
+								</artifactItem>
+							</artifactItems>
+						</configuration>
 					</execution>
 				</executions>
 			</plugin>

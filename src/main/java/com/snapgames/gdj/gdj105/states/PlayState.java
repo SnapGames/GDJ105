@@ -86,7 +86,7 @@ public class PlayState extends AbstractGameState {
         // Add the Player object with its display sprite.
         Sprite sps = new Sprite(
                 ResourceManager
-                        .getImage("/res/images/Sprite-0001.png")
+                        .getImage("/res/images/sprite-0001.png")
                         .getSubimage(32, 48, 32, 32),
                 "player");
         player = new Player("player", 32, 32);

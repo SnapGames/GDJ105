@@ -14,7 +14,7 @@ public class Eatable extends AbstractGameObject {
     public Eatable(String name, float x, float y) {
         super(name, x, y);
         attributes.put("nrj", 10);
-        sprite = new Sprite(ResourceManager.getImage("/res/images/Sprite-0001.png").getSubimage(3 * 16, 0, 16, 16), "eatable");
+        sprite = new Sprite(ResourceManager.getImage("/res/images/sprite-0001.png").getSubimage(3 * 16, 0, 16, 16), "eatable");
     }
 
     public void draw(Game game, Graphics2D g) {

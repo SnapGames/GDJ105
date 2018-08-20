@@ -1,6 +1,6 @@
 name:Test Level
 comment:This a first test level for the Kingdom of Asperion platform game!
-spriteSheet:/res/images/Sprite-0001.png
+spriteSheet:/res/images/sprite-0001.png
 background:/res/images/background-large.jpg
 mapSize:40x19
 tileSize:16x16

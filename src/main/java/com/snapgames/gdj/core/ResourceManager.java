@@ -129,6 +129,7 @@ public class ResourceManager {
 	 * @return
 	 */
 	public static BufferedImage getImage(String name) {
+		logger.info("load resourve {}",name);
 		return (BufferedImage) getInstance().addResource(name);
 	}
 

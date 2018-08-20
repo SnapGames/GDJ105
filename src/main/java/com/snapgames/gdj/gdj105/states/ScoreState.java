@@ -51,7 +51,7 @@ public class ScoreState extends AbstractGameState {
         // Define the background image object
         BufferedImage bgImg = ResourceManager.getImage("/res/images/background-image.jpg");
 
-        UIImage bgi = new UIImage("background", bgImg, 0, (Game.HEIGHT - bgImg.getHeight()) / 2, 2, 1);
+        bgi = new UIImage("background", bgImg, 0, (Game.HEIGHT - bgImg.getHeight()) / 2, 2, 1);
         bgi.scale = 1.0f;
         bgi.dx = 0.031f;
         bgi.x = 0;
@@ -119,7 +119,7 @@ public class ScoreState extends AbstractGameState {
 
     @Override
     public void update(Game game, long dt) {
-        // Compute Background Image
+        // Compute scrolling Background Image position
         if (bgi != null) {
             bgi.x -= bgi.dx * dt;
 
