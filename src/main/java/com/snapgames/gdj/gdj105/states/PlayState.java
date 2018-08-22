@@ -11,20 +11,17 @@ package com.snapgames.gdj.gdj105.states;
 
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
-import com.snapgames.gdj.core.entity.Actions;
-import com.snapgames.gdj.core.entity.Camera;
-import com.snapgames.gdj.core.entity.Direction;
-import com.snapgames.gdj.core.entity.GameObject;
+import com.snapgames.gdj.core.entity.*;
 import com.snapgames.gdj.core.gfx.DebugLevel;
 import com.snapgames.gdj.core.gfx.RenderHelper.Justification;
 import com.snapgames.gdj.core.gfx.Sprite;
-import com.snapgames.gdj.core.i18n.Messages;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.AbstractGameState;
 import com.snapgames.gdj.core.ui.UIText;
 import com.snapgames.gdj.gdj105.entity.Player;
 import com.snapgames.gdj.gdj105.entity.TileMap;
-import com.snapgames.gdj.gdj105.i18n.Labels;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.awt.*;
 import java.awt.event.KeyEvent;
@@ -38,6 +35,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * @author Frédéric Delorme
  */
 public class PlayState extends AbstractGameState {
+    private static final Logger logger = LoggerFactory.getLogger(PlayState.class);
 
     private Map<String, Camera> cameras = new ConcurrentHashMap<>();
     private Camera activeCamera;
@@ -60,9 +58,6 @@ public class PlayState extends AbstractGameState {
         super.initialize(game, forcedReload);
         cameras.clear();
 
-        // read i18n labels
-        String titleLabel = Messages.getString(Labels.PLAY_TITLE.getKey());
-
         // Prepare fonts.
         Font titleFont = ResourceManager.getFont("/res/fonts/Prince Valiant.ttf")
                 .deriveFont(2.5f * Game.SCREEN_FONT_RATIO);
@@ -71,16 +66,15 @@ public class PlayState extends AbstractGameState {
 
         // Add the TileMap for this test level
         tilemap = new TileMap("tilemap");
-        tilemap.loadTileFile("/res/maps/level-001.map");
+        tilemap.loadTileFile("/res/maps/level-001.json");
         tilemap.layer = 2;
         addObject(tilemap);
 
+        layers[0].moveWithCamera = false;
+
         // Define the main Game title object
-        UIText titleText = new UIText("title", (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.05f), titleLabel,
-                titleFont, 1, 1, Color.WHITE, Justification.CENTER);
-        titleText.setLabel(Labels.PLAY_TITLE.getKey());
-        titleText.layer = 1;
-        titleText.priority = 2;
+        UIText titleText = new UIText("title", (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.05f), tilemap.name,
+                titleFont, 0, 1, Color.WHITE, Justification.CENTER);
         addObject(titleText);
 
         // Add the Player object with its display sprite.
@@ -244,21 +238,57 @@ public class PlayState extends AbstractGameState {
      */
     @Override
     public void render(Game game, Graphics2D g) {
-        // Process the before Camera rendering
-        if (activeCamera != null) {
-            activeCamera.beforeRender(g);
+
+        int renderedObjectCount = 0;
+        if (!objects.isEmpty()) {
+            if (activeCamera != null) {
+                activeCamera.beforeRender(g);
+            }
+            for (Layer layer : layersWith) {
+                logger.debug("layer:{active:%d, moveWithCamera:%d}", layer.active, layer.moveWithCamera);
+                if (layer.active) {
+                    renderedObjectCount = renderObjectsForLayer(game, g, renderedObjectCount, layer);
+
+                }
+            }
+
+            if (activeCamera != null) {
+                activeCamera.afterRender(g);
+            }
+            for (Layer layer : layersWithoutCamera) {
+                logger.debug("layer:{active:%d, moveWithCamera:%d}", layer.active, layer.moveWithCamera);
+                if (layer.active) {
+                    renderedObjectCount = renderObjectsForLayer(game, g, renderedObjectCount, layer);
+
+                }
+            }
+
+            statistics.put("renderedObjCount", renderedObjectCount);
+            statistics.put("staticObjCount", objects.size());
         }
-        // Render all objects
-        super.render(game, g);
 
         // Process the after Camera rendering
         if (activeCamera != null) {
-            activeCamera.afterRender(g);
+            //activeCamera.afterRender(g);
             // add some camera info to the debug rendering display.
             activeCamera.addDebugInfo(game);
             activeCamera.drawSpecialDebugInfo(game, g);
             activeCamera.getDebugInfo().clear();
         }
+    }
+
+    private int renderObjectsForLayer(Game game, Graphics2D g, int renderedObjectCount, Layer layer) {
+        for (GameObject o : layer.objects) {
+            renderedObjectCount++;
+            o.draw(game, g);
+            if (game.isDebug(DebugLevel.DEBUG_FPS) || o.isDebugInfoDisplayed()) {
+                o.addDebugInfo(game);
+                o.drawSpecialDebugInfo(game, g);
+                o.getDebugInfo().clear();
+            }
+
+        }
+        return renderedObjectCount;
     }
 
 }

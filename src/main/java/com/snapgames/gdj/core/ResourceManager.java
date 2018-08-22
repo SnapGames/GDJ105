@@ -195,7 +195,9 @@ public class ResourceManager {
 					logger.error("Unable to read font from {}", name);
 				}
 				break;
+            case ".txt":
 			case ".map":
+            case ".json":
 				InputStream stream = this.getClass().getResourceAsStream(name);
 				String value = new BufferedReader(
 						new InputStreamReader(stream))

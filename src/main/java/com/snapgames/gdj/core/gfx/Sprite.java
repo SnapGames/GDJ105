@@ -21,12 +21,12 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Sprite {
 
-    private static int index = 0;
+    protected static int index = 0;
 
-    int id;
-    private String name;
-    private BufferedImage pixels;
-    private Map<String, Object> attributes = new ConcurrentHashMap<>(10);
+    protected int id;
+    protected String name;
+    protected BufferedImage pixels;
+    protected Map<String, Object> attributes = new ConcurrentHashMap<>(10);
 
     /**
      * Initialize the new Sprite with the pixels and name. The id filed will be
