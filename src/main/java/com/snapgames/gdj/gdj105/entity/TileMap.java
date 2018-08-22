@@ -16,6 +16,7 @@ import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.Actions;
+import com.snapgames.gdj.core.entity.Camera;
 import com.snapgames.gdj.core.entity.DynamicGameObject;
 import com.snapgames.gdj.core.gfx.Sprite;
 import com.snapgames.gdj.core.gfx.SpriteSheet;
@@ -50,6 +51,8 @@ public class TileMap extends AbstractGameObject {
     private float playerX;
     private float playerY;
     private Map<String, Enemy> enemies = new HashMap<>();
+
+    private Camera camera;
 
     /**
      * TileMap constructor.
@@ -149,14 +152,24 @@ public class TileMap extends AbstractGameObject {
      */
     @Override
     public void draw(Game game, Graphics2D g) {
+        int minX = 0, minY = 0;
+        int maxX = mapWidth, maxY = mapHeight;
 
         if (bgi != null) {
             g.drawImage(bgi, 0, 0, null);
         }
+        // compute zone to be rendered according to game current viewport.
 
-        for (int y = 0; y < mapHeight; y++) {
+        /*if(camera!=null){
+            minX = (int)Math.min(Math.abs((this.camera.x-32)/tileWidth),0);
+            maxX = (int)Math.min((this.camera.x+camera.width+64)/tileWidth,mapWidth);
+            minY = (int)Math.min(Math.abs((this.camera.y-32)/tileHeight),0);
+            maxY = (int)Math.min((this.camera.y+camera.height+64)/tileHeight,mapHeight);
 
-            for (int x = 0; x < mapWidth; x++) {
+        }*/
+        for (int y = minY; y < maxY; y++) {
+
+            for (int x = minX; x < maxX; x++) {
 
                 int index = tileJsonMap[x + (y * mapWidth)].value;
 
@@ -273,6 +286,15 @@ public class TileMap extends AbstractGameObject {
         if (o.x > this.boundingBox.width) o.x = this.boundingBox.width;
         if (o.y > this.boundingBox.height) o.y = this.boundingBox.height;
 
+    }
+
+    /**
+     * Camera to be track for TileMap rendering.
+     *
+     * @param cam camera targeting for TileMap rendering;
+     */
+    public void setCamera(Camera cam) {
+        this.camera = cam;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)

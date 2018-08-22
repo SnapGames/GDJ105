@@ -42,7 +42,13 @@ public class PlayState extends AbstractGameState {
 
     private TileMap tilemap;
     private Player player;
+
     private Camera camera;
+
+    private UIText titleText;
+
+    private int score;
+    private UIText scoreText;
 
     private Point2D playerInitialPos;
 
@@ -57,11 +63,13 @@ public class PlayState extends AbstractGameState {
     public void initialize(Game game, boolean forcedReload) {
         super.initialize(game, forcedReload);
         cameras.clear();
+        score = 0;
 
         // Prepare fonts.
         Font titleFont = ResourceManager.getFont("/res/fonts/Prince Valiant.ttf")
                 .deriveFont(2.5f * Game.SCREEN_FONT_RATIO);
-
+        Font scoreFont = game.getGraphics().getFont().deriveFont(1.6f * Game.SCREEN_FONT_RATIO);
+        ;
         game.getWindow().setTitle("playState");
 
         // Add the TileMap for this test level
@@ -73,9 +81,14 @@ public class PlayState extends AbstractGameState {
         layers[0].moveWithCamera = false;
 
         // Define the main Game title object
-        UIText titleText = new UIText("title", (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.05f), tilemap.name,
+        titleText = new UIText("title", (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.05f), tilemap.name,
                 titleFont, 0, 1, Color.WHITE, Justification.CENTER);
         addObject(titleText);
+
+        // Define the main Game title object
+        scoreText = new UIText("title", (Game.WIDTH) - 12, 0, String.format("%06d", score),
+                scoreFont, 0, 1, Color.WHITE, Justification.RIGHT);
+        addObject(scoreText);
 
         // Add the Player object with its display sprite.
         Sprite sps = new Sprite(
@@ -97,6 +110,8 @@ public class PlayState extends AbstractGameState {
         Camera camera = new Camera("cam0", player);
         camera.setTweenFactor(0.004f);
         addCamera(camera);
+
+        tilemap.setCamera(camera);
     }
 
     /**
@@ -141,6 +156,22 @@ public class PlayState extends AbstractGameState {
         }
         if (activeCamera != null) {
             activeCamera.update(game, dt);
+        }
+        if (titleText != null && titleText.lifeDuration > 12 * 60) {
+
+            if (titleText.alpha > 0.01f) {
+                titleText.alpha *= 0.98f;
+                int red = titleText.color.getRed();
+                int green = titleText.color.getGreen();
+                int blue = titleText.color.getBlue();
+                if (green > 10f) {
+                    green *= 0.03f;
+                    blue *= 0.03f;
+                    titleText.setFrontColor(red, green, blue);
+                }
+            } else {
+                removeObject(titleText);
+            }
         }
     }
 

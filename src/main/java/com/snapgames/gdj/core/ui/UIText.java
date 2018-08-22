@@ -81,6 +81,7 @@ public class UIText extends UIGameObject implements UIi18nReload {
 	 */
 	@Override
 	public void draw(Game game, Graphics2D g) {
+        super.draw(game, g);
 		if (font != null) {
 			g.setFont(font);
 		}

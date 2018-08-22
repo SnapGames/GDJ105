@@ -1,10 +1,10 @@
 /**
  * SnapGames
- * 
+ * <p>
  * Game Development Java
- * 
+ * <p>
  * GDJ104
- * 
+ *
  * @year 2017
  */
 package com.snapgames.gdj.core.state;
@@ -34,243 +34,267 @@ import java.util.concurrent.CopyOnWriteArrayList;
  */
 public abstract class AbstractGameState implements GameState {
 
-	private static final Logger logger = LoggerFactory.getLogger(AbstractGameState.class);
+    private static final Logger logger = LoggerFactory.getLogger(AbstractGameState.class);
+    private static final String defaultName = "STATE_";
+    private static int index = 0;
+    public Map<String, Integer> statistics = new ConcurrentHashMap<>();
+    public String name = defaultName + (index++);
 
-	public Map<String, Integer> statistics = new ConcurrentHashMap<>();
+    /**
+     * Referring GameStateManager
+     */
+    protected GameStateManager gsm = null;
 
-	/**
-	 * Referring GameStateManager
-	 */
-	protected GameStateManager gsm = null;
+    /**
+     * Internal rendering layers. by default 4 layers (0->3) are initialized.
+     */
+    protected Layer[] layers = new Layer[3];
+    protected List<Layer> layersWith = new CopyOnWriteArrayList<>();
+    protected List<Layer> layersWithoutCamera = new CopyOnWriteArrayList<>();
 
-	/**
-	 * Internal rendering layers. by default 4 layers (0->3) are initialized.
-	 */
-	protected Layer[] layers = new Layer[3];
-	protected List<Layer> layersWith = new CopyOnWriteArrayList<>();
-	protected List<Layer> layersWithoutCamera = new CopyOnWriteArrayList<>();
+    /**
+     * embedded debug font to draw on screen debug information.
+     */
+    protected Font debugFont;
 
-	/**
-	 * embedded debug font to draw on screen debug information.
-	 */
-	protected Font debugFont;
+    /**
+     * Background color (for clear purpose).
+     */
+    protected Color backgroundColor = Color.BLACK;
 
-	/**
-	 * Background color (for clear purpose).
-	 */
-	protected Color backgroundColor = Color.BLACK;
+    /**
+     * List of managed objects. Use a list that can put up with concurrent access.
+     */
+    protected List<GameObject> objects = new CopyOnWriteArrayList<>();
 
-	/**
-	 * List of managed objects. Use a list that can put up with concurrent access.
-	 */
-	protected List<GameObject> objects = new CopyOnWriteArrayList<>();
+    protected List<UIi18nReload> uis = new CopyOnWriteArrayList<>();
 
-	protected List<UIi18nReload> uis = new CopyOnWriteArrayList<>();
+    /**
+     * Default constructor for the AbstractGameState
+     */
+    public AbstractGameState() {
+        super();
+    }
 
-	/**
-	 * Default constructor for the AbstractGameState
-	 */
-	public AbstractGameState() {
-		super();
-	}
+    public AbstractGameState(GameStateManager gsm) {
+        this.gsm = gsm;
+    }
 
-	public AbstractGameState(GameStateManager gsm) {
-		this.gsm = gsm;
-	}
-
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.snapgames.gdj.core.state.GameState#initialize(com.snapgames.gdj.
-	 * gdj105.core.Game)
-	 */
-	@Override
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.snapgames.gdj.core.state.GameState#initialize(com.snapgames.gdj.
+     * gdj105.core.Game)
+     */
+    @Override
     public void initialize(Game game, boolean forcedReload) {
-		// activate needed layers
-		resetLayers();
-	}
+        // activate needed layers
+        resetLayers();
+    }
 
-	/**
-	 * 
-	 */
-	protected void resetLayers() {
-		for (int i = 0; i < layers.length; i++) {
-			layers[i] = new Layer(true, true);
-		}
-		layersWith.clear();
-		layersWithoutCamera.clear();
-		objects.clear();
-	}
+    /**
+     *
+     */
+    protected void resetLayers() {
+        for (int i = 0; i < layers.length; i++) {
+            layers[i] = new Layer(true, true);
+        }
+        layersWith.clear();
+        layersWithoutCamera.clear();
+        objects.clear();
+    }
 
-	/**
-	 * Add an object to the Object list and sort them according to their layer and
-	 * priority.
-	 * 
-	 * @param object
-	 */
-	protected void addObject(AbstractGameObject object) {
-		// add object to rendering list
-		objects.add(object);
-		// if this object contains translated text, it must be declared as is.
-		if (object instanceof UIi18nReload) {
-			uis.add((UIi18nReload) object);
-		}
-		// Sort all objects according to their layer and their own priority in the
-		// layer.
-		objects.sort(new Comparator<GameObject>() {
-			public int compare(GameObject o1, GameObject o2) {
-				AbstractGameObject ago1 = (AbstractGameObject) o1;
-				AbstractGameObject ago2 = (AbstractGameObject) o2;
-				return (ago1.layer > ago2.layer ? -1 : (ago1.priority > ago2.priority ? -1 : 1));
-			};
-		});
-		// add object to a specific Layer.
-		addObjectToLayer(object);
-		// update internal statistics KPI.
-		statistics.put("objectCount", objects.size());
-		logger.debug("Add {} to the objects list", object.name);
-	}
+    /**
+     * Add an object to the Object list and sort them according to their layer and
+     * priority.
+     *
+     * @param object
+     */
+    protected void addObject(AbstractGameObject object) {
+        // add object to rendering list
+        objects.add(object);
+        // if this object contains translated text, it must be declared as is.
+        if (object instanceof UIi18nReload) {
+            uis.add((UIi18nReload) object);
+        }
+        // Sort all objects according to their layer and their own priority in the
+        // layer.
+        objects.sort(new Comparator<GameObject>() {
+            public int compare(GameObject o1, GameObject o2) {
+                AbstractGameObject ago1 = (AbstractGameObject) o1;
+                AbstractGameObject ago2 = (AbstractGameObject) o2;
+                return (ago1.layer > ago2.layer ? -1 : (ago1.priority > ago2.priority ? -1 : 1));
+            }
 
-	/**
-	 * Add an object to its specific layer (see
-	 * {@link AbstractGameObject#getLayer()}).
-	 * 
-	 * @param object the GameObject to be added to its own layer.
-	 */
-	private void addObjectToLayer(AbstractGameObject object) {
-		if (object.layer >= 0 && layers[object.layer] != null) {
+            ;
+        });
+        // add object to a specific Layer.
+        addObjectToLayer(object);
+        // update internal statistics KPI.
+        statistics.put("objectCount", objects.size());
+        logger.debug("Add {} to the objects list", object.name);
+    }
 
-			layers[object.layer].objects.add(object);
-		}
-		if (!layers[object.layer].moveWithCamera) {
-			layersWithoutCamera.add(layers[object.layer]);
-		} else {
-			layersWith.add(layers[object.layer]);
-		}
-	}
+    public void removeObject(AbstractGameObject object) {
+        removeObjectFromLayer(object);
+        this.objects.remove(object);
+        logger.debug("Object {} has been removed from state {}", object.getName(), this.name);
+    }
 
-	/**
-	 * This is a specific delete method to remove all objects with a particular
-	 * class, to cleanup the object stack.
-	 * 
-	 * @param clazz the object's class to be purged of.
-	 */
-	protected void removeAllObjectOfClass(Class<? extends AbstractGameObject> clazz) {
-		List<GameObject> toBeDeleted = new ArrayList<>();
-		for (GameObject o : objects) {
-			if (o.getClass().equals(clazz)) {
-				toBeDeleted.add(o);
-			}
-		}
-		objects.removeAll(toBeDeleted);
-	}
+    /**
+     * Add an object to its specific layer (see
+     * {@link AbstractGameObject#getLayer()}).
+     *
+     * @param object the GameObject to be added to its own layer.
+     */
+    private void addObjectToLayer(AbstractGameObject object) {
+        if (object.layer >= 0 && layers[object.layer] != null) {
 
-	/**
-	 * The internal "free in memory" objects.
-	 */
-	public void dispose(Game game) {
-		objects.clear();
-	}
+            layers[object.layer].objects.add(object);
+        }
+        if (!layers[object.layer].moveWithCamera) {
+            layersWithoutCamera.add(layers[object.layer]);
+        } else {
+            layersWith.add(layers[object.layer]);
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.snapgames.gdj.core.state.GameState#keyTyped(com.snapgames.gdj.
-	 * gdj105.core.Game, java.awt.event.KeyEvent)
-	 */
-	@Override
-	public void keyTyped(Game game, KeyEvent e) {
-	}
+    private void removeObjectFromLayer(AbstractGameObject object) {
+        if (object.layer >= 0 && layers[object.layer] != null) {
+            layers[object.layer].objects.remove(object);
+        }
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.snapgames.gdj.core.state.GameState#keyPressed(com.snapgames.gdj.
-	 * gdj105.core.Game, java.awt.event.KeyEvent)
-	 */
-	@Override
-	public void keyPressed(Game game, KeyEvent e) {
-	}
+    /**
+     * This is a specific delete method to remove all objects with a particular
+     * class, to cleanup the object stack.
+     *
+     * @param clazz the object's class to be purged of.
+     */
+    protected void removeAllObjectOfClass(Class<? extends AbstractGameObject> clazz) {
+        List<GameObject> toBeDeleted = new ArrayList<>();
+        for (GameObject o : objects) {
+            if (o.getClass().equals(clazz)) {
+                toBeDeleted.add(o);
+            }
+        }
+        objects.removeAll(toBeDeleted);
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.snapgames.gdj.core.state.GameState#keyReleased(com.snapgames.gdj.
-	 * gdj105.core.Game, java.awt.event.KeyEvent)
-	 */
-	@Override
-	public void keyReleased(Game game, KeyEvent e) {
-		switch (e.getKeyCode()) {
-		case KeyEvent.VK_Q:
-			game.setExit(true);
-			break;
-		case KeyEvent.VK_F9:
-		case KeyEvent.VK_D:
-			DebugLevel debug = game.getDebug();
-			int debugLevel = debug.getValue();
-			debugLevel++;
-			debugLevel = (debugLevel > DebugLevel.DEBUG_FPS_BOX_DIRECTION_ATTRS.getValue() ? 0 : debugLevel);
-			game.setDebug(debug.setValue(debugLevel));
-			break;
-		case KeyEvent.VK_S:
-			game.captureScreenshot();
-			break;
-		case KeyEvent.VK_L:
-			Messages.switchLanguage();
-			reloadUI();
-			break;
-		default:
-			break;
-		}
-	}
+    /**
+     * The internal "free in memory" objects.
+     */
+    public void dispose(Game game) {
+        objects.clear();
+    }
 
-	/**
-	 * reload all messages for translated UI components.
-	 */
-	private void reloadUI() {
-		Messages.reloadUIi18n(uis);
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.snapgames.gdj.core.state.GameState#keyTyped(com.snapgames.gdj.
+     * gdj105.core.Game, java.awt.event.KeyEvent)
+     */
+    @Override
+    public void keyTyped(Game game, KeyEvent e) {
+    }
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.snapgames.gdj.core.state.GameState#render(com.snapgames.gdj.gdj105
-	 * .core.Game, java.awt.Graphics2D)
-	 */
-	public void render(Game game, Graphics2D g) {
-		int renderedObjectCount = 0;
-		if (!objects.isEmpty()) {
-			for (GameObject o : objects) {
-				Layer layer = layers[o.getLayer() - 1];
-				if (layer.active) {
-					renderedObjectCount++;
-					o.draw(game, g);
-					if (game.isDebug(DebugLevel.DEBUG_FPS) || o.isDebugInfoDisplayed()) {
-						o.addDebugInfo(game);
-						o.drawSpecialDebugInfo(game, g);
-						o.getDebugInfo().clear();
-					}
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.snapgames.gdj.core.state.GameState#keyPressed(com.snapgames.gdj.
+     * gdj105.core.Game, java.awt.event.KeyEvent)
+     */
+    @Override
+    public void keyPressed(Game game, KeyEvent e) {
+    }
 
-				}
-			}
-			statistics.put("renderedObjCount", renderedObjectCount);
-			statistics.put("staticObjCount", objects.size());
-		}
-	}
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.snapgames.gdj.core.state.GameState#keyReleased(com.snapgames.gdj.
+     * gdj105.core.Game, java.awt.event.KeyEvent)
+     */
+    @Override
+    public void keyReleased(Game game, KeyEvent e) {
+        switch (e.getKeyCode()) {
+            case KeyEvent.VK_Q:
+                game.setExit(true);
+                break;
+            case KeyEvent.VK_F9:
+            case KeyEvent.VK_D:
+                DebugLevel debug = game.getDebug();
+                int debugLevel = debug.getValue();
+                debugLevel++;
+                debugLevel = (debugLevel > DebugLevel.DEBUG_FPS_BOX_DIRECTION_ATTRS.getValue() ? 0 : debugLevel);
+                game.setDebug(debug.setValue(debugLevel));
+                break;
+            case KeyEvent.VK_S:
+                game.captureScreenshot();
+                break;
+            case KeyEvent.VK_L:
+                Messages.switchLanguage();
+                reloadUI();
+                break;
+            default:
+                break;
+        }
+    }
 
-	public void renderFrontDebugInfo(Game game, Graphics2D g) {
-		if (game.isDebug(DebugLevel.DEBUG_FPS))
+    /**
+     * reload all messages for translated UI components.
+     */
+    private void reloadUI() {
+        Messages.reloadUIi18n(uis);
+    }
 
-		{
-			RenderHelper.drawShadowString(g, String.format("FPS:%03d, UPS:%03d, ROC:%04d, SOC:%04d, DBG:%d",
-					game.framesPerSecond,
-					game.updatePerSecond,
-					statistics.get("renderedObjCount"),
-					statistics.get("staticObjCount"),
-					game.getDebug().getValue()),
-					4, (int) (Game.HEIGHT * 0.85f), Color.ORANGE, Color.BLACK);
-		}
+    /*
+     * (non-Javadoc)
+     *
+     * @see com.snapgames.gdj.core.state.GameState#render(com.snapgames.gdj.gdj105
+     * .core.Game, java.awt.Graphics2D)
+     */
+    public void render(Game game, Graphics2D g) {
+        int renderedObjectCount = 0;
+        if (!objects.isEmpty()) {
+            for (GameObject o : objects) {
+                Layer layer = layers[o.getLayer() - 1];
+                if (layer.active) {
+                    renderedObjectCount++;
+                    o.draw(game, g);
+                    if (game.isDebug(DebugLevel.DEBUG_FPS) || o.isDebugInfoDisplayed()) {
+                        o.addDebugInfo(game);
+                        o.drawSpecialDebugInfo(game, g);
+                        o.getDebugInfo().clear();
+                    }
 
-	}
+                }
+            }
+            statistics.put("renderedObjCount", renderedObjectCount);
+            statistics.put("staticObjCount", objects.size());
+        }
+    }
+
+    public void renderFrontDebugInfo(Game game, Graphics2D g) {
+        if (game.isDebug(DebugLevel.DEBUG_FPS))
+
+        {
+            RenderHelper.drawShadowString(g, String.format("FPS:%03d, UPS:%03d, ROC:%04d, SOC:%04d, DBG:%d",
+                    game.framesPerSecond,
+                    game.updatePerSecond,
+                    statistics.get("renderedObjCount"),
+                    statistics.get("staticObjCount"),
+                    game.getDebug().getValue()),
+                    4, (int) (Game.HEIGHT * 0.85f), Color.ORANGE, Color.BLACK);
+        }
+
+    }
+
+    public String getName() {
+        return this.name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
 }

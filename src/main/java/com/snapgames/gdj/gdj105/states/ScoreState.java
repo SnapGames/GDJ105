@@ -53,8 +53,8 @@ public class ScoreState extends AbstractGameState {
 
         bgi = new UIImage("background", bgImg, 0, (Game.HEIGHT - bgImg.getHeight()) / 2, 2, 1);
         bgi.scale = 1.0f;
-        bgi.dx = 0.031f;
-        bgi.x = 0;
+        bgi.dx = -0.031f;
+        bgi.x = bgi.width - bgImg.getWidth();
         bgi.repeat = Repeat.HORIZONTAL_INFINITY;
         addObject(bgi);
 
@@ -121,12 +121,12 @@ public class ScoreState extends AbstractGameState {
     public void update(Game game, long dt) {
         // Compute scrolling Background Image position
         if (bgi != null) {
-            bgi.x -= bgi.dx * dt;
+            bgi.x += bgi.dx * dt;
 
             float ax = Math.abs(bgi.x);
-            if (ax > game.getWidth() - bgi.width) {
-                ax = Math.floorMod((int) ax, bgi.width);
-                bgi.x = -(ax + (bgi.dx * dt));
+            if (ax < game.getWidth()) {
+                ax = Math.floorMod((int) ax, bgi.width - game.getWidth());
+                bgi.x = (ax - (bgi.dx * dt));
             }
         }
     }
