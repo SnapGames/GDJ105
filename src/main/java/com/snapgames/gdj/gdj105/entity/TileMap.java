@@ -16,6 +16,7 @@ import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.Actions;
+import com.snapgames.gdj.core.entity.Camera;
 import com.snapgames.gdj.core.entity.DynamicGameObject;
 import com.snapgames.gdj.core.gfx.Sprite;
 import com.snapgames.gdj.core.gfx.SpriteSheet;
@@ -51,6 +52,11 @@ public class TileMap extends AbstractGameObject {
     private float playerY;
     private Map<String, Enemy> enemies = new HashMap<>();
 
+    int minX = 0, minY = 0;
+    int maxX = 0, maxY = 0;
+
+    private Camera camera;
+
     /**
      * TileMap constructor.
      *
@@ -73,7 +79,10 @@ public class TileMap extends AbstractGameObject {
         // Compute BoundingBox.
         this.width = tileWidth * mapWidth;
         this.height = tileHeight * mapHeight;
-
+        minX = 0;
+        minY = 0;
+        maxX = mapWidth;
+        maxY = mapHeight;
     }
 
     private void parseFromJSON(String jsonFile) {
@@ -149,14 +158,25 @@ public class TileMap extends AbstractGameObject {
      */
     @Override
     public void draw(Game game, Graphics2D g) {
+        int minX = 0, minY = 0;
+        int maxX = mapWidth, maxY = mapHeight;
+        int midXScreen = game.getWidth() / 2;
+        int midYScreen = game.getHeight() / 2;
 
         if (bgi != null) {
             g.drawImage(bgi, 0, 0, null);
         }
+        // compute zone to be rendered according to game current viewport.
 
-        for (int y = 0; y < mapHeight; y++) {
+        if (camera != null) {
+            minX = (int) Math.min(Math.abs((this.camera.x - 32 - midXScreen) / tileWidth), 0);
+            maxX = (int) Math.min((this.camera.x + camera.width + 64 + midXScreen) / tileWidth, mapWidth);
+            minY = (int) Math.min(Math.abs((this.camera.y - 32 - midYScreen) / tileHeight), 0);
+            maxY = (int) Math.min((this.camera.y + camera.height + 64 + midYScreen) / tileHeight, mapHeight);
+        }
+        for (int y = minY; y < maxY; y++) {
 
-            for (int x = 0; x < mapWidth; x++) {
+            for (int x = minX; x < maxX; x++) {
 
                 int index = tileJsonMap[x + (y * mapWidth)].value;
 
@@ -209,51 +229,66 @@ public class TileMap extends AbstractGameObject {
     public DynamicGameObject resolve(DynamicGameObject o) {
         if (o.collisionBox != null) {
             // X coordinates
-            float tlX = o.x;
-            float trX = o.x + o.width;
-            float blX = o.x;
-            float brY = o.y + o.height;
+            float tlX = o.boundingBox.x;
+            float trX = o.boundingBox.x + o.boundingBox.width;
+            float blX = o.boundingBox.x;
+            float brY = o.boundingBox.y + o.boundingBox.height;
 
             // Y coordinates
-            float tlY = o.y;
-            float blY = o.y;
+            float tlY = o.boundingBox.y;
+            float blY = o.boundingBox.y + o.boundingBox.height;
+
+            MapTileDescription tile, tile2;
 
             // Test on horizontal movement
             if (o.dx < 0) {
-                int i = getTile(tlX, tlY).blocker;
-                if (i != 0) {
-                    o.x = (((int) (tlX / tileWidth) + 1) * tileWidth);
-                    o.ax = -o.ax * o.elasticity;
+                tile = getTile(tlX, tlY);
+                if (tile != null) {
+                    int i = tile.blocker;
+
+                    if (i != 0) {
+                        o.x = (((int) (tlX / tileWidth) + 1) * tileWidth);
+                        o.ax = -o.ax * o.elasticity;
+                    }
                 }
             }
             if (o.dx > 0) {
-                int i = getTile(trX, tlY).blocker;
-                if (i != 0) {
-                    o.x = (((int) ((trX / tileWidth)) * tileWidth) - o.width);
-                    o.ax = -o.ax * o.elasticity;
-                }
+                tile = getTile(trX, tlY);
+                if (tile != null) {
+                    int i = tile.blocker;
 
+                    if (i != 0) {
+                        o.x = (((int) ((trX / tileWidth)) * tileWidth) - o.width);
+                        o.ax = -o.ax * o.elasticity;
+                    }
+                }
             }
             // Test on vertical movement
             if (o.dy < 0) {
-                int i = getTile(blX, blY).blocker;
-                o.action = Actions.JUMP;
-                if (i != 0) {
-                    o.y = (((int) (blY / tileHeight) + 1) * tileHeight);
-                    o.ay = -o.ay * o.elasticity;
-                    o.action = Actions.FALL;
+                tile = getTile(blX, blY);
+                if (tile != null) {
+                    int i = tile.blocker;
+                    o.action = Actions.JUMP;
+                    if (i != 0) {
+                        o.y = (((int) (blY / tileHeight) + 1) * tileHeight);
+                        o.ay = -o.ay * o.elasticity;
+                        o.action = Actions.FALL;
+                    }
                 }
             }
             if (o.dy > 0) {
-                int i = getTile(blX, brY).blocker;
-                if (i != 0) {
-                    o.y = (((int) ((brY / tileHeight)) * tileHeight) - o.height);
-                    o.ay = -o.ay * o.elasticity;
-                    if (!o.previousAction.equals(Actions.WALK)) {
-                        o.action = Actions.IDLE;
+                tile = getTile(blX, brY);
+                if (tile != null) {
+                    int i = tile.blocker;
+                    if (i != 0) {
+                        o.y = (((int) ((brY / tileHeight)) * tileHeight) - o.height);
+                        o.ay = -o.ay * o.elasticity;
+                        if (!o.previousAction.equals(Actions.WALK)) {
+                            o.action = Actions.IDLE;
+                        }
+                    } else {
+                        o.action = Actions.FALL;
                     }
-                } else {
-                    o.action = Actions.FALL;
                 }
 
             }
@@ -273,6 +308,15 @@ public class TileMap extends AbstractGameObject {
         if (o.x > this.boundingBox.width) o.x = this.boundingBox.width;
         if (o.y > this.boundingBox.height) o.y = this.boundingBox.height;
 
+    }
+
+    /**
+     * Camera to be track for TileMap rendering.
+     *
+     * @param cam camera targeting for TileMap rendering;
+     */
+    public void setCamera(Camera cam) {
+        this.camera = cam;
     }
 
     @JsonIgnoreProperties(ignoreUnknown = true)
@@ -316,4 +360,10 @@ public class TileMap extends AbstractGameObject {
         public String[] tileMap;
     }
 
+    @Override
+    public void addDebugInfo(Game game) {
+        super.addDebugInfo(game);
+        debugInfo.add(String.format("rendArea:(%03d,%03d)-(%03d,%03d)", minX, minY, maxX, maxY));
+
+    }
 }

@@ -183,6 +183,7 @@ public class Game extends JPanel {
                 }
                 i = 0;
             }
+            ulastTime = currentTime;
 
             // copy buffer
             drawToScreen();

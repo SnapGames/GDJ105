@@ -32,8 +32,10 @@ public enum Labels {
 	TITLE_LANGUAGE("language", "Language"),
 	// Option State title
 	OPTION_TITLE("OptionState.title", "Options"),
-	// Option State title
+    // Option State title
     PLAY_TITLE("PlayState.title", "Play !"),
+    // Option State title
+    PLAY_PAUSE("PlayState.label.pause", "PAUSE"),
     // Score State title
     SCORE_TITLE("ScoreState.title", "Scores");
 

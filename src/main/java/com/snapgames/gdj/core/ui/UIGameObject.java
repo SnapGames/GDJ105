@@ -9,11 +9,10 @@
  */
 package com.snapgames.gdj.core.ui;
 
-import java.awt.Color;
-import java.awt.Font;
-
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.gfx.RenderHelper.Justification;
+
+import java.awt.*;
 
 /**
  * 
@@ -23,11 +22,11 @@ import com.snapgames.gdj.core.gfx.RenderHelper.Justification;
 public class UIGameObject extends AbstractGameObject implements UIComponent {
 
 	protected Font font;
-	protected Color frontColor;
-	protected Color shadowColor;
-	protected int shadowBold;
-	protected Color backgroundColor;
-	protected Justification justification;
+    public Color frontColor;
+    public Color shadowColor;
+    public int shadowBold;
+    public Color backgroundColor;
+    public Justification justification;
 
 	/**
 	 * 
@@ -54,8 +53,6 @@ public class UIGameObject extends AbstractGameObject implements UIComponent {
 	 * @param name
 	 * @param x
 	 * @param y
-	 * @param dx
-	 * @param dy
 	 */
 	public UIGameObject(String name, int x, int y) {
 		super(name, x, y);
@@ -100,5 +97,11 @@ public class UIGameObject extends AbstractGameObject implements UIComponent {
 	public void onFocusLost() {
 
 	}
+
+    public void setFrontColor(int red, int green, int blue) {
+        frontColor = new Color(red, green, blue);
+    }
+
+
 
 }

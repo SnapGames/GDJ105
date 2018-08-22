@@ -15,11 +15,14 @@ import com.snapgames.gdj.core.entity.*;
 import com.snapgames.gdj.core.gfx.DebugLevel;
 import com.snapgames.gdj.core.gfx.RenderHelper.Justification;
 import com.snapgames.gdj.core.gfx.Sprite;
+import com.snapgames.gdj.core.i18n.Messages;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.AbstractGameState;
 import com.snapgames.gdj.core.ui.UIText;
 import com.snapgames.gdj.gdj105.entity.Player;
 import com.snapgames.gdj.gdj105.entity.TileMap;
+import com.snapgames.gdj.gdj105.i18n.Labels;
+import com.snapgames.gdj.gdj105.ui.UIPause;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,7 +45,14 @@ public class PlayState extends AbstractGameState {
 
     private TileMap tilemap;
     private Player player;
+
     private Camera camera;
+
+    private UIText titleText;
+    private UIText pauseText;
+
+    private int score;
+    private UIText scoreText;
 
     private Point2D playerInitialPos;
 
@@ -57,11 +67,13 @@ public class PlayState extends AbstractGameState {
     public void initialize(Game game, boolean forcedReload) {
         super.initialize(game, forcedReload);
         cameras.clear();
+        score = 0;
 
         // Prepare fonts.
         Font titleFont = ResourceManager.getFont("/res/fonts/Prince Valiant.ttf")
                 .deriveFont(2.5f * Game.SCREEN_FONT_RATIO);
-
+        Font scoreFont = game.getGraphics().getFont().deriveFont(1.6f * Game.SCREEN_FONT_RATIO);
+        Font pauseFont = game.getGraphics().getFont().deriveFont(1.3f * Game.SCREEN_FONT_RATIO);
         game.getWindow().setTitle("playState");
 
         // Add the TileMap for this test level
@@ -72,10 +84,37 @@ public class PlayState extends AbstractGameState {
 
         layers[0].moveWithCamera = false;
 
+
         // Define the main Game title object
-        UIText titleText = new UIText("title", (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.05f), tilemap.name,
-                titleFont, 0, 1, Color.WHITE, Justification.CENTER);
+        pauseText = new UIPause(game, "pause",
+                (int) (Game.WIDTH * 0.5f), (int) (Game.HEIGHT * 0.5f),
+                Messages.getString(Labels.PLAY_PAUSE.getKey()),
+                pauseFont,
+                0, 1,
+                Color.WHITE,
+                Justification.CENTER);
+        pauseText.active = false;
+        addObject(pauseText);
+
+
+        // Define the main Game title object
+        titleText = new UIText("title",
+                (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.05f),
+                tilemap.name,
+                titleFont,
+                0, 1,
+                Color.WHITE,
+                Justification.CENTER);
         addObject(titleText);
+
+        // Define the main Game title object
+        scoreText = new UIText("title",
+                (Game.WIDTH) - 12, 0, String.format("%06d", score),
+                scoreFont,
+                0, 1,
+                Color.WHITE,
+                Justification.RIGHT);
+        addObject(scoreText);
 
         // Add the Player object with its display sprite.
         Sprite sps = new Sprite(
@@ -97,6 +136,8 @@ public class PlayState extends AbstractGameState {
         Camera camera = new Camera("cam0", player);
         camera.setTweenFactor(0.004f);
         addCamera(camera);
+
+        tilemap.setCamera(camera);
     }
 
     /**
@@ -109,7 +150,11 @@ public class PlayState extends AbstractGameState {
         if (activeCamera == null) {
             activeCamera = camera;
         }
-        cameras.put(camera.name, camera);
+        if (!cameras.containsKey(camera.name)) {
+            cameras.put(camera.name, camera);
+        } else {
+            logger.info("The Camera named '{}' already exists", camera.name);
+        }
     }
 
     /**
@@ -132,15 +177,35 @@ public class PlayState extends AbstractGameState {
      */
     @Override
     public void update(Game game, long dt) {
+
         for (GameObject o : objects) {
             o.update(game, dt);
         }
+
         if (player != null) {
             player = (Player) tilemap.resolve(player);
             player.computeCollisionBox();
         }
+
         if (activeCamera != null) {
             activeCamera.update(game, dt);
+        }
+
+        if (titleText != null && titleText.lifeDuration > 12 * 60) {
+
+            if (titleText.alpha > 0.01f) {
+                titleText.alpha *= 0.98f;
+                int red = titleText.color.getRed();
+                int green = titleText.color.getGreen();
+                int blue = titleText.color.getBlue();
+                if (green > 10f) {
+                    green *= 0.03f;
+                    blue *= 0.03f;
+                    titleText.setFrontColor(red, green, blue);
+                }
+            } else {
+                removeObject(titleText);
+            }
         }
     }
 
@@ -182,6 +247,12 @@ public class PlayState extends AbstractGameState {
                     player.y = (float) playerInitialPos.getY();
                     activeCamera.setTarget(player);
                 }
+                break;
+            // request pause for this game.
+            case KeyEvent.VK_P:
+            case KeyEvent.VK_PAUSE:
+                game.requestPause();
+                pauseText.active = game.isPause();
                 break;
             default:
                 break;
@@ -280,13 +351,14 @@ public class PlayState extends AbstractGameState {
     private int renderObjectsForLayer(Game game, Graphics2D g, int renderedObjectCount, Layer layer) {
         for (GameObject o : layer.objects) {
             renderedObjectCount++;
-            o.draw(game, g);
-            if (game.isDebug(DebugLevel.DEBUG_FPS) || o.isDebugInfoDisplayed()) {
-                o.addDebugInfo(game);
-                o.drawSpecialDebugInfo(game, g);
-                o.getDebugInfo().clear();
+            if (o.isActive()) {
+                o.draw(game, g);
+                if (game.isDebug(DebugLevel.DEBUG_FPS) || o.isDebugInfoDisplayed()) {
+                    o.addDebugInfo(game);
+                    o.drawSpecialDebugInfo(game, g);
+                    o.getDebugInfo().clear();
+                }
             }
-
         }
         return renderedObjectCount;
     }

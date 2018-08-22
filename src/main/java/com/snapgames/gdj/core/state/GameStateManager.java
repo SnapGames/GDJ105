@@ -92,6 +92,7 @@ public class GameStateManager {
 		try {
 			StateDefinition stateDef = gsf.getStateDefintion(name);
 			state = stateDef.classState.newInstance();
+            state.setName(name);
 			logger.info("State named '{}' with class '{}' has been instantiated with success", stateDef.name,
 					stateDef.className);
 		} catch (InstantiationException | IllegalAccessException | NoDefaultStateException e) {
