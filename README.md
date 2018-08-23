@@ -4,6 +4,7 @@
 [![buddy pipeline](https://app.buddy.works/fredericdelorme/gdj105/pipelines/pipeline/148927/badge.svg?token=05a173644a4977bbce08533e358dc272005af3d915e8c36ceba53f1bd0228c50 "buddy pipeline")](https://app.buddy.works/fredericdelorme/gdj105/pipelines/pipeline/148927)
 [![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FSnapGames%2FGDJ105.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FSnapGames%2FGDJ105?ref=badge_shield)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/5876eb7101f44b3790b92f9553a35e39)](https://www.codacy.com/project/mcgivrer/GDJ105/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=SnapGames/GDJ105&amp;utm_campaign=Badge_Grade_Dashboard)
+[![Github Releases](https://img.shields.io/github/release/SnapGames/GDJ105.svg)](https://github.com/SnapGames/GDJ105/releases/tag/gdj105-1.0.0)
 
 ## Game Development Java Basics 105
 
