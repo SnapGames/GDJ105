@@ -35,8 +35,13 @@ import java.util.Map;
  */
 public class TileMap extends AbstractGameObject {
 
-
+    /**
+     * internal logger for this class.
+     */
     public final Logger logger = LoggerFactory.getLogger(TileMap.class);
+    /**
+     * Attributes loaded from th emap file (*.json)
+     */
     private String comment;
     private SpriteSheet tileSprites;
     private int mapWidth = 0;
@@ -48,13 +53,26 @@ public class TileMap extends AbstractGameObject {
     private Map<String, MapTileDescription> mapTiles = new HashMap<>();
     private Map<String, Sprite> sprites = new HashMap<>();
     private BufferedImage bgi;
+
+    /**
+     * Player initial position in the map.
+     */
     private float playerX;
     private float playerY;
+    /**
+     * Enemies to be inserted in the map.
+     */
     private Map<String, Enemy> enemies = new HashMap<>();
 
+    /**
+     * Zone to be rendered according to camera focus point.
+     */
     int minX = 0, minY = 0;
     int maxX = 0, maxY = 0;
 
+    /**
+     * The camera to focus on durin g rendering.
+     */
     private Camera camera;
 
     /**
