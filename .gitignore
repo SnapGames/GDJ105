@@ -4,4 +4,4 @@ gdj105.iml
 .classpath
 .project
 target
-dependency-reduced-pom.xml
+.vscode

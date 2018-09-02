@@ -48,6 +48,7 @@
 
 	<properties>
 		<mainClass>com.snapgames.gdj.core.Game</mainClass>
+		<github.global.server>github</github.global.server>		
 	</properties>
 
 	<!-- Project Dependencies -->
