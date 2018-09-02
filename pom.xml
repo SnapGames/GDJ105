@@ -35,7 +35,7 @@
 		<url>http://snapgames.github.io</url>
 		<connection>scm:git:https://github.com/SnapGames/GDJ105.git</connection>
 		<developerConnection>scm:git:git@github.com:SnapGames/GDJ105.git</developerConnection>
-		<tag>${project.version}</tag>
+		<tag>gdj105-1.0.1</tag>
 	</scm>
 	<issueManagement>
 		<system>Github issues</system>
