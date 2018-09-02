@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.snapgames.gdj</groupId>
 	<artifactId>gdj105</artifactId>
-	<version>1.0.1-SNAPSHOT</version>
+	<version>1.0.1</version>
 	<name>GDJ105</name>
 	<description>The basics for the Game Development on the Java platform. In this sample code,
         we will add some `UIText`, `UIMenu`, `UIMenuItem` and `UIImage` to create great UI in a
@@ -35,7 +35,7 @@
 		<url>http://snapgames.github.io</url>
 		<connection>scm:git:https://github.com/SnapGames/GDJ105.git</connection>
 		<developerConnection>scm:git:git@github.com:SnapGames/GDJ105.git</developerConnection>
-		<tag>${project.version}</tag>
+		<tag>gdj105-1.0.1</tag>
 	</scm>
 	<issueManagement>
 		<system>Github issues</system>
