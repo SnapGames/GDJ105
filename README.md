@@ -106,27 +106,37 @@ Some debug information can be displayed according to the debug level you've chos
 
   - `EN` for English,
   - `FR` for French,
-  - `DE` for Deutch,
+  - `DE` for German,
   - `ES` for Spanish,
   - `IT` for Italian.
 
-### Screenshots
-
-![TitleState in English](src/main/docs/images/gdj105-screenshot-titlestate-english.jpg "English Version") ![TitleState in German](src/main/docs/images/gdj105-screenshot-titlestate-german.jpg "German version")
-![TitleState in French](src/main/docs/images/gdj105-screenshot-titlestate-spanish.jpg "spanish version") ![TitleState in Spanish](src/main/docs/images/gdj105-screenshot-titlestate-french.jpg "French version")
-
-## ScoreState
-
-//TODO
-
-## PlayState
-
-//TODO
+# Screenshots
 
 ## Take a snapshot
 
 You can at any time push the <kbd>S</kbd> key to take a snapshot.
 This JPEG picture screenshot of the game window will be saved to the `~/` directory on linux/ux platform or in the `c:\users\[username]` path on Windows.
+
+
+## TitleState
+
+![TitleState in English](src/main/docs/images/gdj105-screenshot-titlestate.jpg "English Version")
+
+## OptionState
+
+![TitleState in English](src/main/docs/images/gdj105-screenshot-optionstate.jpg "spanish version") 
+
+## ScoreState
+
+![ScoreState in Enlish](src/main/docs/images/gdj105-screenshot-scorestate.jpg "spanish version") 
+
+## PlayState
+
+![PlayState in English](src/main/docs/images/gdj105-screenshot-playstate.jpg "spanish version") 
+
+Bonus track, the debug enhanced version :
+
+![PlayState in English](src/main/docs/images/gdj105-screenshot-playstate-debug.jpg "spanish version") 
 
 Have Fun !
 
