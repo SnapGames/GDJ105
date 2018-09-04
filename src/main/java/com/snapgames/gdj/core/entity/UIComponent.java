@@ -19,13 +19,13 @@ public interface UIComponent {
 
 	/**
 	 * retrieve the unique id of this component.
-	 * @return
+	 * @return return the unique ID
 	 */
 	public int getID();
 
 	/**
 	 * return the value for this component.
-	 * @return
+	 * @return return the value for this component
 	 */
 	public String getValue();
 

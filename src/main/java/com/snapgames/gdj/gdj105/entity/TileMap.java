@@ -9,8 +9,6 @@
  */
 package com.snapgames.gdj.gdj105.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.google.gson.Gson;
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
@@ -319,44 +317,26 @@ public class TileMap extends AbstractGameObject {
         this.camera = cam;
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
     public class MapTileDescription {
-        @JsonProperty("id")
         public String id;
-        @JsonProperty("type")
         public String type;
-        @JsonProperty("value")
         public int value;
-        @JsonProperty("blocker")
         public int blocker;
-        @JsonProperty("frames")
         public int[] frames;
-        @JsonProperty("attributes")
         public Map<String, String> attributes;
 
     }
 
-    @JsonIgnoreProperties(ignoreUnknown = true)
     public class MapDescription {
-        @JsonProperty("name")
         public String name;
-        @JsonProperty("comment")
         public String comment;
-        @JsonProperty("background")
         public String background;
-        @JsonProperty("spritesheet")
         public String spriteSheet;
-        @JsonProperty("mapWidth")
         public int mapWidth;
-        @JsonProperty("mapHeight")
         public int mapHeight;
-        @JsonProperty("tileWidth")
         public int tileWidth;
-        @JsonProperty("tileHeight")
         public int tileHeight;
-        @JsonProperty("tileSprites")
         public MapTileDescription[] tiles;
-        @JsonProperty("tileMap")
         public String[] tileMap;
     }
 

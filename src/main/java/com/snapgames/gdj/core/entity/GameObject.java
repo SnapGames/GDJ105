@@ -39,52 +39,57 @@ public interface GameObject {
     /**
      * Draw object
      *
-     * @param game
-     * @param g
+     * @param game the parent Game
+     * @param g a Graphics API
      */
     public void draw(Game game, Graphics2D g);
 
     /**
      * return the name of this object.
      *
-     * @return
+     * @return the name of this component
      */
     public String getName();
 
     /**
      * return the layer this object belongs to.
      *
-     * @return
+     * @return the layer for this object
      */
     public int getLayer();
 
     /**
      * return the rendering priority for the layer this object belongs to.
      *
-     * @return
+     * @return the rendering piority of this object
      */
     public int getPriority();
 
     /**
      * Add some debug information to display if needed.
+     * thes debug information are added at update time.
      *
-     * @return
+     * @return add object specific debug information.
      */
     public void addDebugInfo(Game game);
 
+    /**
+     * return all the debug information for this object.
+     * @return retur nthe list of interpreted debug information for this object.
+     */
     public List<String> getDebugInfo();
 
     /**
      * Return the object scale factor.
      *
-     * @return
+     * @return the scale of this object.
      */
     public float getScale();
 
     /**
      * Does the debug info must be displayed for this object ?
      *
-     * @return
+     * @return a flag activated if debug info display is actvated.
      */
     public boolean isDebugInfoDisplayed();
 
@@ -100,7 +105,7 @@ public interface GameObject {
     /**
      * return true if this object is active
      *
-     * @return
+     * @return true if this object is active.
      */
     public boolean isActive();
 }

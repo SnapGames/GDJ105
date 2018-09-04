@@ -47,22 +47,56 @@
 	</ciManagement>
 
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>com.snapgames.gdj.core.Game</mainClass>
 		<github.global.server>github</github.global.server>
+		<jinput.version>2.0.6</jinput.version>
+        <gson.version>2.8.0</gson.version>
+        <slf4j.version>1.7.25</slf4j.version>
 	</properties>
 
 	<!-- Project Dependencies -->
 	<dependencies>
+		<dependency>
+			<groupId>com.jayway.jsonpath</groupId>
+			<artifactId>json-path</artifactId>
+			<version>2.4.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
+        </dependency>
 		<!-- https://mvnrepository.com/artifact/org.slf4j/log4j-over-slf4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>log4j-over-slf4j</artifactId>
-			<version>1.7.25</version>
+            <version>${slf4j.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-			<version>1.7.25</version>
+            <version>${slf4j.version}</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.java.jinput/jinput -->
+		<dependency>
+			<groupId>net.java.jinput</groupId>
+			<artifactId>jinput</artifactId>
+			<version>${jinput.version}</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.java.jutils</groupId>
+			<artifactId>jutils</artifactId>
+			<version>1.0.0</version>
+			<scope>provided</scope>
+		</dependency>
+		<dependency>
+			<groupId>net.java.jinput</groupId>
+			<artifactId>jinput-platform</artifactId>
+			<version>${jinput.version}</version>
+			<classifier>natives-linux</classifier>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 
@@ -249,7 +283,7 @@
 								<fileVersion>1.0.0.0</fileVersion>
 								<txtFileVersion>${project.version}</txtFileVersion>
 								<fileDescription>${project.name}</fileDescription>
-								<copyright>${project.year} snapgames.fr</copyright>
+                                <copyright>${project.inceptionYear} snapgames.fr</copyright>
 								<productVersion>1.0.0.0</productVersion>
 								<txtProductVersion>1.0.0.0</txtProductVersion>
 								<productName>${project.name}</productName>

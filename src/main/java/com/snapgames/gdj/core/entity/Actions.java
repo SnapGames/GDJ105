@@ -45,7 +45,7 @@ public enum Actions {
 
 	/**
 	 * return action value for the enumeration value.
-	 * @return
+	 * @return the action string for this enum value.
 	 */
 	public String getValue() {
 		return action;
