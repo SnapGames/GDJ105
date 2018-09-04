@@ -28,12 +28,15 @@ Let's create :
 To build a new game state : the `TitleState`.
 
 > **NOTE** <<2018-09-04>>
->
 > 
 > As test purpose in this specific git branch [`feature/enhance-tilemap-loading`](https://github.com/SnapGames/GDJ105/tree/feature/enhance-tilemap-loading "open the branch on the GDJ105 github repo"), to prepare development of GDJ10X course, we add new features:
-> - `ScoreState`to display a fictuve list of players with their own High Score, to prepare a next dev where those High Scores are stored in the cloud.
+>
+> - `ScoreState`to display a fictive list of players with their own High Score, to prepare a next dev where those High Scores are stored in the cloud.
+>
 > - `PlayState` integrate a TileMap loader and some new GameObject like a `Player`, and `Enemy` and some `MapDescription` and `TileMapDescription` where are deserialized JSON data from the `res/maps/` path, a `Camera` object to track another object, here it will be the Player object, and this camera is contrained to TileMap dimension.
-
+>
+> - `OptionState` options menu where user can choose preferred language.
+>
 ## Compile
 
 To compile the full project, please execute the following command :
