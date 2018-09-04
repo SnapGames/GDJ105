@@ -2,9 +2,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.snapgames.gdj</groupId>
 	<artifactId>gdj105</artifactId>
-    <version>1.0.1</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<name>GDJ105</name>
-	<description>The basics for the Game development on the java platform. In this sample code, we will add some TextObject, Background image and ButtonObject to create great UI in a new GameState.</description>
+	<description>The basics for the Game Development on the Java platform. In this sample code,
+        we will add some `UIText`, `UIMenu`, `UIMenuItem` and `UIImage` to create great UI in a
+        new TitleState. We will also add new empty `PlayState` and `OptionState` to demonstrate
+        navigation through states capability.
+    </description>
 	<url>https://github.com/SnapGames/GDJ105</url>
 	<inceptionYear>2017</inceptionYear>
 
@@ -31,7 +35,7 @@
 		<url>http://snapgames.github.io</url>
 		<connection>scm:git:https://github.com/SnapGames/GDJ105.git</connection>
 		<developerConnection>scm:git:git@github.com:SnapGames/GDJ105.git</developerConnection>
-        <tag>gdj105-1.0.1</tag>
+		<tag>${project.version}</tag>
 	</scm>
 	<issueManagement>
 		<system>Github issues</system>
@@ -42,90 +46,24 @@
 		<system>Travis-CI</system>
 	</ciManagement>
 
-	<!-- Distribution to OSSRH -->
-	<distributionManagement>
-		<snapshotRepository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-		</snapshotRepository>
-		<repository>
-			<id>ossrh</id>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
-		</repository>
-	</distributionManagement>
-
-
 	<properties>
-		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<mainClass>com.snapgames.gdj.core.Game</mainClass>
 		<github.global.server>github</github.global.server>
-		<jinput.version>2.0.6</jinput.version>
-        <gson.version>2.8.0</gson.version>
-        <slf4j.version>1.7.25</slf4j.version>
 	</properties>
 
 	<!-- Project Dependencies -->
 	<dependencies>
-		<dependency>
-			<groupId>com.jayway.jsonpath</groupId>
-			<artifactId>json-path</artifactId>
-			<version>2.4.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.google.code.gson</groupId>
-            <artifactId>gson</artifactId>
-            <version>${gson.version}</version>
-        </dependency>
 		<!-- https://mvnrepository.com/artifact/org.slf4j/log4j-over-slf4j -->
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>log4j-over-slf4j</artifactId>
-            <version>${slf4j.version}</version>
+			<version>1.7.25</version>
 		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
-            <version>${slf4j.version}</version>
+			<version>1.7.25</version>
 		</dependency>
-		<!-- https://mvnrepository.com/artifact/net.java.jinput/jinput -->
-		<dependency>
-			<groupId>net.java.jinput</groupId>
-			<artifactId>jinput</artifactId>
-			<version>${jinput.version}</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.java.jutils</groupId>
-			<artifactId>jutils</artifactId>
-			<version>1.0.0</version>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.java.jinput</groupId>
-			<artifactId>jinput-platform</artifactId>
-			<version>${jinput.version}</version>
-			<classifier>natives-linux</classifier>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.java.jinput</groupId>
-			<artifactId>jinput-platform</artifactId>
-			<version>${jinput.version}</version>
-			<classifier>natives-windows</classifier>
-			<scope>provided</scope>
-		</dependency>
-		<dependency>
-			<groupId>net.java.jinput</groupId>
-			<artifactId>jinput-platform</artifactId>
-			<version>${jinput.version}</version>
-			<classifier>natives-osx</classifier>
-			<scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.fasterxml.jackson.core</groupId>
-            <artifactId>jackson-annotations</artifactId>
-            <version>2.8.0</version>
-        </dependency>
 	</dependencies>
 
 	<build>
@@ -155,7 +93,6 @@
 							<mainClass>${mainClass}</mainClass>
 						</manifest>
 					</archive>
-					<encoding>utf-8</encoding>
 				</configuration>
 			</plugin>
 			
@@ -164,9 +101,6 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<version>3.0.1</version>
-				<configuration>
-					<enconding>utf-8</enconding>
-				</configuration>
 				<executions>
 					<execution>
 						<id>attach-sources</id>
@@ -183,7 +117,7 @@
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>2.10.4</version>
 				<configuration>
-					<enconding>utf-8</enconding>
+					<encoding>utf-8</encoding>
 					<stylesheet>maven</stylesheet>
 					<overview>${project.basedir}/README.md</overview>
 					<doclet>ch.raffael.doclets.pegdown.PegdownDoclet</doclet>
@@ -201,34 +135,6 @@
 						<goals>
 							<goal>jar</goal>
 						</goals>
-					</execution>
-				</executions>
-			</plugin>
-
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<version>2.8</version>
-				<executions>
-					<execution>
-						<id>unpack</id>
-						<phase>compile</phase>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>net.java.jinput</groupId>
-									<artifactId>jinput-platform</artifactId>
-									<version>${jinput.version}</version>
-									<classifier>natives-windows</classifier>
-									<type>jar</type>
-									<overWrite>true</overWrite>
-									<outputDirectory>${project.build.directory}/lib</outputDirectory>
-								</artifactItem>
-							</artifactItems>
-						</configuration>
 					</execution>
 				</executions>
 			</plugin>
@@ -327,7 +233,7 @@
 	                    </goals>
 	                    <configuration>
 	                        <headerType>gui</headerType>
-							<jar>${project.build.directory}/${artifactId}-${version}-shaded.jar</jar>
+							<jar>${project.build.directory}/${project.artifactId}-${project.version}-shaded.jar</jar>
 							<outfile>${project.build.directory}/${project.name}.exe</outfile>
 							<downloadUrl>http://java.com/download</downloadUrl>
 							<classPath>
@@ -343,7 +249,7 @@
 								<fileVersion>1.0.0.0</fileVersion>
 								<txtFileVersion>${project.version}</txtFileVersion>
 								<fileDescription>${project.name}</fileDescription>
-                                <copyright>${project.inceptionYear} snapgames.fr</copyright>
+								<copyright>${project.year} snapgames.fr</copyright>
 								<productVersion>1.0.0.0</productVersion>
 								<txtProductVersion>1.0.0.0</txtProductVersion>
 								<productName>${project.name}</productName>
@@ -372,7 +278,6 @@
 				<artifactId>site-maven-plugin</artifactId>
 				<version>0.12</version>
 				<configuration>
-					<encoding>utf-8</encoding>
 					<message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
 					<noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
 					<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->

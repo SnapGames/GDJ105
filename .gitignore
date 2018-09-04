@@ -1,7 +1,7 @@
-/target/
-/.classpath
-/.project
-/dependency-reduced-pom.xml
-/bin/
-/gdj105.iml
-/.idea/
+.idea
+gdj105.iml
+.settings
+.classpath
+.project
+target
+.vscode
