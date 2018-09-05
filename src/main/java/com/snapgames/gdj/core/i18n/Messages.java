@@ -15,6 +15,8 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 import com.snapgames.gdj.core.ui.UIi18nReload;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 
@@ -22,6 +24,8 @@ import com.snapgames.gdj.core.ui.UIi18nReload;
  *
  */
 public class Messages {
+	private static final Logger logger = LoggerFactory.getLogger(Messages.class);
+
 	/**
 	 * Path to the resource messages file
 	 */
@@ -71,6 +75,7 @@ public class Messages {
 	public static void setLanguage(String lang) {
 		Locale l = new Locale(lang.toLowerCase(), lang.toUpperCase());
 		RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME, l);
+		logger.debug("switch language to {}",l);
 	}
 
 	/**
@@ -82,6 +87,7 @@ public class Messages {
 		String lang = availableLanguages[index];
 		Locale locale = new Locale(lang.toLowerCase(), lang.toUpperCase());
 		RESOURCE_BUNDLE = ResourceBundle.getBundle(BUNDLE_NAME, locale);
+		logger.info("switch language to {}",locale);
 	}
 
 	public static void reloadUIi18n(List<UIi18nReload> uis) {

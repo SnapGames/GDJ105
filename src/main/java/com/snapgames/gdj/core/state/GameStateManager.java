@@ -9,21 +9,21 @@
  */
 package com.snapgames.gdj.core.state;
 
-import java.awt.Graphics2D;
+import com.snapgames.gdj.core.Game;
+import com.snapgames.gdj.core.gfx.DebugLevel;
+import com.snapgames.gdj.core.io.InputHandler;
+import com.snapgames.gdj.core.state.factory.GameStateFactory;
+import com.snapgames.gdj.core.state.factory.GameStateFactory.StateDefinition;
+import com.snapgames.gdj.core.state.factory.NoDefaultStateException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import com.snapgames.gdj.core.Game;
-import com.snapgames.gdj.core.io.InputHandler;
-import com.snapgames.gdj.core.state.factory.GameStateFactory;
-import com.snapgames.gdj.core.state.factory.GameStateFactory.StateDefinition;
-import com.snapgames.gdj.core.state.factory.NoDefaultStateException;
 
 /**
  * The Game State Manager is the state machine to manage all the states of the
@@ -92,6 +92,7 @@ public class GameStateManager {
 		try {
 			StateDefinition stateDef = gsf.getStateDefintion(name);
 			state = stateDef.classState.newInstance();
+            state.setName(name);
 			logger.info("State named '{}' with class '{}' has been instantiated with success", stateDef.name,
 					stateDef.className);
 		} catch (InstantiationException | IllegalAccessException | NoDefaultStateException e) {
@@ -130,7 +131,7 @@ public class GameStateManager {
 		}
 		if (states.containsKey(name)) {
 			currentState = states.get(name);
-			currentState.initialize(game);
+			currentState.initialize(game, false);
 			logger.info("State '{}' activated with success", name);
 		} else {
 			logger.error("Unable to load state '{}'", name);
@@ -167,6 +168,7 @@ public class GameStateManager {
 	 */
 	public void render(Graphics2D g) {
 		currentState.render(game, g);
+		currentState.renderFrontDebugInfo(game, g);
 	}
 
 	public void dispose() {
@@ -211,6 +213,16 @@ public class GameStateManager {
 	 * @param e
 	 */
 	public void keyReleased(KeyEvent e) {
+        // Add a reset to request a full State reload only activated if debug mode on.
+		if (e.isControlDown()) {
+			switch (e.getKeyCode()) {
+				case KeyEvent.VK_R:
+                    if (this.game.isDebug(DebugLevel.DEBUG_FPS)) {
+                        this.currentState.initialize(this.game, true);
+                    }
+					break;
+			}
+		}
 		currentState.keyReleased(this.getGame(), e);
 	}
 

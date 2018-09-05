@@ -9,16 +9,12 @@
  */
 package com.snapgames.gdj.core.ui;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.gfx.RenderHelper.Justification;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * The UIMenu class intends to provide a selector UI component between multiple
@@ -155,18 +151,18 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 			item.setPosition(x, y + i * fm.getHeight());
 			item.draw(game, g);
 			i++;
-			// update rectangle Bounding Box for this object.
+			// update boundingBox Bounding Box for this object.
 			extendMenuBoundingBox(fm, i, item);
 		}
 	}
 
 	private void extendMenuBoundingBox(FontMetrics fm, int i, UIMenuItem item) {
 		Rectangle rect = item.getBoundingBox();
-		rectangle.x = (int) (rect.x < rectangle.x ? rect.x : rectangle.x);
-		rectangle.y = (int) (y - fm.getHeight());
-		rectangle.width = (int) (rect.width > width ? rect.width : width);
-		rectangle.height = i * fm.getHeight();
-		rectangle.width = width = (fm.stringWidth(item.getLabel()) > width ? fm.stringWidth(item.getLabel()) : width);
+		boundingBox.x = (int) (rect.x < boundingBox.x ? rect.x : boundingBox.x);
+		boundingBox.y = (int) (y - fm.getHeight());
+		boundingBox.width = (int) (rect.width > width ? rect.width : width);
+		boundingBox.height = i * fm.getHeight();
+		boundingBox.width = width = (fm.stringWidth(item.getLabel()) > width ? fm.stringWidth(item.getLabel()) : width);
 	}
 
 	/**

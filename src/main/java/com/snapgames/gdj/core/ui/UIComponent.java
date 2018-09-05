@@ -9,6 +9,10 @@
  */
 package com.snapgames.gdj.core.ui;
 
+import com.snapgames.gdj.core.Game;
+
+import java.awt.*;
+
 /**
  * This is the main interface to manage User Interface Component.
  * 
@@ -21,22 +25,35 @@ public interface UIComponent {
 	 * retrieve the unique id of this component.
 	 * @return
 	 */
-	public int getId();
+	int getId();
 
 	/**
 	 * return the value for this component.
 	 * @return
 	 */
-	public String getValue();
+	String getValue();
 
 	/**
 	 * when the component get the focus.
 	 */
-	public void onFocus();
+	void onFocus();
 
 	/**
 	 * when the component lost focus.
 	 */
-	public void onFocusLost();
+	void onFocusLost();
 
+	/**
+	 * Add a parent to this UIComponent.
+	 * @param parent
+	 */
+	void setParent(UIComponent parent);
+
+	void draw(Game game, Graphics2D g);
+
+	Rectangle getBoundingBox();
+
+	float getWidth();
+	float getHeight();
+	void setPosition(float x, float y);
 }

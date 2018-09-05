@@ -17,8 +17,9 @@ package com.snapgames.gdj.core.entity;
  *
  */
 public enum Actions {
-	IDLE("idle"), 
-	WALK("walk"), 
+	IDLE("idle"),
+    WALK("walk"),
+    JUMP("jump"),
 	RUN("run"), 
 	UP("up"), 
 	DOWN("down"), 
@@ -44,7 +45,7 @@ public enum Actions {
 
 	/**
 	 * return action value for the enumeration value.
-	 * @return
+	 * @return the action string for this enum value.
 	 */
 	public String getValue() {
 		return action;

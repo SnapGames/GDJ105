@@ -9,12 +9,12 @@
  */
 package com.snapgames.gdj.core.gfx;
 
-import java.awt.Graphics2D;
-import java.util.ArrayList;
-import java.util.List;
-
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.entity.GameObject;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * 
@@ -40,6 +40,7 @@ public class DebugInfo {
 		this.g = g;
 		this.o = o;
 		fontHeight = g2D.getFontMetrics().getHeight();
+		lines = o.getDebugInfo();
 
 	}
 

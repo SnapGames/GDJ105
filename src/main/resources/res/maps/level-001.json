@@ -1,0 +1,181 @@
+{
+  "name": "Test Level",
+  "comment": "This a first test level for the Kingdom of Asperion platform game!",
+  "background": "/res/images/background-large.jpg",
+  "spriteSheet": "/res/images/sprite-0001.png",
+  "mapWidth": 40,
+  "mapHeight": 19,
+  "tileWidth": 16,
+  "tileHeight": 16,
+  "tiles": [
+    {
+      "id": ".",
+      "type": "1",
+      "value": 0,
+      "blocker": "0",
+      "frames": [],
+      "attributes": []
+    },
+    {
+      "id": "1",
+      "type": "1",
+      "value": 116,
+      "blocker": "1",
+      "frames": [],
+      "attributes": []
+    },
+    {
+      "id": "2",
+      "type": "1",
+      "value": 12,
+      "blocker": "1",
+      "frames": [],
+      "attributes": []
+    },
+    {
+      "id": "3",
+      "type": "1",
+      "value": 35,
+      "blocker": "1",
+      "frames": [],
+      "attributes": []
+    },
+    {
+      "id": "H",
+      "type": "1",
+      "value": 112,
+      "blocker": "0",
+      "frames": [],
+      "attributes": []
+    },
+    {
+      "id": "O",
+      "type": "1",
+      "value": 240,
+      "blocker": "0",
+      "frames": [],
+      "attributes": []
+    },
+    {
+      "id": "P",
+      "type": "3",
+      "value": -1,
+      "blocker": "0",
+      "frames": [],
+      "attributes": {
+        "energy": 1000,
+        "mana": 1000,
+        "coins": 100
+      },
+      "class": "com.snapgames.gdj.gdj105.entity.Player"
+    },
+    {
+      "id": "E",
+      "type": "3",
+      "value": -1,
+      "blocker": "0",
+      "frames": [],
+      "attributes": {
+        "energy": 100,
+        "attack": 10
+      },
+      "class": "com.snapgames.gdj.gdj105.entity.Enemy"
+    },
+    {
+      "id": "F",
+      "type": "2",
+      "value": 3,
+      "blocker": "0",
+      "frames": [],
+      "attributes": {
+        "energy": 100
+      }
+    },
+    {
+      "id": "M",
+      "type": "2",
+      "value": 23,
+      "blocker": "0",
+      "frames": [],
+      "attributes": {
+        "mana": 100
+      }
+    },
+    {
+      "id": "J",
+      "type": "2",
+      "value": -1,
+      "blocker": "0",
+      "frames": [
+        23,
+        20,
+        24,
+        12,
+        25,
+        18
+      ],
+      "attributes": {
+        "energy": 100
+      }
+    },
+    {
+      "id": "N",
+      "type": "2",
+      "value": -1,
+      "blocker": "0",
+      "frames": [
+        23,
+        20,
+        24,
+        12,
+        25,
+        18
+      ],
+      "attributes": {
+        "mana": 100
+      }
+    },
+    {
+      "id": "c",
+      "type": "2",
+      "value": 14,
+      "blocker": "0",
+      "frames": [
+        50,
+        30,
+        51,
+        15,
+        52,
+        15,
+        53,
+        15,
+        53,
+        15
+      ],
+      "attributes": {
+        "coins": 10
+      }
+    }
+  ],
+  "tileMap": [
+    "3311111111111113111111111111111111111111",
+    "3311111111311111111111111111111111111111",
+    "3311131111111111111111111111111111111111",
+    "11......11111111....................1111",
+    "11......11111111....................1111",
+    "11......11111111....................1111",
+    "11....................................11",
+    "11....................................11",
+    "11P...................................11",
+    "11.........M........F.................11",
+    "1111...11111111111111111H111111111111111",
+    "1111...............11111H1.......1111111",
+    "11......................H.............11",
+    "11..........M...........H.............11",
+    "1111111111111111111111111111...111111111",
+    "11....................................11",
+    "11...c..c..c..c..........M..........O.11",
+    "1111111111111111111111111111111111111111",
+    "1111111111111111111111111111111111111111"
+  ]
+}

@@ -9,17 +9,13 @@
  */
 package com.snapgames.gdj.core.gfx;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.FontMetrics;
-import java.awt.Graphics2D;
-import java.awt.Rectangle;
-
 import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.ResourceManager;
 import com.snapgames.gdj.core.entity.AbstractGameObject;
 import com.snapgames.gdj.core.entity.DynamicGameObject;
 import com.snapgames.gdj.core.entity.GameObject;
+
+import java.awt.*;
 
 /**
  * This class is a Render helper class to draw some shiny things.
@@ -171,16 +167,21 @@ public class RenderHelper {
 			dbi.pane_x = (int) ago.offsetInfo.getX();
 			dbi.pane_y = (int) ago.offsetInfo.getY();
 		} else {
-			// pane_x = (int) (ago.rectangle.x + ago.width + pane_padding);
-			// pane_y = (int) (ago.rectangle.y + ago.height + pane_padding);
-			dbi.pane_x = (int) (ago.rectangle.x);
-			dbi.pane_y = (int) (ago.rectangle.y);
+			// pane_x = (int) (ago.boundingBox.x + ago.width + pane_padding);
+			// pane_y = (int) (ago.boundingBox.y + ago.height + pane_padding);
+			dbi.pane_x = (int) (ago.boundingBox.x);
+			dbi.pane_y = (int) (ago.boundingBox.y);
 		}
 		if (o.getScale() != 1.0f) {
 			g.scale(o.getScale(), o.getScale());
 		}
 		if (game.isDebug(DebugLevel.DEBUG_FPS_BOX)) {
-			drawBoundingBox(g, ago);
+			if (ago.boundingBox != null) {
+				drawBoundingBox(g, ago);
+			}
+			if (ago.collisionBox != null) {
+				drawCollisionBox(g, ago);
+			}
 		}
 		if (ago instanceof DynamicGameObject) {
 			DynamicGameObject dgo = (DynamicGameObject) ago;
@@ -200,8 +201,17 @@ public class RenderHelper {
 	 */
 	private static void drawBoundingBox(Graphics2D g, AbstractGameObject ago) {
 		g.setColor(Color.YELLOW);
-		g.drawRect((int) ago.rectangle.x, (int) ago.rectangle.y, ago.rectangle.width, ago.rectangle.height);
-		g.drawString("" + ago.id, (int) ago.rectangle.x, (int) ago.rectangle.y);
+		g.drawRect((int) ago.boundingBox.x, (int) ago.boundingBox.y, ago.boundingBox.width, ago.boundingBox.height);
+		g.drawString("id:" + ago.id, (int) ago.boundingBox.x, (int) ago.boundingBox.y);
+	}
+
+	/**
+	 * @param g
+	 * @param ago
+	 */
+	private static void drawCollisionBox(Graphics2D g, AbstractGameObject ago) {
+		g.setColor(Color.CYAN);
+		g.drawRect((int) ago.collisionBox.x, (int) ago.collisionBox.y, ago.collisionBox.width, ago.collisionBox.height);
 	}
 
 	/**
@@ -227,8 +237,8 @@ public class RenderHelper {
 
 		g.setColor(Color.GREEN);
 		/*
-		 * g.drawLine( (int) ago.rectangle.x + ago.rectangle.width, (int)
-		 * ago.rectangle.y + ago.rectangle.height, (int) dbi.pane_x + dbi.link,
+		 * g.drawLine( (int) ago.boundingBox.x + ago.boundingBox.width, (int)
+		 * ago.boundingBox.y + ago.boundingBox.height, (int) dbi.pane_x + dbi.link,
 		 * dbi.pane_y + dbi.link);
 		 */
 		for (int i = 0; i < dbi.lines.size(); i++) {
@@ -248,23 +258,23 @@ public class RenderHelper {
 		if (game.isDebug(DebugLevel.DEBUG_FPS_BOX_DIRECTION)) {
 			g.setColor(Color.GREEN);
 			switch (dgo.direction) {
-			case UP:
-				g.drawLine((int) dgo.rectangle.x, (int) dgo.rectangle.y, (int) dgo.rectangle.x + dgo.rectangle.width,
-						(int) dgo.rectangle.y);
+				case UP:
+					g.drawLine((int) dgo.boundingBox.x, (int) dgo.boundingBox.y, (int) dgo.boundingBox.x + dgo.boundingBox.width,
+							(int) dgo.boundingBox.y);
 				break;
 			case LEFT:
-				g.drawLine((int) dgo.rectangle.x, (int) dgo.rectangle.y + (int) dgo.rectangle.height,
-						(int) dgo.rectangle.x, (int) dgo.rectangle.y);
+				g.drawLine((int) dgo.boundingBox.x, (int) dgo.boundingBox.y + (int) dgo.boundingBox.height,
+						(int) dgo.boundingBox.x, (int) dgo.boundingBox.y);
 				break;
 			case RIGHT:
-				g.drawLine((int) dgo.rectangle.x + (int) dgo.rectangle.width,
-						(int) dgo.rectangle.y + (int) dgo.rectangle.height,
-						(int) dgo.rectangle.x + (int) dgo.rectangle.width, (int) dgo.rectangle.y);
+				g.drawLine((int) dgo.boundingBox.x + (int) dgo.boundingBox.width,
+						(int) dgo.boundingBox.y + (int) dgo.boundingBox.height,
+						(int) dgo.boundingBox.x + (int) dgo.boundingBox.width, (int) dgo.boundingBox.y);
 				break;
 			case DOWN:
-				g.drawLine((int) dgo.rectangle.x, (int) dgo.rectangle.y + (int) dgo.rectangle.height,
-						(int) dgo.rectangle.x + dgo.rectangle.width,
-						(int) dgo.rectangle.y + (int) dgo.rectangle.height);
+				g.drawLine((int) dgo.boundingBox.x, (int) dgo.boundingBox.y + (int) dgo.boundingBox.height,
+						(int) dgo.boundingBox.x + dgo.boundingBox.width,
+						(int) dgo.boundingBox.y + (int) dgo.boundingBox.height);
 				break;
 			case NONE:
 				break;

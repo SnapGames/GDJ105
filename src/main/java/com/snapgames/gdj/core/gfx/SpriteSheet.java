@@ -9,15 +9,13 @@
  */
 package com.snapgames.gdj.core.gfx;
 
-import java.awt.image.BufferedImage;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.awt.image.BufferedImage;
+
 /**
- *
  * @author Frédéric Delorme
- *
  */
 public class SpriteSheet {
 
@@ -94,12 +92,17 @@ public class SpriteSheet {
      * @param index index of the request sprite in the preloaded SpriteSheet buffer.
      * @return the index corresponding Sprite object.
      */
-    public Sprite getSPrite(int index) {
-        return sprites[index];
+    public Sprite getSprite(int index) {
+        if (sprites != null && index < sprites.length) {
+            return sprites[index];
+        } else {
+            return null;
+        }
     }
 
     /**
      * Return size of the sprite sheet in term of number of sprites defined in the internal SpriteSheet buffer.
+     *
      * @return the size of the internal buffer
      */
     public int getSize() {
