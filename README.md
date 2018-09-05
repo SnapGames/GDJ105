@@ -1,4 +1,5 @@
 # GDJ105
+[![Snapgames Home](src/main/docs/images/github-avatar-snapgames.png "go and visit SnapGames home page")](https://snapgames.github.io/)
 
 [![TravisCI](https://travis-ci.org/SnapGames/GDJ105.svg?branch=develop)](https://travis-ci.org/SnapGames/GDJ105 "open the TravisCI compilation trend")
 [![buddy pipeline](https://app.buddy.works/fredericdelorme/gdj105/pipelines/pipeline/148927/badge.svg?token=05a173644a4977bbce08533e358dc272005af3d915e8c36ceba53f1bd0228c50 "buddy pipeline")](https://app.buddy.works/fredericdelorme/gdj105/pipelines/pipeline/148927)
