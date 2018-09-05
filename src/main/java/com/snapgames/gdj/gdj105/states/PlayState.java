@@ -67,6 +67,7 @@ public class PlayState extends AbstractGameState {
     public void initialize(Game game, boolean forcedReload) {
         super.initialize(game, forcedReload);
         cameras.clear();
+        objects.clear();
         score = 0;
 
         // Prepare fonts.
@@ -133,7 +134,7 @@ public class PlayState extends AbstractGameState {
         addObject(player);
         playerInitialPos = new Point2D.Float(player.x, player.y);
 
-        Camera camera = new Camera("cam0", player);
+        camera = new Camera("cam0", player);
         camera.setTweenFactor(0.004f);
         addCamera(camera);
 

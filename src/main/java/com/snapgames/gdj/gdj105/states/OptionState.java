@@ -16,6 +16,8 @@ import com.snapgames.gdj.core.gfx.RenderHelper.Justification;
 import com.snapgames.gdj.core.i18n.Messages;
 import com.snapgames.gdj.core.io.InputHandler;
 import com.snapgames.gdj.core.state.AbstractGameState;
+import com.snapgames.gdj.core.ui.UIGroup;
+import com.snapgames.gdj.core.ui.UILayout;
 import com.snapgames.gdj.core.ui.UIMenu;
 import com.snapgames.gdj.core.ui.UIText;
 import com.snapgames.gdj.gdj105.i18n.Labels;
@@ -59,19 +61,19 @@ public class OptionState extends AbstractGameState {
 		game.getWindow().setTitle("OptionState");
 
         // Define the Options title
-        UIText titleText = new UIText("title", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.05f), titleLabel,
+        UIText titleText = new UIText("title", (int) (Game.WIDTH) / 2, (int) (Game.HEIGHT * 0.02f), titleLabel,
                 titleFont, 1, 1, Color.WHITE, Justification.CENTER);
         titleText.setLabel(Labels.OPTION_TITLE.getKey());
         addObject(titleText);
 
         // Define the label for language option
-        UIText menuLangTitle = new UIText("language", (int) (Game.WIDTH*0.33f), (int) (Game.HEIGHT * 0.25f), Messages.getString(Labels.TITLE_LANGUAGE.getKey()),
+        UIText menuLangTitle = new UIText("language", (int) (Game.WIDTH*0.33f), (int) (Game.HEIGHT * 0.26f), Messages.getString(Labels.TITLE_LANGUAGE.getKey()),
                 menuItemFont, 1, 2, Color.WHITE, Justification.RIGHT);
         menuLangTitle.setLabel(Labels.OPT_LANG_LABEL.getKey());
         addObject(menuLangTitle);
 
         // Define the Language menu options
-		menuLang = new UIMenu("language",(int) (Game.WIDTH*0.66f),(int) (Game.HEIGHT*0.25f),1 , menuItemFont, Color.WHITE,
+		menuLang = new UIMenu("language",(int) (Game.WIDTH*0.66f),(int) (Game.HEIGHT*0.26f),1 , menuItemFont, Color.WHITE,
                 Color.BLACK, Justification.LEFT);
         menuLang.layer = 2;
         menuLang.priority = 1;
@@ -80,7 +82,12 @@ public class OptionState extends AbstractGameState {
 		menuLang.addItem("GE", Labels.OPT_LANG_GERMAN.getKey(), "German");
 		menuLang.addItem("IT", Labels.OPT_LANG_ITALIAN.getKey(), "Italian");
 		menuLang.addItem("ES", Labels.OPT_LANG_SPANISH.getKey(), "Español");
-		addObject(menuLang);
+
+		UIGroup g = new UIGroup("languageOption",(int) (Game.WIDTH*0.33f), (int) (Game.HEIGHT * 0.25f), UILayout.HORIZONTAL,1,2,Color.WHITE);
+        g.add(menuLangTitle);
+        g.add(menuLang);
+
+        addObject(g);
 
 	}
 
