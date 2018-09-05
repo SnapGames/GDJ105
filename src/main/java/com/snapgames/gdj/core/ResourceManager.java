@@ -49,7 +49,7 @@ public class ResourceManager {
 	 * retrieve from cache if exists or load the text file resource named <code>name</code>.
 	 *
 	 * @param name the name of the text resource to load.
-	 * @return
+	 * @return the text (as string) for this particular resource.
 	 */
 	public static String getText(String name) {
 		return (String) getInstance().addResource(name);
@@ -60,7 +60,7 @@ public class ResourceManager {
 	 *
 	 * @param name         the name of the resource to load.
 	 * @param forcedReload flag to request a cache passthrough
-	 * @return
+	 * @return the text (as string) for this particular resource updated if requested.
 	 */
 	public static String getText(String name, boolean forcedReload) {
 		return (String) getInstance().loadResource(name, forcedReload);
@@ -68,15 +68,16 @@ public class ResourceManager {
 
 	/**
 	 * the private constructor to instantiate the {@link ResourceManager} only from
-	 * the getInstance(when needed). private ResourceManager() {
-	 *
-	 * }
-	 *
-	 * /** This main method is able to read some type of data (now Images and Font)
+	 * the getInstance(when needed). 
+	 */
+	private ResourceManager() {
+
+	}
+	/** This main method is able to read some type of data (now Images and Font)
 	 * and store them in the resource cache.
 	 *
 	 * @param name the name (file name) of the resource to be loaded.
-	 * @return
+	 * @return Object return as resource for the <code>name</code> file.
 	 */
 	private Object addResource(String name) {
 		assert (resources != null);
@@ -88,9 +89,9 @@ public class ResourceManager {
 	}
 
 	/**
-	 * 
-	 * @param name
-	 * @param value
+	 * Add a specific value for a resource
+	 * @param name name of this resource.
+	 * @param value the value (Object) for this object.
 	 */
 	private void addResource(String name, Object value) {
 		assert (resources != null);
@@ -104,8 +105,8 @@ public class ResourceManager {
 	/**
 	 * retrieve a resource for this name
 	 * 
-	 * @param name
-	 * @return
+	 * @param name name of this resource.
+	 * @return the value (Object) for this object.
 	 */
 	public static Object get(String name) {
 		return getInstance().addResource(name);
@@ -115,8 +116,8 @@ public class ResourceManager {
 	 * Add an external (<code>name</code>,<code>value</code>) resource to the
 	 * manager.
 	 * 
-	 * @param name
-	 * @param value
+	 * @param name name of this resource.
+	 * @param value the value (Object) for this object.
 	 */
 	public static void add(String name, Object value) {
 		getInstance().addResource(name, value);
@@ -125,8 +126,8 @@ public class ResourceManager {
 	/**
 	 * Retrieve an image <code>name</code> from the resources.
 	 * 
-	 * @param name
-	 * @return
+	 * @param name name of this resource.
+	 * @return a BuffuredImage as the name resource requested.
 	 */
 	public static BufferedImage getImage(String name) {
 		logger.info("load resourve {}",name);
@@ -136,8 +137,8 @@ public class ResourceManager {
 	/**
 	 * Retrieve a Font <code>name</code> from the resources
 	 * 
-	 * @param name
-	 * @return
+	 * @param name name of this resource.
+	 * @return Font requested.
 	 */
 	public static Font getFont(String name) {
 		return (Font) getInstance().addResource(name);
@@ -146,7 +147,7 @@ public class ResourceManager {
 	/**
 	 * return the instance of this Resource Manager.
 	 * 
-	 * @return
+	 * @return instance of the ResourceManager.
 	 */
 	public static ResourceManager getInstance() {
 		if (instance == null) {
@@ -159,7 +160,7 @@ public class ResourceManager {
 	 * Force cache to load resource again.
 	 *
 	 * @param name name of the resource to reload.
-	 * @return
+	 * @return Object correspoding to the name.
 	 */
 	private Object loadResource(String name, boolean forcedReload) {
 		assert (resources != null);
@@ -172,6 +173,11 @@ public class ResourceManager {
 		return resources.get(name);
 	}
 
+	/**
+	 * Add a name resource to the cache. according to its file extension name,
+	 * the cache is prepared as the corresponding Java Object.
+	 * @param name name of the resource to be loaded (a File name).
+	 */
 	private void putResource(String name) {
 		String extension = name.substring(name.lastIndexOf("."), name.length());
 		switch (extension) {

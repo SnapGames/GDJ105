@@ -29,7 +29,18 @@ public enum Labels {
 	// TitleState Menu options quit
 	TITLE_MENU_QUIT("TitleState.label.quit", "Quit"),
 	// Language for the game.
-	TITLE_LANGUAGE("language", "Language"),
+    TITLE_LANGUAGE("language", "Language"),
+    OPT_LANG_LABEL("options.language.label", "Language"),
+	// Language for the game.
+	OPT_LANG_ENGLISH("options.language.item.english", "English"),
+	// Lang for the game.
+	OPT_LANG_FRENCH("options.language.item.french", "Français"),
+	// Lang for the game.
+	OPT_LANG_GERMAN("options.language.item.german", "German"),
+	// Lang for the game.
+	OPT_LANG_ITALIAN("options.language.item.italian", "Italian"),
+	// Language for the game.
+	OPT_LANG_SPANISH("options.language.item.spanish", "Español"),
 	// Option State title
 	OPTION_TITLE("OptionState.title", "Options"),
     // Option State title

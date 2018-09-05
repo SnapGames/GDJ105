@@ -30,8 +30,6 @@ import org.xml.sax.SAXException;
 
 import com.snapgames.gdj.core.state.AbstractGameState;
 
-import net.minidev.json.JSONObject;
-
 /**
  * 
  * <p>
@@ -62,7 +60,6 @@ public class GameStateFactory {
 		public String className;
 		public Class<? extends AbstractGameState> classState;
 		public String attributes;
-		public JSONObject attrJSON;
 		public boolean defaultFlag;
 
 		/**

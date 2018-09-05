@@ -298,7 +298,7 @@ public class Game extends JPanel {
     /**
      * return the title of the game.
      *
-     * @return
+     * @return the title for this game.
      */
     public String getTitle() {
         return this.title;
@@ -307,7 +307,7 @@ public class Game extends JPanel {
     /**
      * Set Game title.
      *
-     * @param title
+     * @param title the tatle to be assigned.
      */
     public void setTitle(String title) {
         this.title = title;
@@ -316,7 +316,7 @@ public class Game extends JPanel {
     /**
      * return the dimension of the Game display.
      *
-     * @return
+     * @return the dimension of the game.
      */
     public Dimension getDimension() {
         return dimension;
@@ -360,14 +360,25 @@ public class Game extends JPanel {
         return isPause;
     }
 
+    /**
+     * The Graphics API
+     * @return a Graphics2D instance.
+     */
     public Graphics2D getRender() {
         return g;
     }
 
+    /**
+     * return the scaling of this game.
+     * @return a float value for this game scale factor.
+     */
     public float getScale() {
         return SCALE;
     }
 
+    /**
+     * Switch Pause status.
+     */
     public void requestPause() {
         isPause = !isPause;
 
@@ -418,5 +429,4 @@ public class Game extends JPanel {
     public void setWindow(Window window) {
         this.window = window;
     }
-
 }
