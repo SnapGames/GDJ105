@@ -1,15 +1,15 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.snapgames.gdj</groupId>
-	<artifactId>gdj105</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
-	<name>GDJ105</name>
+	<artifactId>gdj106</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+	<name>GDJ106</name>
 	<description>The basics for the Game Development on the Java platform. In this sample code,
         we will add some `UIText`, `UIMenu`, `UIMenuItem` and `UIImage` to create great UI in a
         new TitleState. We will also add new empty `PlayState` and `OptionState` to demonstrate
         navigation through states capability.
     </description>
-	<url>https://github.com/SnapGames/GDJ105</url>
+	<url>https://github.com/mcgivrer/GDJ106</url>
 	<inceptionYear>2017</inceptionYear>
 
 	<!-- Authors and Designers -->
@@ -33,16 +33,16 @@
 	</organization>
 	<scm>
 		<url>http://snapgames.github.io</url>
-		<connection>scm:git:https://github.com/SnapGames/GDJ105.git</connection>
-		<developerConnection>scm:git:git@github.com:SnapGames/GDJ105.git</developerConnection>
-		<tag>gdj105-1.0.1</tag>
+		<connection>scm:git:https://github.com/mcgivrer/GDJ106.git</connection>
+		<developerConnection>scm:git:git@github.com:SnapGames/GDJ106.git</developerConnection>
+		<tag>${project.id}-${project.version}</tag>
 	</scm>
 	<issueManagement>
 		<system>Github issues</system>
-		<url>https://github.com/SnapGames/GDJ105/issues</url>
+		<url>https://github.com/mcgivrer/GDJ106/issues</url>
 	</issueManagement>
 	<ciManagement>
-		<url>https://travis-ci.org/SnapGames/GDJ105</url>
+		<url>https://travis-ci.org/mcgivrer/GDJ106</url>
 		<system>Travis-CI</system>
 	</ciManagement>
 
@@ -285,8 +285,8 @@
 					<includes>
 						<include>**/*</include>
 					</includes>
-					<repositoryName>GDJ105</repositoryName>      <!-- github repo name -->
-					<repositoryOwner>snapgames</repositoryOwner>    <!-- github username -->
+					<repositoryName>GDJ106</repositoryName>      <!-- github repo name -->
+					<repositoryOwner>mcgivrer</repositoryOwner>    <!-- github username -->
 				</configuration>
 				<executions>
 					<!-- run site-maven-plugin's 'site' target as part of the build's normal 
