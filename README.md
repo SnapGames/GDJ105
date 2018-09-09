@@ -1,15 +1,15 @@
-# GDJ105
+# GDJ106
 [![Snapgames Home](src/main/docs/images/github-avatar-snapgames.png "go and visit SnapGames home page")](https://snapgames.github.io/)
 
-[![TravisCI](https://travis-ci.org/SnapGames/GDJ105.svg?branch=develop)](https://travis-ci.org/SnapGames/GDJ105 "open the TravisCI compilation trend")
-[![buddy pipeline](https://app.buddy.works/fredericdelorme/gdj105/pipelines/pipeline/148927/badge.svg?token=05a173644a4977bbce08533e358dc272005af3d915e8c36ceba53f1bd0228c50 "buddy pipeline")](https://app.buddy.works/fredericdelorme/gdj105/pipelines/pipeline/148927)
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FSnapGames%2FGDJ105.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FSnapGames%2FGDJ105?ref=badge_shield)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5876eb7101f44b3790b92f9553a35e39)](https://www.codacy.com/project/mcgivrer/GDJ105/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=SnapGames/GDJ105&amp;utm_campaign=Badge_Grade_Dashboard)
-[![Github Releases](https://img.shields.io/github/release/SnapGames/GDJ105.svg)](https://github.com/SnapGames/GDJ105/releases/tag/gdj105-1.0.0)
+[![TravisCI](https://travis-ci.org/SnapGames/GDJ106.svg?branch=develop)](https://travis-ci.org/SnapGames/GDJ106 "open the TravisCI compilation trend")
+[![buddy pipeline](https://app.buddy.works/fredericdelorme/gdj106/pipelines/pipeline/148927/badge.svg?token=05a173644a4977bbce08533e358dc272005af3d915e8c36ceba53f1bd0228c50 "buddy pipeline")](https://app.buddy.works/fredericdelorme/gdj106/pipelines/pipeline/148927)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FSnapGames%2FGDJ106.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FSnapGames%2FGDJ106?ref=badge_shield)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/5876eb7101f44b3790b92f9553a35e39)](https://www.codacy.com/project/mcgivrer/GDJ106/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=SnapGames/GDJ106&amp;utm_campaign=Badge_Grade_Dashboard)
+[![Github Releases](https://img.shields.io/github/release/SnapGames/GDJ106.svg)](https://github.com/SnapGames/GDJ106/releases/tag/gdj106-1.0.0)
 
-## Game Development Java Basics 105
+## Game Development Java Basics 106
 
-This project is part of the [gdj105](https://classroom.google.com/c/NzI2ODQ3NjU2MFpa/t/NzI2Nzg0MjgxNFpa) course from [GameDev Basics
+This project is part of the [gdj106](https://classroom.google.com/c/NzI2ODQ3NjU2MFpa/t/NzI2Nzg0MjgxNFpa) course from [GameDev Basics
 Java](https://classroom.google.com/c/NzI2ODQ3NjU2MFpa "Open the official on-line course") 
 provided by the [SnapGames](http://snapgames.fr) site. 
 
@@ -45,13 +45,13 @@ $> mvn exec:java
 or :
 
 ```bash
-$> java -jar gdj105-0.0.1-SNAPSHOT.jar
+$> java -jar gdj106-0.0.1-SNAPSHOT.jar
 ```
 
-After full build, on the windows platform, you can execute the `target/ GDJ105.exe` executable file.
+After full build, on the windows platform, you can execute the `target/ GDJ106.exe` executable file.
 
 ```bash
-c:\> target\GDJ105.exe
+c:\> target\GDJ106.exe
 ```
 
 
@@ -115,8 +115,9 @@ This JPEG picture screenshot of the game window will be saved to the `~/` direct
 
 Have Fun !
 
-Send a mail to [SnapGames](mailto:contact@snapgames.fr?subject=gdj105 "send a mail to our team")
+Send a mail to [SnapGames](mailto:contact@snapgames.fr?subject=gdj106 "send a mail to our team")
 
 
 ## License
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FSnapGames%2FGDJ105.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FSnapGames%2FGDJ105?ref=badge_large)
+
+TODO
