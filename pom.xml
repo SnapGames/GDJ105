@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.snapgames.gdj</groupId>
 	<artifactId>gdj105</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.0-SNAPSHOT</version>
 	<name>GDJ105</name>
 	<description>The basics for the Game Development on the Java platform. In this sample code,
         we will add some `UIText`, `UIMenu`, `UIMenuItem` and `UIImage` to create great UI in a
