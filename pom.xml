@@ -1,4 +1,5 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.snapgames.gdj</groupId>
 	<artifactId>gdj105</artifactId>
@@ -8,7 +9,7 @@
         we will add some `UIText`, `UIMenu`, `UIMenuItem` and `UIImage` to create great UI in a
         new TitleState. We will also add new empty `PlayState` and `OptionState` to demonstrate
         navigation through states capability.
-    </description>
+	</description>
 	<url>https://github.com/SnapGames/GDJ105</url>
 	<inceptionYear>2017</inceptionYear>
 
@@ -48,7 +49,7 @@
 
 	<properties>
 		<mainClass>com.snapgames.gdj.core.Game</mainClass>
-		<github.global.server>github</github.global.server>		
+		<github.global.server>github</github.global.server>
 	</properties>
 
 	<!-- Project Dependencies -->
@@ -79,7 +80,7 @@
 					<encoding>utf-8</encoding>
 				</configuration>
 			</plugin>
-			
+
 			<!-- Build the minimalist JAR without dependencies (Normal Edition) -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -95,7 +96,7 @@
 					</archive>
 				</configuration>
 			</plugin>
-			
+
 			<!-- Package a jar with Sources -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -194,27 +195,27 @@
 				<artifactId>maven-shade-plugin</artifactId>
 				<version>3.1.0</version>
 				<configuration>
-				  <!-- put your configurations here -->
-				  <shadedArtifactAttached>true</shadedArtifactAttached>
-                <shadedClassifierName>shaded</shadedClassifierName>
-                <transformers>
-                    <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                        <mainClass>${mainClass}</mainClass>
-                    </transformer>
-                    <transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
-                        <resource>src/main/resources/res</resource>
-                        <file>server.properties</file>
-                    </transformer>
-                </transformers>
-				  <!-- end of config-->
+					<!-- put your configurations here -->
+					<shadedArtifactAttached>true</shadedArtifactAttached>
+					<shadedClassifierName>shaded</shadedClassifierName>
+					<transformers>
+						<transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+							<mainClass>${mainClass}</mainClass>
+						</transformer>
+						<transformer implementation="org.apache.maven.plugins.shade.resource.IncludeResourceTransformer">
+							<resource>src/main/resources/res</resource>
+							<file>server.properties</file>
+						</transformer>
+					</transformers>
+					<!-- end of config-->
 				</configuration>
 				<executions>
-				  <execution>
-				    <phase>package</phase>
-				    <goals>
-				      <goal>shade</goal>
-				    </goals>
-				  </execution>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>shade</goal>
+						</goals>
+					</execution>
 				</executions>
 			</plugin>
 			<!-- create a Windows EXE -->
@@ -224,15 +225,15 @@
 				<groupId>com.akathist.maven.plugins.launch4j</groupId>
 				<artifactId>launch4j-maven-plugin</artifactId>
 				<version>1.7.21</version>
-	            <executions>
-	                <execution>
-	                    <id>l4j-clui</id>
-	                    <phase>package</phase>
-	                    <goals>
-	                        <goal>launch4j</goal>
-	                    </goals>
-	                    <configuration>
-	                        <headerType>gui</headerType>
+				<executions>
+					<execution>
+						<id>l4j-clui</id>
+						<phase>package</phase>
+						<goals>
+							<goal>launch4j</goal>
+						</goals>
+						<configuration>
+							<headerType>gui</headerType>
 							<jar>${project.build.directory}/${project.artifactId}-${project.version}-shaded.jar</jar>
 							<outfile>${project.build.directory}/${project.name}.exe</outfile>
 							<downloadUrl>http://java.com/download</downloadUrl>
@@ -240,7 +241,7 @@
 								<mainClass>${mainClass}</mainClass>
 								<preCp>anything</preCp>
 							</classPath>
-							<icon>src/main/resources/res/gdj-application.ico</icon>
+							<icon>src/main/resources/res/gdj-app-105.ico</icon>
 							<jre>
 								<minVersion>1.8.0</minVersion>
 								<jdkPreference>preferJre</jdkPreference>
@@ -278,15 +279,15 @@
 				<artifactId>site-maven-plugin</artifactId>
 				<version>0.12</version>
 				<configuration>
-					<message>Maven artifacts for ${project.version}</message>  <!-- git commit message -->
-					<noJekyll>true</noJekyll>                                  <!-- disable webpage processing -->
-					<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory> <!-- matches distribution management repository url above -->
-					<branch>refs/heads/mvn-repo</branch>                       <!-- remote branch name -->
+					<message>Maven artifacts for ${project.version}</message>					<!-- git commit message -->
+					<noJekyll>true</noJekyll>					<!-- disable webpage processing -->
+					<outputDirectory>${project.build.directory}/mvn-repo</outputDirectory>					<!-- matches distribution management repository url above -->
+					<branch>refs/heads/mvn-repo</branch>					<!-- remote branch name -->
 					<includes>
 						<include>**/*</include>
 					</includes>
-					<repositoryName>GDJ105</repositoryName>      <!-- github repo name -->
-					<repositoryOwner>snapgames</repositoryOwner>    <!-- github username -->
+					<repositoryName>GDJ105</repositoryName>					<!-- github repo name -->
+					<repositoryOwner>snapgames</repositoryOwner>					<!-- github username -->
 				</configuration>
 				<executions>
 					<!-- run site-maven-plugin's 'site' target as part of the build's normal 
