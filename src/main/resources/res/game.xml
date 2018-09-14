@@ -3,8 +3,8 @@
 <game>
 	<default name="title" />
 	<states>
-		<state name="title" class="com.snapgames.gdj.gdj105.TitleState" />
-		<state name="play" class="com.snapgames.gdj.gdj105.PlayState" />
-		<state name="options" class="com.snapgames.gdj.gdj105.OptionState" />
+		<state name="title" class="com.snapgames.gdj.gdj105.states.TitleState" />
+		<state name="play" class="com.snapgames.gdj.gdj105.states.PlayState" />
+		<state name="options" class="com.snapgames.gdj.gdj105.states.OptionState" />
 	</states>
 </game>
