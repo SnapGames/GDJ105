@@ -31,7 +31,7 @@ public class PlayState extends AbstractGameState {
 
 	@Override
 	public void initialize(Game game) {
-		// TODO Auto-generated method stub
+		
 		super.initialize(game);
 
 		// read i18n labels

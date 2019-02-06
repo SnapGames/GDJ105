@@ -21,13 +21,37 @@ import com.snapgames.gdj.core.Game;
 import com.snapgames.gdj.core.gfx.RenderHelper.Justification;
 
 /**
+ * <p>
  * The UIMenu class intends to provide a selector UI component between multiple
  * items. Those items are described by the inner class UIMenuItem.
  * 
+ * <p>
  * Its provides navigation operation (previous(), next()) and standard
  * update/draw methods.
  * 
+ * <p>
+ * Each item of the menu is a {@link UIMenuItem}.
+ * 
+ * <p>
+ * All the menu can be translated into any language accrding to the i18n
+ * properties files.
+ * <p>
+ * In case of languages switching, the UIi18nReload interface will be used to
+ * update this particular component and re-rendered it to the new active
+ * language.
+ * 
+ * <p>
+ * A new introduced {@link UIMenu#cursor} attribute is an UIImage to highlight
+ * the active {@link UIMenuItem}.
+ * <p>
+ * The current active item number is hosted by the {@link UIMenu#activeItem}.
+ * <p>
+ * The {@link UIMenu#items} contains all UIMenuItem for this UIMenu.
+ * 
  * @author Frédéric Delorme
+ * @see UIMenuItem
+ * @see UIGameObject
+ * @see UIi18nReload
  *
  */
 public class UIMenu extends UIGameObject implements UIi18nReload {
@@ -69,6 +93,24 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 		this.font = font;
 	}
 
+	/**
+	 * <p>
+	 * Create a new {@link UIMenu} with a <code>name</code>, at position
+	 * (<code>x</code>,<code>y</code>) with the <code>defaultActiveItem</code> item
+	 * number, with a <code>foreColor</code> to draw text of label and a
+	 * <code>shadowColor</code> to draw border shadow.
+	 * <p>
+	 * And finally the <code>pos</code> attribute indicates the text Justification
+	 * for the UIMenuItem's.
+	 * 
+	 * @param name              Name of this UIMenu
+	 * @param x                 position on X axis
+	 * @param y                 position on Y axis
+	 * @param defaultActiveItem default active item.
+	 * @param font              the Font to be used on render phase.
+	 * @param color             foreground color to draw menu item label
+	 * @param shadowColor       shadow color to draw as border of label.
+	 */
 	public UIMenu(String name, int x, int y, int defaultActiveItem, Font font, Color foreColor, Color shadowColor,
 			Justification pos) {
 		this(name, x, y, defaultActiveItem, font, foreColor, shadowColor);
@@ -76,12 +118,18 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 	}
 
 	/**
-	 * Add a new Item to the menu.
+	 * <p>
+	 * Add a new item to the menu.
+	 * <p>
+	 * This will create a new {@link UIMenuItem} with set parameters, and add it to
+	 * the {@link UIMenu}.
 	 * 
-	 * @param value    value to return if this item is selected
-	 * @param labelKey label key in the translated text (see messages.properties)
-	 * @param text     the default text to draw if the labelKey does not exists. if
-	 *                 this text is empty, will display the labelKey;
+	 * @param value       value to return if this item is selected
+	 * @param labelKey    label key in the translated text (see messages.properties)
+	 * @param defaultText the default text to draw if the labelKey does not exists.
+	 *                    if this text is empty, will display the labelKey;
+	 * @param args        a list of arguments used to render text (see
+	 *                    {@link String#format(String, Object...)} for details. )
 	 */
 	public void addItem(String value, String labelKey, String defaultText, Object... args) {
 		UIMenuItem item = new UIMenuItem(this, index++, labelKey, value, defaultText, args);
@@ -89,7 +137,7 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 	}
 
 	/**
-	 * Add a new UIMenuItem object to the UIMenu.
+	 * Add a new {@link UIMenuItem} menu item to the {@link UIMenu}.
 	 * 
 	 * @param item the Menu item to be added.
 	 * @see UIMenuItem
@@ -99,10 +147,13 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 	}
 
 	/**
+	 * Add a simple item with e the basic parameters by creating the corresponding
+	 * UIMenuItem and add it to the UIMenu.
 	 * 
-	 * @param value
-	 * @param labelKey
-	 * @param defaultText
+	 * @param value       the retuernd valuie when this item is selected
+	 * @param labelKey    the translated label key for this item.
+	 * @param defaultText the default text used if this labelkey does not exist in
+	 *                    the transation file for the activated language.
 	 */
 	public void addItem(String value, String labelKey, String defaultText) {
 		UIMenuItem item = new UIMenuItem(this, index++, labelKey, value, defaultText);
@@ -147,7 +198,7 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 			} else {
 				item.onFocus();
 				if (cursor != null) {
-					cursor.setPosition(x + 10, y + 3+(i-1) * fm.getHeight());
+					cursor.setPosition(x + 10, y + 3 + (i - 1) * fm.getHeight());
 					cursor.draw(game, g);
 				}
 			}
@@ -160,6 +211,13 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 		}
 	}
 
+	/**
+	 * Adapt the bounding box of the UIMenu with the newly added UIMenuItem.
+	 * 
+	 * @param fm   the fontmetric for the current active font text
+	 * @param i    the line number for this item in the menu.
+	 * @param item the item that has been added.
+	 */
 	private void extendMenuBoundingBox(FontMetrics fm, int i, UIMenuItem item) {
 		Rectangle rect = item.getBoundingBox();
 		rectangle.x = (int) (rect.x < rectangle.x ? rect.x : rectangle.x);
@@ -249,8 +307,8 @@ public class UIMenu extends UIGameObject implements UIi18nReload {
 	}
 
 	/**
-	 * Add a specific UIImage as a cursor to be displayed near the current selected
-	 * MeuniItem.
+	 * Add a specific {@link UIImage} as a cursor to be displayed near the current
+	 * selected {@link UIMenuItem}.
 	 * 
 	 * @param cursor
 	 */

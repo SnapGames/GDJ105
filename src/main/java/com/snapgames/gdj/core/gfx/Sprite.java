@@ -64,7 +64,6 @@ public class Sprite {
 	}
 
 	public BufferedImage getImage() {
-		// TODO Auto-generated method stub
 		return pixels;
 	}
 
