@@ -10,8 +10,9 @@
 package com.snapgames.gdj.core.ui;
 
 /**
+ * The Repeat enumaration list all repeatable option for an UIImage.
  * 
- * @author Frédéric Delorme
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
  *
  */
 public enum Repeat {
@@ -20,13 +21,13 @@ public enum Repeat {
 	 */
 	NONE,
 	/*
-	 * Repeat object horizontally on time. 
+	 * Repeat object horizontally on time.
 	 */
-	HORIZONTAL_ONE, 
+	HORIZONTAL_ONE,
 	/*
 	 * Repeat object horizontally an infinity times (regarding screen display).
 	 */
-	HORIZONTAL_INFINITY, 
+	HORIZONTAL_INFINITY,
 	/*
 	 * Repeat object veritally one time.
 	 */
@@ -34,5 +35,9 @@ public enum Repeat {
 	/*
 	 * Repeat object vertically an infinity times (regarding screen display).
 	 */
-	VERTICAL_INFINITY;
+	VERTICAL_INFINITY,
+	/**
+	 * repeat image in bot vertically and horizontaly.
+	 */
+	BOTH;
 }

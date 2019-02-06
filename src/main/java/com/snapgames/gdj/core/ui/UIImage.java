@@ -13,30 +13,46 @@ import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 
 import com.snapgames.gdj.core.Game;
-import com.snapgames.gdj.core.entity.AbstractGameObject;
 
 /**
- * The Background image is a simple image to be displayed in background.
+ * <p>
+ * The <code>UIImage</code> component is a simple image rendering component to be
+ * displayed as a background (as example) or as a simple image on screen.
  * 
- * @author Frédéric Delorme
- *
+ * <p>
+ * It is inhering from the {@link UIGameObject} component
+ * 
+ * <p>
+ * The image can be
+ * <ul>
+ * <li>simply rendered,</li>
+ * <li>or repeated horizontaly,</li>
+ * <li>or repeated verticaly,</li>
+ * <li>or both ({@link Repeat}).</li>
+ * </ul>
+ * 
+ * @author Frédéric Delorme<frederic.delorme@snapgames.fr>
+ * @see UIGameObject
+ * @see Repeat
  */
-public class UIImage extends AbstractGameObject {
+public class UIImage extends UIGameObject {
 
 	public BufferedImage image;
 	public Repeat repeat;
 	int xmax = 0, ymax = 0;
 
 	/**
+	 * The default constructor for the UIImage component
 	 * 
-	 * @param name
-	 * @param x
-	 * @param y
-	 * @param width
-	 * @param height
-	 * @param layer
-	 * @param priority
-	 * @param color
+	 * @param name     name of this UIImage component
+	 * @param x        the x position
+	 * @param y        the y position
+	 * @param width    the width of the UIImage
+	 * @param height   the height of the UIImage
+	 * @param layer    the layer where to render this object
+	 * @param priority the priority of this object in the rendering pipeline for
+	 *                 this layer
+	 * @param color    the default color for this object (if no image is provided)
 	 */
 	public UIImage(String name, BufferedImage image, int x, int y, int layer, int priority) {
 		super(name, x, y, image.getWidth(), image.getHeight(), layer, priority, null);
@@ -55,6 +71,9 @@ public class UIImage extends AbstractGameObject {
 	 */
 	@Override
 	public void draw(Game game, Graphics2D g) {
+		/**
+		 * @see Repeat
+		 */
 		switch (repeat) {
 		case NONE:
 			g.drawImage(image, (int) (x), (int) (y), null);
@@ -77,7 +96,15 @@ public class UIImage extends AbstractGameObject {
 				g.drawImage(image, (int) (x), (int) (y) + ry, null);
 			}
 			break;
-
+		case BOTH:
+			xmax = ((int) (game.getWidth() / width) + 1);
+			ymax = ((int) (game.getHeight() / height) + 1);
+			for (int rx = 0; rx < xmax; rx += 1) {
+				for (int ry = 0; ry < ymax * height; ry += height) {
+					g.drawImage(image, (int) (x), (int) (y) + ry, null);
+				}
+			}
+			break;
 		}
 	}
 
